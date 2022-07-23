@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class BaseTemplateView(TemplateView):
+    """ Вьюха для демонстрации базового шаблона """
+    template_name = 'index.html'
+    extra_context = {'title': "Megano"}
+
