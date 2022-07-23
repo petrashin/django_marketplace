@@ -25,12 +25,14 @@
           </div>
           <nav class="row-block">
             <div class="row ControlPanel-rowSplit">
+                <!--Доступ к профилю для авторизованного пользователя-->
                 {% if request.user.is_authenticated %}
                 <div class="row-block">
                     <a class="ControlPanel-title" href="account.html">{{ request.user.username }} /</a>
                     <a class="ControlPanel-title" href="account.html">Profile /</a>
-                    <a class="ControlPanel-title" href="account.html">Logout</a>
+                    <a class="ControlPanel-title" href="#">Logout</a>
               </div>
+                <!-- Вход или регистрация для неавторизованного пользователя-->
                 {% else %}
               <div class="row-block"><a class="ControlPanel-title" href="account.html">Login /</a>
                   <a class="ControlPanel-title" href="account.html">Register</a>
@@ -58,6 +60,7 @@
         <nav class="row-block row-block_right Header-menu">
           <div class="menuModal" id="navigate">
             <ul class="menu menu_main">
+                <!-- Доступ к админке для администратора -->
                 {% if request.user.is_staff %}
                 {% url 'admin:index' as url_admin %}
                 <li class="menu-item"><a class="menu-link" href="{{ url_admin }}">Admin</a>
