@@ -8,4 +8,11 @@ __pycache__/
 db.sqlite3
 *.sqlite3
 *.py[cod]
+
 .idea
+.DS_Store
+.AppleDouble
+.LSOverride
+
+*.sublime-project
+*.sublime-workspace
