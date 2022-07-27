@@ -1,8 +1,11 @@
 /venv/
 venv/
-
 __pycache__/
+.git/*
+
 **/__pycache__/
 
 db.sqlite3
 *.sqlite3
+*.py[cod]
+.idea
