@@ -1,10 +1,10 @@
-from django.contrib.auth.models import User
 from django.db import models
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=12)
-    avatar_url = models.CharField(max_length=256)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
-    
+class Categories(models.Model):
+    name = models.CharField(max_length=25)
+    parent_category = models.ForeignKey('self', null=True, blank=True, on_delete=models.DO_NOTHING, related_name="sub")
+    category_icon = models.FileField(upload_to='static/assets/img/icons/departments/')
+
+    def __str__(self):
+        return self.name

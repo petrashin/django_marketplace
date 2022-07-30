@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'app_main.apps.AppMainConfig',
     'app_auth',
     'crispy_forms',
+    'app_users',
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,6 @@ if DEBUG:
     INTERNAL_IPS = ['127.0.0.1']
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
