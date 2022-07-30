@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rewiew</title>
+</head>
+<body>
+
+
+<h3>
+    <!--<span>{{ product.reviews_set.count }}</span>-->
+    Оставить отзыв
+</h3>
+<form action="/add_review/" method="post" id="formReview">
+    {% csrf_token %}
+    <input type="hidden" name="parent" id="contactparent" value="">
+    <div>
+        <label for="contactcomment" class="editContent">
+            Ваш коментарий
+        </label>
+        <div>Товар: {{ review_form.product }}</div>
+
+        <div>Коментарий: {{ review_form.text }}</div>
+    </div>
+
+
+    <button type="submit">
+        Отправить
+    </button>
+</form>
+
+
+{% for review in reviews %}
+    <div>
+            <h5>
+                {{ review.user }}
+            </h5>
+            <p>
+                {{ review.text }}
+            </p>
+            <a href="#formReview" onclick="addReview('{{ review.name }}', '{{ review.id }}')">Ответить</a>
+
+        {% for rew in review.reviews_set.all %}
+
+            <div style="padding-left: 50px">
+                <h5>
+                    {{ rew.user }}
+                </h5>
+                <p>
+                    {{ rew.text }}
+                </p>
+            </div>
+
+        {% endfor %}
+    </div>
+    <script type="text/javascript">
+                    function addReview(name, id) {
+                        document.getElementById("contactparent").value = id;
+                        document.getElementById("contactcomment").innerText = name + ', '
+                    }
+
+
+
+    </script>
+{% endfor %}
+
+</body>
+</html>
