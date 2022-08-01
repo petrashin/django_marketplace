@@ -33,7 +33,7 @@ def register_view(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('../../')
+            return redirect('home')
     else:
         form = SignUpForm()
     return render(request, 'register.html', {'form': form})
@@ -65,6 +65,6 @@ def password_reset_request(request):
                                   [user.email], fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
-                    return redirect("../password_reset/done/")
+                    return redirect("password_reset_done")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="password_reset.html", context={"password_reset_form": password_reset_form})
