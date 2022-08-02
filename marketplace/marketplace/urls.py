@@ -1,15 +1,23 @@
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('cart/', include('cart.urls')),
     path('', include('app_main.urls')),
     path('auth/', include('app_auth.urls'))
+    path('', include('app_shops.urls')),
+    path('', include('app_goods.urls')),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
     urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls)),
     ]
+

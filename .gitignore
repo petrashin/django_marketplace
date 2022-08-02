@@ -11,6 +11,7 @@ db.sqlite3
 *.sqlite3
 
 *.py[cod]
+/marketplace/app_main/migrations/
 
 .idea
 .DS_Store
