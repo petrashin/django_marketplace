@@ -11,7 +11,10 @@ db.sqlite3
 *.sqlite3
 
 *.py[cod]
-/marketplace/app_main/migrations/
+/marketplace/app_users/migrations/
+/marketplace/app_shops/migrations/
+/marketplace/cart/migrations/
+/marketplace/app_goods/migrations/
 
 .idea
 .DS_Store
@@ -20,3 +23,7 @@ db.sqlite3
 
 *.sublime-project
 *.sublime-workspace
+
+
+
+
