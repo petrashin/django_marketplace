@@ -5,8 +5,11 @@ __pycache__/
 
 **/__pycache__/
 
+migraions/__pycache__
+
 db.sqlite3
 *.sqlite3
+
 *.py[cod]
 /marketplace/app_users/migrations/
 /marketplace/app_shops/migrations/
