@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Reviews, Categories
+from .models import Profile, Reviews, Categories, Role
 
 admin.site.register(Categories)
 
@@ -10,5 +10,10 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 @admin.register(Reviews)
+class ProfileAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Role)
 class ProfileAdmin(admin.ModelAdmin):
     pass
