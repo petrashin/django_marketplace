@@ -28,7 +28,7 @@
                 <!--Доступ к профилю для авторизованного пользователя-->
                 {% if request.user.is_authenticated %}
                 <div class="row-block">
-                    <a class="ControlPanel-title" href="account.html">{{ request.user.username }} /</a>
+                    <a class="ControlPanel-title" href="{% url 'account' %}">{{ request.user.username }} /</a>
                     <a class="ControlPanel-title" href="account.html">Profile /</a>
                     <a class="ControlPanel-title" href="{% url 'logout' %}">Logout</a>
               </div>
