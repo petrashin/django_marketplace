@@ -1,7 +1,9 @@
 from decimal import Decimal
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+
 from app_shops.models import Shop
 
 
@@ -122,6 +124,9 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'slug': self.slug})
 
+    def get_review(self):
+        return self.reviews_set.all()
+
     class Meta:
         db_table = 'goods'
         verbose_name = 'товар'
@@ -154,3 +159,19 @@ class ProductImage(models.Model):
         db_table = 'product_images'
         verbose_name = 'изображение товара'
         verbose_name_plural = 'изображения товаров'
+
+
+class Reviews(models.Model):
+    """ Отзывы """
+    user = models.ForeignKey(User, verbose_name='пользователь', on_delete=models.CASCADE)
+    email = models.EmailField(verbose_name="email", default=None)
+    text = models.TextField(verbose_name="сообщение", max_length=5000)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время создания')
+    product = models.ForeignKey(Product, verbose_name="товар", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.product} - {self.user.username}"
+
+    class Meta:
+        verbose_name = 'отзыв'
+        verbose_name_plural = 'отзывы'
