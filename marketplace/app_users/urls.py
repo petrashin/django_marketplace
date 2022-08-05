@@ -1,8 +1,7 @@
 from django.urls import path
 
-from app_users.views import BaseTemplateView, AddReview
+from app_users.views import AddReview
 
 urlpatterns = [
-    path('', BaseTemplateView.as_view(), name='home'),
     path('add_review/', AddReview.as_view(), name='add_review')
 ]
