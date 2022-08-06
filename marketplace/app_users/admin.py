@@ -7,12 +7,6 @@ class ProfileAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Reviews)
-class ProfileAdmin(admin.ModelAdmin):
-    pass
-
-
 @admin.register(Role)
 class ProfileAdmin(admin.ModelAdmin):
     pass
-
