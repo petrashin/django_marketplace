@@ -37,16 +37,3 @@ class Image(models.Model):
                                    help_text='Связь с моделью профиля пользователя')
     avatar = models.ImageField(upload_to='avatars', verbose_name='аватарка',
                                help_text='Поле для сохранения аватарки пользователя')
-
-
-class Reviews(models.Model):
-    """ Отзывы """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.TextField(verbose_name="Сообщение", max_length=5000)
-    parent = models.ForeignKey('self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True)
-    product = models.CharField(verbose_name="Товар", max_length=100, default=None)
-
-    # TODO добавить связку с товаром
-
-    def __str__(self):
-        return self.user
