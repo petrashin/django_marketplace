@@ -7,6 +7,15 @@ class ShopTemplateView(TemplateView):
     template_name = 'shop.html'
 
 
+class CatalogTemplateView(TemplateView):
+    template_name = 'catalog.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CatalogTemplateView, self).get_context_data()
+        context['categories'] = Category.objects.filter(parent_category__isnull=True)
+        return context
+
+
 class BaseTemplateView(TemplateView):
     """ Вьюха для демонстрации базового шаблона """
     template_name = 'index.html'
