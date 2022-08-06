@@ -12,7 +12,7 @@ class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name='наименование')
     parent_category = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True,
                                         related_name="sub", verbose_name="родительская категория")
-    category_icon = models.FileField(upload_to="icons/categories/", verbose_name="иконка категории")
+    category_icon = models.FileField(upload_to="icons/categories/", verbose_name="иконка категории", null=True)
     slug = models.SlugField(max_length=255,
                             db_index=True,
                             verbose_name='url',
