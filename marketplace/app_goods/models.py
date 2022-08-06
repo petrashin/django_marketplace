@@ -117,6 +117,7 @@ class Product(models.Model):
                               related_name='products',
                               help_text='связь с моделью Price'
                               )
+    views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
 
     def __str__(self):
         return self.name

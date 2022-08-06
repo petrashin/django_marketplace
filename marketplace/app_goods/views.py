@@ -25,6 +25,12 @@ class ProductDetailView(FormMixin, DetailView):
     form_class = CartAddProductForm
     extra_context = {'title': 'Товар', 'review_form': ReviewForm, 'reviews': Reviews.objects.all}
 
+    def get_object(self, *args, **kwargs):
+        view_object = super(ProductDetailView, self).get_object()
+        view_object.views_count += 1
+        view_object.save()
+        return view_object
+
 
 class AddReview(View):
     """ Отзыв """
