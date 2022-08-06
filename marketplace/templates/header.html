@@ -114,7 +114,7 @@
 
                   <div class="CategoriesButton-link"><a href="{% url 'catalog' category.id %}">
                       <div class="CategoriesButton-icon">
-                      <img src="/media/{{ category.category_icon }}" alt="icon.svg"/>
+                      <img src="{{ category.category_icon.url }}" alt="icon.svg"/>
                       </div><span class="CategoriesButton-text">{{ category.name }}</span></a>
 
                       {% if category.sub.all.count > 0 %}
@@ -124,7 +124,7 @@
                       {% for sub_category in category.sub.all %}
                       <a class="CategoriesButton-link" href="{% url 'catalog' sub_category.id %}">
                       <div class="CategoriesButton-icon">
-                      <img src="/media/{{ sub_category.category_icon }}" alt="icon.svg"/>
+                      <img src="{{ sub_category.category_icon.url }}" alt="icon.svg"/>
                       </div><span class="CategoriesButton-text">{{ sub_category.name }}</span></a>
 
               {% endfor %}</div>{% endif %}</div>{% endfor %}
