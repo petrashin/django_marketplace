@@ -1,7 +1,11 @@
+from django.contrib.auth.models import User
+from django.shortcuts import redirect
+from django.views import View
 from django.views.generic.edit import FormMixin
 from django.views.generic import ListView, DetailView, TemplateView
 
-from app_goods.models import Product
+from app_goods.models import Product, Reviews
+from app_goods.forms import ReviewForm
 from cart.forms import CartAddProductForm
 
 
@@ -19,5 +23,28 @@ class ProductDetailView(FormMixin, DetailView):
     context_object_name = 'product'
     template_name = 'product.html'
     form_class = CartAddProductForm
-    extra_context = {'title': 'Товар'}
+    extra_context = {'title': 'Товар', 'review_form': ReviewForm, 'reviews': Reviews.objects.all}
 
+    def get_object(self, *args, **kwargs):
+        view_object = super(ProductDetailView, self).get_object()
+        view_object.views_count += 1
+        view_object.save()
+        return view_object
+
+
+class AddReview(View):
+    """ Отзыв """
+
+    def post(self, request, slug):
+        form = ReviewForm(request.POST)
+        product = Product.objects.get(slug=slug)
+        if form.is_valid():
+            form = form.save(commit=False)
+            user = User.objects.get(id=request.user.id)
+            form.user = user
+            form.email = user.email
+            form.product = product
+
+            form.save()
+
+        return redirect(product.get_absolute_url())

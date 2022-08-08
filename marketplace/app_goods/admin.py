@@ -33,5 +33,6 @@ class PriceTypeAdmin(admin.ModelAdmin):
     inlines = [PriceInline]
 
 
-
-
+@admin.register(Reviews)
+class ProfileAdmin(admin.ModelAdmin):
+    pass
