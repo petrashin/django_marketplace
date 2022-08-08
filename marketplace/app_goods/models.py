@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
-from app_shops.models import Shop
-
 
 class Category(models.Model):
     """ Модель Категория """
@@ -107,19 +105,10 @@ class Product(models.Model):
                             help_text='уникальный фрагмент url на основе наименования товара'
                             )
     description = models.TextField(verbose_name='описание', blank=True)
-    quantity = models.PositiveSmallIntegerField(null=True, verbose_name='количество товара')
     availability = models.BooleanField(default=True, verbose_name='в наличии')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='дата и время обновления')
-    shop = models.ManyToManyField(Shop, verbose_name='магазин', related_name='products')
     category = models.ManyToManyField(Category, verbose_name='категория', related_name='products')
-    price = models.ForeignKey(Price,
-                              null=True,
-                              on_delete=models.CASCADE,
-                              verbose_name='цена',
-                              related_name='products',
-                              help_text='связь с моделью Price'
-                              )
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
 
     def __str__(self):
