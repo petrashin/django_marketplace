@@ -1,6 +1,6 @@
 from django.urls import path
-from app_account.views import BaseTemplateView
+from app_account.views import account_view
 
 urlpatterns = [
-    path('', BaseTemplateView.as_view(), name='account')
+    path('', account_view, name='account')
 ]
