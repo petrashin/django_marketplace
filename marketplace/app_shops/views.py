@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
-from app_goods.models import Category
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from app_goods.models import Category, Product
 
 
 class ShopTemplateView(TemplateView):
@@ -13,6 +14,19 @@ class CatalogTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CatalogTemplateView, self).get_context_data()
         context['categories'] = Category.objects.filter(parent_category__isnull=True)
+        products_list = Product.objects.filter(category=kwargs["category_id"])
+        paginator = Paginator(products_list, 8)
+        if 'page' in self.request.GET:
+            page = self.request.GET['page']
+        else:
+            page = 1
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            products = paginator.page(1)
+        except EmptyPage:
+            products = paginator.page(paginator.num_pages)
+        context['object_list'] = products
         return context
 
 
