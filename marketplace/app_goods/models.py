@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
@@ -56,46 +54,6 @@ class PriceType(models.Model):
         verbose_name_plural = 'типы цен'
 
 
-class Price(models.Model):
-    """ Модель Цена """
-    price_type = models.ForeignKey(PriceType,
-                                   on_delete=models.CASCADE,
-                                   verbose_name='тип цены',
-                                   related_name='prices',
-                                   help_text='связь с моделью PriceType'
-                                   )
-
-    base_price = models.DecimalField(max_digits=10,
-                                     decimal_places=2,
-                                     verbose_name='цена товара',
-                                     help_text='базовая цена товара'
-                                     )
-    discounted_price = models.DecimalField(max_digits=10,
-                                           decimal_places=2,
-                                           default=0,
-                                           verbose_name='цена товара со скидкой')
-
-    def __str__(self):
-        return f'{self.price_type.name}: {self.base_price}'
-
-    def get_discounted_price(self):
-        """ Получаем цену со скидкой """
-        discount = self.price_type.discount
-        if discount > 0:
-            return Decimal(self.base_price - (self.base_price * discount / 100))
-        return self.base_price
-
-    def save(self, *args, **kwargs):
-        """ Сохраняем цену со скидкой в поле discounted_price """
-        self.discounted_price = self.get_discounted_price()
-        super(Price, self).save(*args, **kwargs)
-
-    class Meta:
-        db_table = 'prices'
-        verbose_name = 'цена'
-        verbose_name_plural = 'цены'
-
-
 class Product(models.Model):
     """ Модель Товар """
     name = models.CharField(max_length=255, verbose_name='наименование')
@@ -110,6 +68,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='дата и время обновления')
     category = models.ManyToManyField(Category, verbose_name='категория', related_name='products')
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
+    sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
 
     def __str__(self):
         return self.name

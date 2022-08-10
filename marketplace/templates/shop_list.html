@@ -143,73 +143,88 @@
             <h2 class="Section-title">Popular Products
             </h2>
           </header>
+
           <div class="Cards">
-            {% for card in top_goods %}
-            <div class="Card"><a class="Card-picture" href="#"><img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>
+            {% for item in products %}
+            {% for image in item.product.product_images.all %}
+            <div class="Card"><a class="Card-picture" href="{% url 'product_detail' item.product.slug %}"><img src="{{image.main_image.url}}" alt="card.jpg"/></a>
               <div class="Card-content">
-                <strong class="Card-title"><a href="#">{{ card.name }}</a>
+                <strong class="Card-title"><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
+                </strong>
+                <strong class="Card-title"><a href="{% url 'shop_detail' item.shop.slug %}">{{ item.shop.name }}</a>
                 </strong>
                 <div class="Card-description">
-                  <div class="Card-cost"><span class="Card-priceOld">{{ card.price.base_price }}</span><span class="Card-price">{{ card.price.discounted_price }}</span>
+                  <div class="Card-cost">
+                    {% if item.price_type.discount > 0 %}
+                    <span class="Card-priceOld">{{ item.old_price }} руб.</span>
+                    {% endif %}
+                    <span class="Card-price">{{ item.current_price }} руб.</span>
                   </div>
-                  {% for c in card.category.all %}
-                  <div class="Card-category">{{ c.name }}
+                  {% for cat in item.product.category.all %}
+                  <div class="Card-category">{{ cat.name }}
                   </div>
                   {% endfor %}
-                  <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
+                  <div class="Card-hover">
+                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
                   </div>
                 </div>
               </div>
-              <div class="Card-sale">-{{ card.price.price_type.discount }}
+              {% if item.price_type.discount > 0 %}
+              <div class="Card-sale">-{{ item.price_type.discount }}
               </div>
+              {% endif %}
             </div>
             {% endfor %}
-            {% for card in top_goods_hide_md %}
-            <div class="Card hide_md"><a class="Card-picture" href="#"><img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>
-              <div class="Card-content">
-                <strong class="Card-title"><a href="#">{{ card.name }}</a>
-                </strong>
-                <div class="Card-description">
-                  <div class="Card-cost"><span class="Card-priceOld">{{ card.price.base_price }}</span><span class="Card-price">{{ card.price.discounted_price }}</span>
-                  </div>
-                  {% for c in card.category.all %}
-                  <div class="Card-category">{{ c.name }}
-                  </div>
-                  {% endfor %}
-                  <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
-                  </div>
-                </div>
-              </div>
-              <div class="Card-sale">-{{ card.price.price_type.discount }}
-              </div>
-            </div>
             {% endfor %}
-            {% for card in top_goods_hide_1450 %}
-            <div class="Card hide_md hide_1450"><a class="Card-picture" href="#"><img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>
-              <div class="Card-content">
-                <strong class="Card-title"><a href="#">{{ card.name }}</a>
-                </strong>
-                <div class="Card-description">
-                  <div class="Card-cost"><span class="Card-price">{{ card.price.base_price }}</span>
-                  </div>
-                  {% for c in card.category.all %}
-                  <div class="Card-category">{{ c.name }}
-                  </div>
-                  {% endfor %}
-                  <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
-                  </div>
-                </div>
-              </div>
-              <div class="Card-sale">-{{ card.price.price_type.discount }}
-              </div>
-            </div>
-            {% endfor %}
+
+<!--            {% for card in top_goods_hide_md %}-->
+<!--            <div class="Card hide_md"><a class="Card-picture" href="#"><img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>-->
+<!--              <div class="Card-content">-->
+<!--                <strong class="Card-title"><a href="#">{{ card.name }}</a>-->
+<!--                </strong>-->
+<!--                <div class="Card-description">-->
+<!--                  <div class="Card-cost"><span class="Card-priceOld">{{ card.price.base_price }}</span><span class="Card-price">{{ card.price.discounted_price }}</span>-->
+<!--                  </div>-->
+<!--                  {% for c in card.category.all %}-->
+<!--                  <div class="Card-category">{{ c.name }}-->
+<!--                  </div>-->
+<!--                  {% endfor %}-->
+<!--                  <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>-->
+<!--                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>-->
+<!--                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="Card-sale">-{{ card.price.price_type.discount }}-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            {% endfor %}-->
+<!--            -->
+<!--            {% for card in top_goods_hide_1450 %}-->
+<!--            <div class="Card hide_md hide_1450"><a class="Card-picture" href="#"><img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>-->
+<!--              <div class="Card-content">-->
+<!--                <strong class="Card-title"><a href="#">{{ card.name }}</a>-->
+<!--                </strong>-->
+<!--                <div class="Card-description">-->
+<!--                  <div class="Card-cost"><span class="Card-price">{{ card.price.base_price }}</span>-->
+<!--                  </div>-->
+<!--                  {% for c in card.category.all %}-->
+<!--                  <div class="Card-category">{{ c.name }}-->
+<!--                  </div>-->
+<!--                  {% endfor %}-->
+<!--                  <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>-->
+<!--                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>-->
+<!--                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="Card-sale">-{{ card.price.price_type.discount }}-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            {% endfor %}-->
+
           </div>
         </div>
       </div>

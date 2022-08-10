@@ -5,7 +5,7 @@
     <div class="Middle-top">
       <div class="wrap">
         <div class="Middle-header">
-          <h1 class="Middle-title">About Megano
+          <h1 class="Middle-title">About {{shop.name}}
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
             <li class="breadcrumbs-item"><a href="index.html">home</a>
@@ -126,7 +126,7 @@
               </div>
             </div>
             <div class="row-block">
-              <h2>Megano Store Hystory
+              <h2>{{shop.name}} Store Hystory
               </h2>
               <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit doli. Aenean commodo ligula eget dolor. Aenean massa. Cumtipsu sociis natoque penatibus et magnis dis parturient montesti, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eutu, pretiumem.
               </p>
@@ -151,15 +151,20 @@
             </h2>
           </header>
           <div class="Cards">
-            {% for product in goods %}
-              {% for image in product.product_images.all %}
-                <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.slug %}"><img src="{{ image.main_image.url }}" alt="card.jpg"/></a>
+
+            {% for product in products %}
+                <div class="Card">
+                  <a class="Card-picture" href="{% url 'product_detail' product.product__slug %}">
+                    <img src="/media/{{ product.product__product_images__main_image }}" alt="card.jpg"/></a>
                   <div class="Card-content">
-                    <strong class="Card-title"><a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+                    <strong class="Card-title"><a href="{% url 'product_detail' product.product__slug %}">{{ product.product__name }}</a>
                     </strong>
                     <div class="Card-description">
-                      <div class="Card-cost"><span class="Card-priceOld">{{ product.price.base_price }} руб.</span>
-                        <span class="Card-price">{{ product.price.discounted_price }} руб.</span>
+                      <div class="Card-cost">
+                        {% if product.price_type__discount > 0%}
+                        <span class="Card-priceOld">{{ product.old_price }} руб.</span>
+                        {% endif %}
+                        <span class="Card-price">{{ product.current_price }} руб.</span>
                       </div>
                       <div class="Card-category">Games / xbox
                       </div>
@@ -169,11 +174,13 @@
                       </div>
                     </div>
                   </div>
-                  <div class="Card-sale">-60%
+                  {% if product.price_type__discount > 0%}
+                  <div class="Card-sale">-{{product.price_type__discount}}%
                   </div>
+                  {% endif %}
                 </div>
-              {% endfor %}
             {% endfor %}
+
           </div>
         </div>
       </div>
