@@ -24,10 +24,13 @@
                 <div class="ProductCard">
                     <div class="ProductCard-look">
                         <div class="ProductCard-photo">
-
-                            <div class="ProductCard-sale">-15%
+                            {% if aver_price.discount > 0%}
+                            <div class="ProductCard-sale">-{{aver_price.discount}}%
                             </div>
+                            {% endif %}
+                            {% for image in product.product_images.all %}
                             <img src="{{ image.main_image.url }}" alt="bigGoods.png"/>
+                            {% endfor %}
                         </div>
                         <div class="ProductCard-picts">
                             <a class="ProductCard-pict ProductCard-pict_ACTIVE"
@@ -45,9 +48,9 @@
                             </h2>
                             <div class="ProductCard-info">
                                 <div class="ProductCard-cost">
-                                    <div class="ProductCard-price">{{ product.price.discounted_price }} руб.
+                                    <div class="ProductCard-price">{{ aver_price.discounted_price }} руб.
                                     </div>
-                                    <div class="ProductCard-priceOld">{{ product.price.base_price }} руб.
+                                    <div class="ProductCard-priceOld">{{ aver_price.base_price }} руб.
                                     </div>
                                 </div>
                                 <div class="ProductCard-compare"><a class="btn btn_default" href="#"><img
@@ -75,8 +78,13 @@
                         <div class="ProductCard-footer">
                             <div class="ProductCard-tags">
                                 <strong class="ProductCard-tagsTitle">Tags:
-                                </strong><a href="#">Accesories</a>,<a href="#">Creative</a>,<a href="#">Design</a>,<a
-                                    href="#">Gaming</a>
+                                </strong>
+                                {% for category in product.category.all %}
+                                <a href="#">{{ category.name }}</a>,
+<!--                                <a href="#">Creative</a>,-->
+<!--                                <a href="#">Design</a>,-->
+<!--                                <a href="#">Gaming</a>-->
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -132,30 +140,34 @@
                                 </table>
                             </div>
                         </div>
-
-                        {% for shop in product.shop.all %}
                         <div class="Tabs-block" id="sellers">
                             <div class="Categories Categories_product">
+                                {% for shop in shops %}
                                 <div class="Categories-row">
+
                                     <div class="Categories-block Categories-block_info">
                                         <div class="Categories-info">
-                                            <strong> {{ shop.name }} </strong>
+                                            <strong> {{ shop.shop__name }} </strong>
                                         </div>
                                     </div>
                                     <div class="Categories-splitProps">
                                     </div>
                                     <div class="Categories-block Categories-price">
-                                        <strong>€&#32;40.58
+                                        <strong>{{ shop.current_price }}
                                         </strong>
                                     </div>
-                                    <div class="Categories-block Categories-button"><a class="btn btn_primary" href="#"><img
-                                            class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
-                                            alt="cart_white.svg"/><span class="btn-content">Купить</span></a>
+                                    <div class="Categories-block Categories-button">
+                                        <a class="btn btn_primary" href="{% url 'cart_detail' %}">
+                                            <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
+                                            alt="cart_white.svg"/>
+                                            <span class="btn-content">Купить</span></a>
                                     </div>
+
                                 </div>
+                                {% endfor %}
                             </div>
                         </div>
-                        {% endfor %}
+
 
                         <div class="Tabs-block" id="addit">
                             <div class="Product-props">

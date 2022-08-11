@@ -1,10 +1,6 @@
-from decimal import Decimal
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-
-from app_shops.models import Shop
 
 
 class Category(models.Model):
@@ -58,46 +54,6 @@ class PriceType(models.Model):
         verbose_name_plural = 'типы цен'
 
 
-class Price(models.Model):
-    """ Модель Цена """
-    price_type = models.ForeignKey(PriceType,
-                                   on_delete=models.CASCADE,
-                                   verbose_name='тип цены',
-                                   related_name='prices',
-                                   help_text='связь с моделью PriceType'
-                                   )
-
-    base_price = models.DecimalField(max_digits=10,
-                                     decimal_places=2,
-                                     verbose_name='цена товара',
-                                     help_text='базовая цена товара'
-                                     )
-    discounted_price = models.DecimalField(max_digits=10,
-                                           decimal_places=2,
-                                           default=0,
-                                           verbose_name='цена товара со скидкой')
-
-    def __str__(self):
-        return f'{self.price_type.name}: {self.base_price}'
-
-    def get_discounted_price(self):
-        """ Получаем цену со скидкой """
-        discount = self.price_type.discount
-        if discount > 0:
-            return Decimal(self.base_price - (self.base_price * discount / 100))
-        return self.base_price
-
-    def save(self, *args, **kwargs):
-        """ Сохраняем цену со скидкой в поле discounted_price """
-        self.discounted_price = self.get_discounted_price()
-        super(Price, self).save(*args, **kwargs)
-
-    class Meta:
-        db_table = 'prices'
-        verbose_name = 'цена'
-        verbose_name_plural = 'цены'
-
-
 class Product(models.Model):
     """ Модель Товар """
     name = models.CharField(max_length=255, verbose_name='наименование')
@@ -107,20 +63,12 @@ class Product(models.Model):
                             help_text='уникальный фрагмент url на основе наименования товара'
                             )
     description = models.TextField(verbose_name='описание', blank=True)
-    quantity = models.PositiveSmallIntegerField(null=True, verbose_name='количество товара')
     availability = models.BooleanField(default=True, verbose_name='в наличии')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='дата и время обновления')
-    shop = models.ManyToManyField(Shop, verbose_name='магазин', related_name='products')
     category = models.ManyToManyField(Category, verbose_name='категория', related_name='products')
-    price = models.ForeignKey(Price,
-                              null=True,
-                              on_delete=models.CASCADE,
-                              verbose_name='цена',
-                              related_name='products',
-                              help_text='связь с моделью Price'
-                              )
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
+    sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
 
     def __str__(self):
         return self.name
