@@ -5,11 +5,6 @@ from app_goods.models import Category, Product
 from app_shops.models import ShopProduct, Shop
 
 
-class ShopTemplateView(TemplateView):
-    """ Вьюха для демонстрации магазина """
-    template_name = 'shop.html'
-
-
 class CatalogTemplateView(TemplateView):
     template_name = 'catalog.html'
 
