@@ -1,7 +1,13 @@
+from django.core.paginator import Paginator
 from django.db.models import Avg, Max
 from django.views.generic import TemplateView, DetailView, ListView
 from app_goods.models import Category, Product
 from app_shops.models import ShopProduct, Shop
+
+
+class ShopTemplateView(TemplateView):
+    """ Вьюха для демонстрации магазина """
+    template_name = 'shop.html'
 
 
 class CatalogTemplateView(TemplateView):
@@ -19,13 +25,7 @@ class CatalogTemplateView(TemplateView):
 class BaseTemplateView(TemplateView):
     """ Вьюха для демонстрации базового шаблона """
     template_name = 'index.html'
-
     extra_context = {'title': "Megano"}
-
-    def get_context_data(self, **kwargs):
-        context = super(BaseTemplateView, self).get_context_data()
-        context['categories'] = Category.objects.filter(parent_category__isnull=True)
-        return context
 
 
 class ShopListView(ListView):
@@ -51,10 +51,10 @@ class ShopDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # товары магазина и средняя цена на них
-        context['products'] = ShopProduct.objects.\
+        context['products'] = ShopProduct.objects. \
             filter(shop__slug=self.object.slug, is_available=True). \
             select_related('product', 'price_type'). \
-            prefetch_related('product__product_images', 'product__category').\
+            prefetch_related('product__product_images', 'product__category'). \
             values('product__name',
                    'product__slug',
                    'product__product_images__main_image',
@@ -62,9 +62,8 @@ class ShopDetailView(DetailView):
                    'old_price',
                    'price_type__discount'
                    )
-            # annotate(aver_price=Avg('current_price'),
-            #          aver_old_price=Avg('old_price'),
-            #          max_discount=Max('price_type__discount')
-            #          )
-        print(context)
+        # annotate(aver_price=Avg('current_price'),
+        #          aver_old_price=Avg('old_price'),
+        #          max_discount=Max('price_type__discount')
+        #          )
         return context
