@@ -86,6 +86,7 @@
             </div>
           </div>
           <div class="Cards">
+          {% if object_list %}
             {% for product in object_list %}
               <div class="Card"><a class="Card-picture" href="#"><img src={% static 'assets/img/content/home/card.jpg' %} alt="card.jpg"/></a>
                 <div class="Card-content">
@@ -109,6 +110,7 @@
                 </div>
               </div>
             {% endfor %}
+          {% else %} {% include 'empty_category.html' %} {% endif %}
           </div>
           {% if object_list.has_other_pages %}
           <div class="Pagination">
