@@ -44,10 +44,17 @@
           | браузера здесь&nbsp;
       | для правильного отображения сайта.
   -->
-  {% include 'header.html' %}
+
+  {% block header %}
+    {% include 'header.html' %}
+  {% endblock %}
+
   {% block content %}
   {% endblock %}
-  {% include 'footer.html' %}
+
+  {% block footer %}
+    {% include 'footer.html' %}
+  {% endblock %}
 
   <!--+Middle-->
   <!--    +div.-top-->
