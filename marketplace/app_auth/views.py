@@ -11,6 +11,7 @@ from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from app_users.models import Profile, Role, Image
 
 
 class Login(LoginView):
@@ -31,7 +32,10 @@ def register_view(request):
             form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
+            phone_number = form.cleaned_data.get('phone')
             user = authenticate(username=username, password=raw_password)
+            role = Role.objects.create(name='Пользователь')
+            Profile.objects.create(user=user, role=role, phone_number=phone_number)
             login(request, user)
             return redirect('home')
     else:

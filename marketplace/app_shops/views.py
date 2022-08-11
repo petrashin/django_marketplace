@@ -9,7 +9,10 @@ class CatalogTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CatalogTemplateView, self).get_context_data()
-        context['categories'] = Category.objects.filter(parent_category__isnull=True)
+        page = self.request.GET.get('page', 1)
+        products_qs = Product.objects.filter(category=kwargs["category_id"])
+        products = Paginator(products_qs, 8).get_page(page)
+        context['object_list'] = products
         return context
 
 
