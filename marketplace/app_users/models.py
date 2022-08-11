@@ -23,9 +23,9 @@ class Profile(models.Model):
     '''Профиль пользователя'''
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=12)
-    avatar_url = models.CharField(max_length=256)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
-    role = models.ForeignKey(Role, verbose_name="Роль", on_delete=models.DO_NOTHING)
+    avatar_url = models.CharField(blank=True, null=True, max_length=256)
+    balance = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
+    role = models.ForeignKey(Role, blank=True, null=True, verbose_name="Роль", on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return self.user
