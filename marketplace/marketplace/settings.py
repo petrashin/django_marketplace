@@ -27,13 +27,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'app_users.apps.AppMainConfig',
     'app_auth',
     'crispy_forms',
     'app_goods.apps.AppGoodsConfig',
     'app_shops.apps.AppShopsConfig',
     'cart',
+    'app_main.apps.AppMainConfig',
+	'custom_admin',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +133,10 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+MEDIA_URL = '/media/'
+
 # DEBUG TOOLBAR
 if DEBUG:
     INSTALLED_APPS += ['debug_toolbar']
@@ -142,4 +147,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
-
