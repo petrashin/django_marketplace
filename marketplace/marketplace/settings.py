@@ -17,7 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-CART_SESSION_ID = 'session_id'
+CART_SESSION_ID = 'cart'
 
 INSTALLED_APPS = [
     'modeltranslation',
@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'app_users.apps.AppMainConfig',
     'app_auth',
     'crispy_forms',
@@ -144,3 +145,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
+
