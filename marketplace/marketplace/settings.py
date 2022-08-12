@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'app_users.apps.AppMainConfig',
     'app_auth',
     'crispy_forms',
@@ -36,6 +35,7 @@ INSTALLED_APPS = [
     'cart',
     'app_account',
 	'app_order.apps.AppOrderConfig',
+	'custom_admin',
 ]
 
 MIDDLEWARE = [
@@ -145,4 +145,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
-
