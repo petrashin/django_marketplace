@@ -47,7 +47,7 @@ class ShopDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # товары магазина и средняя цена на них
+        # товары магазина и цена на них
         context['products'] = ShopProduct.objects.\
             filter(shop__slug=self.object.slug, is_available=True). \
             select_related('product', 'price_type'). \
@@ -63,5 +63,4 @@ class ShopDetailView(DetailView):
             #          aver_old_price=Avg('old_price'),
             #          max_discount=Max('price_type__discount')
             #          )
-        print(context)
         return context
