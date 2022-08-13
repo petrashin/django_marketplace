@@ -1,6 +1,10 @@
 from decimal import Decimal
+import random
+
 from django.conf import settings
 from app_goods.models import Product
+from app_shops.models import ShopProduct
+from .models import CartModel
 
 
 class Cart(object):
@@ -15,19 +19,39 @@ class Cart(object):
             # save an empty cart in the session
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
+        self.user = request.user
+        if self.user.is_anonymous:
+            self.user = 0
+            self.session_id = self.session.session_key
+        else:
+            self.session_id = 'null'
+            self.user = self.user.id
 
     def add(self, product, quantity=1, update_quantity=False):
         """
         Добавить продукт в корзину или обновить его количество.
-        """ 
-        product_id = str(product.id)
-        if product_id not in self.cart:
-            self.cart[product_id] = {'quantity': 0,
-                                     'price': '1000'}
+        """
+        product_slug = product.slug
+        shops = list(ShopProduct.objects.filter(product=product.id).values('shop__name', 'shop', 'current_price'))
+        for s in shops:
+            s['current_price'] = str(s['current_price'])
+        shop = random.choice(shops)
+        shop_name = shop['shop__name']
+        price = shop['current_price']
+        if product_slug not in self.cart:
+            self.cart[product_slug] = {'quantity': 0,
+                                       'shop': shop_name,
+                                       'shops': shops,
+                                       'price': price}
+            CartModel.objects.create(user=self.user,
+                                     session_id=self.session_id,
+                                     product=product,
+                                     price=price,
+                                     quantity=quantity)
         if update_quantity:
-            self.cart[product_id]['quantity'] = quantity
+            self.cart[product_slug]['quantity'] = quantity
         else:
-            self.cart[product_id]['quantity'] += quantity
+            self.cart[product_slug]['quantity'] += quantity
         self.save()
 
     def save(self):
@@ -40,20 +64,20 @@ class Cart(object):
         """
         Удаление товара из корзины.
         """
-        product_id = str(product.id)
-        if product_id in self.cart:
-            del self.cart[product_id]
+        product_slug = product.slug
+        if product_slug in self.cart:
+            del self.cart[product_slug]
             self.save()
 
     def __iter__(self):
         """
         Перебор элементов в корзине и получение продуктов из базы данных.
         """
-        product_ids = self.cart.keys()
+        product_slugs = self.cart.keys()
         # получение объектов product и добавление их в корзину
-        products = Product.objects.filter(id__in=product_ids)
+        products = Product.objects.filter(slug__in=product_slugs)
         for product in products:
-            self.cart[str(product.id)]['product'] = product
+            self.cart[str(product.slug)]['product'] = product
 
         for item in self.cart.values():
             item['price'] = Decimal(item['price'])

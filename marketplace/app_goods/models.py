@@ -35,6 +35,7 @@ class PriceType(models.Model):
                                                 blank=True,
                                                 verbose_name='скидка',
                                                 help_text='скидка в %')
+    description = models.TextField(verbose_name='описание', blank=True)
     start_date = models.DateTimeField(verbose_name='начало акции',
                                       null=True,
                                       blank=True,
