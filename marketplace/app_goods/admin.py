@@ -10,12 +10,6 @@ class ProductImageInline(admin.TabularInline):
     extra = 0
 
 
-class PriceInline(admin.TabularInline):
-    model = Price
-    raw_id_fields = ['price_type']
-    extra = 0
-
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
@@ -30,8 +24,9 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(PriceType)
 class PriceTypeAdmin(admin.ModelAdmin):
-    inlines = [PriceInline]
+    pass
 
 
-
-
+@admin.register(Reviews)
+class ProfileAdmin(admin.ModelAdmin):
+    pass

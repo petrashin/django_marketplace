@@ -1,13 +1,14 @@
-from decimal import Decimal
-
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-from app_shops.models import Shop
 
 
 class Category(models.Model):
     """ Модель Категория """
     name = models.CharField(max_length=255, verbose_name='наименование')
+    parent_category = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True,
+                                        related_name="sub", verbose_name="родительская категория")
+    category_icon = models.FileField(upload_to="icons/categories/", verbose_name="иконка категории", null=True)
     slug = models.SlugField(max_length=255,
                             db_index=True,
                             verbose_name='url',
@@ -53,46 +54,6 @@ class PriceType(models.Model):
         verbose_name_plural = 'типы цен'
 
 
-class Price(models.Model):
-    """ Модель Цена """
-    price_type = models.ForeignKey(PriceType,
-                                   on_delete=models.CASCADE,
-                                   verbose_name='тип цены',
-                                   related_name='prices',
-                                   help_text='связь с моделью PriceType'
-                                   )
-
-    base_price = models.DecimalField(max_digits=10,
-                                     decimal_places=2,
-                                     verbose_name='цена товара',
-                                     help_text='базовая цена товара'
-                                     )
-    discounted_price = models.DecimalField(max_digits=10,
-                                           decimal_places=2,
-                                           default=0,
-                                           verbose_name='цена товара со скидкой')
-
-    def __str__(self):
-        return f'{self.price_type.name}: {self.base_price}'
-
-    def get_discounted_price(self):
-        """ Получаем цену со скидкой """
-        discount = self.price_type.discount
-        if discount > 0:
-            return Decimal(self.base_price - (self.base_price * discount / 100))
-        return self.base_price
-
-    def save(self, *args, **kwargs):
-        """ Сохраняем цену со скидкой в поле discounted_price """
-        self.discounted_price = self.get_discounted_price()
-        super(Price, self).save(*args, **kwargs)
-
-    class Meta:
-        db_table = 'prices'
-        verbose_name = 'цена'
-        verbose_name_plural = 'цены'
-
-
 class Product(models.Model):
     """ Модель Товар """
     name = models.CharField(max_length=255, verbose_name='наименование')
@@ -102,25 +63,21 @@ class Product(models.Model):
                             help_text='уникальный фрагмент url на основе наименования товара'
                             )
     description = models.TextField(verbose_name='описание', blank=True)
-    quantity = models.PositiveSmallIntegerField(null=True, verbose_name='количество товара')
     availability = models.BooleanField(default=True, verbose_name='в наличии')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='дата и время обновления')
-    shop = models.ManyToManyField(Shop, verbose_name='магазин', related_name='products')
     category = models.ManyToManyField(Category, verbose_name='категория', related_name='products')
-    price = models.ForeignKey(Price,
-                              null=True,
-                              on_delete=models.CASCADE,
-                              verbose_name='цена',
-                              related_name='products',
-                              help_text='связь с моделью Price'
-                              )
+    views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
+    sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'slug': self.slug})
+
+    def get_review(self):
+        return self.reviews_set.all()
 
     class Meta:
         db_table = 'goods'
@@ -154,3 +111,19 @@ class ProductImage(models.Model):
         db_table = 'product_images'
         verbose_name = 'изображение товара'
         verbose_name_plural = 'изображения товаров'
+
+
+class Reviews(models.Model):
+    """ Отзывы """
+    user = models.ForeignKey(User, verbose_name='пользователь', on_delete=models.CASCADE)
+    email = models.EmailField(verbose_name="email", default=None)
+    text = models.TextField(verbose_name="сообщение", max_length=5000)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время создания')
+    product = models.ForeignKey(Product, verbose_name="товар", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.product} - {self.user.username}"
+
+    class Meta:
+        verbose_name = 'отзыв'
+        verbose_name_plural = 'отзывы'
