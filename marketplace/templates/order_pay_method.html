@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!--Order Pay_method-->
+<div class="container p-4" style="padding-left: 50px;">
+    <br>
+    <h2 class="font-weight-bold mt-3" style="text-align: center;">Выберите вариант оплаты:</h2>
+    <form method="post" action="/cart/order/pay_method">
+        {% csrf_token %}
+        <p>Вариант оплаты - {{ pay_method_form.title }}</p>
+      <button class="btn btn-primary" style="border: solid 1px grey;">Следующий шаг</button>
+    </form>
+</div>
+
+{% endblock %}
