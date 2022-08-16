@@ -24,8 +24,8 @@
                 <div class="ProductCard">
                     <div class="ProductCard-look">
                         <div class="ProductCard-photo">
-                            {% if aver_price.discount > 0%}
-                            <div class="ProductCard-sale">-{{aver_price.discount}}%
+                            {% if product.discount.discount_value > 0%}
+                            <div class="ProductCard-sale">-{{product.discount.discount_value}}%
                             </div>
                             {% endif %}
                             {% for image in product.product_images.all %}
@@ -48,10 +48,12 @@
                             </h2>
                             <div class="ProductCard-info">
                                 <div class="ProductCard-cost">
-                                    <div class="ProductCard-price">{{ aver_price.discounted_price }} руб.
+                                    <div class="ProductCard-price">{{ discounted_aver_price }} руб.
                                     </div>
-                                    <div class="ProductCard-priceOld">{{ aver_price.base_price }} руб.
+                                    {% if product.discount.discount_value > 0 %}
+                                    <div class="ProductCard-priceOld">{{ price }} руб.
                                     </div>
+                                    {% endif %}
                                 </div>
                                 <div class="ProductCard-compare"><a class="btn btn_default" href="#"><img
                                         class="btn-icon" src="{% static 'assets/img/icons/card/change.svg' %}"
@@ -147,13 +149,13 @@
 
                                     <div class="Categories-block Categories-block_info">
                                         <div class="Categories-info">
-                                            <strong> {{ shop.shop__name }} </strong>
+                                            <strong> {{ shop.shop.name }} </strong>
                                         </div>
                                     </div>
                                     <div class="Categories-splitProps">
                                     </div>
                                     <div class="Categories-block Categories-price">
-                                        <strong>{{ shop.current_price }}
+                                        <strong>{{ shop.get_discounted_price }} руб.
                                         </strong>
                                     </div>
                                     <div class="Categories-block Categories-button">
