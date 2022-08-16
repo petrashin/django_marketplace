@@ -26,4 +26,5 @@ class Image(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, verbose_name='профиль',
                                    help_text='Связь с моделью профиля пользователя')
     avatar = models.ImageField(upload_to='avatars', verbose_name='аватарка',
-                               help_text='Поле для сохранения аватарки пользователя')
+                               help_text='Поле для сохранения аватарки пользователя',
+                               default='default.jpg')
