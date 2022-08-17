@@ -46,14 +46,18 @@
         </div>
         <div class="Section-content">
           <div class="Profile">
-            <form class="form Profile-form" action="#" method="post">
+            <form class="form Profile-form" action="" method="post">
+              {% csrf_token %}
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
                     <label class="form-label" for="avatar">Аватар
                     </label>
+                    {% if not avatar_correct %}
+                      <p>Размер файла аватарки превышает 2 Мбайт</p>
+                    {% endif %}
                     <div class="Profile-avatar Profile-avatar_noimg">
-                      <div class="Profile-img"><img src="" alt="#.png"/>
+                      <div class="Profile-img"><img src=""/>
                       </div>
                       <label class="Profile-fileLabel" for="avatar">Выберите аватар
                       </label>
@@ -63,28 +67,43 @@
                   <div class="form-group">
                     <label class="form-label" for="name">ФИО
                     </label>
-                    <input class="form-input" id="name" name="name" type="text" value="" data-validate="require"/>
+                    {% if not name_correct %}
+                      <p>Вы неправильно указали ФИО</p>
+                    {% endif %}
+                    <input class="form-input" id="name" name="name" type="text" value="{{ full_name }}" data-validate="require"/>
                   </div>
                 </div>
                 <div class="row-block">
                   <div class="form-group">
                     <label class="form-label" for="phone">Телефон
                     </label>
-                    <input class="form-input" id="phone" name="phone" type="text" value="+70000000000"/>
+                    {% if not phone_correct %}
+                      <p>Вы неправильно указали номер телефона</p>
+                    {% endif %}
+                    <input class="form-input" id="phone" name="phone" type="text" value="{{ phone_number }}"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="mail">E-mail
                     </label>
-                    <input class="form-input" id="mail" name="mail" type="text" value="send@test.test" data-validate="require"/>
+                    {% if not email_correct %}
+                      <p>Вы неправильно указали email</p>
+                    {% endif %}
+                    <input class="form-input" id="mail" name="mail" type="text" value="{{ email }}" data-validate="require"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="password">Пароль
                     </label>
+                    {% if not passwords_correct %}
+                      <p>Вы неправильно указали один из паролей</p>
+                    {% endif %}
                     <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="passwordReply">Подтверждение пароля
                     </label>
+                    {% if not passwords_correct %}
+                      <p>Вы неправильно указали один из паролей</p>
+                    {% endif %}
                     <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
                   </div>
                   <div class="form-group">
@@ -92,8 +111,9 @@
                       <button class="btn btn_success" type="submit">Сохранить
                       </button>
                     </div>
-                    <div class="Profile-success">Профиль успешно сохранен
-                    </div>
+                    {% if changed_successfully %}
+                      <div class="Profile-success">Профиль успешно сохранен</div>
+                    {% endif %}
                   </div>
                 </div>
               </div>
