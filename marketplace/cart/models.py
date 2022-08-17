@@ -22,6 +22,12 @@ class CartItems(models.Model):
                                 null=True,
                                 on_delete=models.CASCADE,
                                 verbose_name='id товара')
+    shop = models.CharField(max_length=255,
+                            null=True,
+                            blank=True,
+                            verbose_name='магазин',
+                            help_text='название выбранного магазина'
+                            )
     price = models.DecimalField(max_digits=10,
                                 decimal_places=2,
                                 null=True,
@@ -36,17 +42,8 @@ class CartItems(models.Model):
           или установка новых cookies если не существуют
           _модификатор для видимости в пределах модуля
           """
-        if request.session.get(settings.CART_SESSION_ID, '') == '':
-            request.session[settings.CART_SESSION_ID] = self._generate_session_id()
-        return request.session[settings.CART_SESSION_ID]
-
-    def _generate_session_id(self):
-        """Генерация уникального id корзины который будет хранится в cookies"""
-        session_id = ''
-        characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()'
-        session_id_length = 50
-        for y in range(session_id_length):
-            session_id += characters[random.randint(0, len(characters) - 1)]
+        self.session = request.session
+        session_id = self.session.get(settings.CART_SESSION_ID)
         return session_id
 
     def get_user_or_session_id(self, request):
@@ -57,23 +54,22 @@ class CartItems(models.Model):
             session_id = self._session_id(request)
 
         else:
-            session_id = 'null'
             user = user.id
+            session_id = self._session_id(request)
         return [user, session_id]
 
     def get_cart_items(self, request):
         """ Получаем товары для текущей корзины """
         user = self.get_user_or_session_id(request)[0]
         session_id = self.get_user_or_session_id(request)[1]
-        return CartItems.objects.filter(user=user, session_id=session_id)
+        # return CartItems.objects.filter(user=user, session_id=session_id)
+        return CartItems.objects.filter(session_id=session_id)
 
     def get_single_cart_item(self, request, item_id):
         """ Получаем отдельный товар из корзины """
-        user = self.get_user_or_session_id(request)[0]
         session_id = self.get_user_or_session_id(request)[1]
         return get_object_or_404(CartItems,
-                                 user=user,
-                                 session_id=session_id,
+                                 # session_id=session_id,
                                  id=item_id)
 
     def get_shops_for_cart_item(self, product):
@@ -90,13 +86,14 @@ class CartItems(models.Model):
             shops = self.get_shops_for_cart_item(product=product)
             shop = random.choice(shops)
             price = shop.get_discounted_price()
-        return price
+        return [price, shop.shop.name]
 
     def create_new_cart_item(self, request, product, quantity=1):
         data = {'user': self.get_user_or_session_id(request)[0],
                 'session_id': self.get_user_or_session_id(request)[1],
                 'product': product,
-                'price': self.get_price_for_cart_item(product),
+                'shop': self.get_price_for_cart_item(product)[1],
+                'price': self.get_price_for_cart_item(product)[0],
                 'quantity': quantity
                 }
         CartItems.objects.create(**data)
@@ -106,7 +103,6 @@ class CartItems(models.Model):
         Добавить продукт в корзину если его там нет или увеличить его количество.
         """
         cart_items = self.get_cart_items(request)
-
         product_in_cart = False
         for item in cart_items:
             if item.product == product:
@@ -116,11 +112,11 @@ class CartItems(models.Model):
         if not product_in_cart:
             self.create_new_cart_item(request, product, quantity)
 
-    def update_cart_quantity(self, request):
+    def update_cart_quantity(self, request, item_id):
         """Обновляет количество отдельного товара"""
         postdata = request.POST.copy()
         quantity = postdata.get('quantity')
-        item_id = int(postdata.get('item_id'))
+        # item_id = int(postdata.get('item_id'))
         if quantity:
             cart_item = self.get_single_cart_item(request, item_id)
             if cart_item:
@@ -130,8 +126,8 @@ class CartItems(models.Model):
                 else:
                     cart_item.delete()
 
-    def update_cart_shop(self, request, item_id):
-        """ Обновляет магазин и цену товара """
+    def update_cart_price(self, request, item_id):
+        """ Обновляет цену товара при смене продавца"""
         postdata = request.POST.copy()
         shop = postdata.get('shop')
         price = ShopProduct.objects.get(shop=shop).get_discounted_price()
@@ -161,4 +157,3 @@ class CartItems(models.Model):
         ordering = ('added_at',)
         verbose_name = 'товар в корзине'
         verbose_name_plural = 'товары в корзине'
-

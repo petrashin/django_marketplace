@@ -45,11 +45,11 @@ class ShopProduct(models.Model):
                                 )
 
     price = models.DecimalField(max_digits=10,
-                                    decimal_places=2,
-                                    null=True,
-                                    verbose_name='базовая цена',
-                                    help_text='цена без скидки'
-                                    )
+                                decimal_places=2,
+                                null=True,
+                                verbose_name='базовая цена',
+                                help_text='цена без скидки'
+                                )
     quantity = models.PositiveSmallIntegerField(verbose_name='количество',
                                                 null=True,
                                                 help_text='количество товара в магазине'

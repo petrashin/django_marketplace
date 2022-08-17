@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
@@ -14,29 +14,26 @@ class CartItemsListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        if len(self.object_list) > 1:
-            context['total_cost'] = 0
-
-            for item in self.object_list:
-                item_cost = item.quantity * item.price
-                context['total_cost'] += item_cost
+        if self.object_list:
+            if len(self.object_list) > 1:
+                context['total_cost'] = 0
+                for item in self.object_list:
+                    item_cost = item.quantity * item.price
+                    context['total_cost'] += item_cost
+                    shops = CartItems().get_shops_for_cart_item(product=item.product)
+                    shop_list = [shop.shop.name for shop in shops]
+                    item.shops = shop_list
+                    item.shops_form = CartShopsForm()
+                    item.update_quantity_form = CartUpdateQuantityProductForm(initial={'quantity': item.quantity,
+                                                                                       'item_id': item.id})
+            else:
+                item = self.object_list[0]
+                context['total_cost'] = item.price * item.quantity
                 shops = CartItems().get_shops_for_cart_item(product=item.product)
                 shop_list = [shop.shop.name for shop in shops]
-                item.shops_form = CartShopsForm(initial={
-                    'shop': shop_list
-                })
+                item.shops = shop_list
                 item.update_quantity_form = CartUpdateQuantityProductForm(initial={'quantity': item.quantity,
                                                                                    'item_id': item.id})
-        else:
-            item = self.object_list[0]
-            context['total_cost'] = item.price * item.quantity
-            shops = CartItems().get_shops_for_cart_item(product=item.product)
-            shop_list = [shop.shop.name for shop in shops]
-            item.shops_form = CartShopsForm(initial={
-                'shop': shop_list
-            })
-            item.update_quantity_form = CartUpdateQuantityProductForm(initial={'quantity': item.quantity,
-                                                                               'item_id': item.id})
 
         return context
 
@@ -65,5 +62,12 @@ def cart_remove(request, **kwargs):
 def cart_update_quantity(request, **kwargs):
     item_id = kwargs['pk']
     cart = CartItems()
-    cart.update_cart_quantity(request)
+    cart.update_cart_quantity(request, item_id)
+    return redirect('cart_detail')
+
+
+def cart_update_price(request, **kwargs):
+    item_id = kwargs['pk']
+    cart = CartItems()
+    cart.update_cart_price(request, item_id)
     return redirect('cart_detail')

@@ -1,3 +1,5 @@
+# TODO удалить после тестирования модели Cart_items
+
 # from decimal import Decimal
 # import random
 #
