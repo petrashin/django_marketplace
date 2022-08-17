@@ -20,10 +20,7 @@ class CartItemsListView(ListView):
                 for item in self.object_list:
                     item_cost = item.quantity * item.price
                     context['total_cost'] += item_cost
-                    shops = CartItems().get_shops_for_cart_item(product=item.product)
-                    shop_list = [shop.shop.name for shop in shops]
-                    item.shops = shop_list
-                    item.shops_form = CartShopsForm()
+                    item.shops_form = CartShopsForm(product=item.product, item_id=item.id)
                     item.update_quantity_form = CartUpdateQuantityProductForm(initial={'quantity': item.quantity,
                                                                                        'item_id': item.id})
             else:
@@ -32,6 +29,7 @@ class CartItemsListView(ListView):
                 shops = CartItems().get_shops_for_cart_item(product=item.product)
                 shop_list = [shop.shop.name for shop in shops]
                 item.shops = shop_list
+                item.shops_form = CartShopsForm(product=item.product, item_id=item.id)
                 item.update_quantity_form = CartUpdateQuantityProductForm(initial={'quantity': item.quantity,
                                                                                    'item_id': item.id})
 

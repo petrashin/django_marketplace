@@ -116,7 +116,6 @@ class CartItems(models.Model):
         """Обновляет количество отдельного товара"""
         postdata = request.POST.copy()
         quantity = postdata.get('quantity')
-        # item_id = int(postdata.get('item_id'))
         if quantity:
             cart_item = self.get_single_cart_item(request, item_id)
             if cart_item:
@@ -129,11 +128,15 @@ class CartItems(models.Model):
     def update_cart_price(self, request, item_id):
         """ Обновляет цену товара при смене продавца"""
         postdata = request.POST.copy()
-        shop = postdata.get('shop')
-        price = ShopProduct.objects.get(shop=shop).get_discounted_price()
+        shop = int(postdata.get('shop'))
+        product = postdata.get('product')
+        shop_object = ShopProduct.objects.get(shop=shop, product__name=product)
+        price = shop_object.get_discounted_price()
+        shop = shop_object.shop.name
         cart_item = self.get_single_cart_item(request, item_id)
         if cart_item:
             cart_item.price = price
+            cart_item.shop = shop
             cart_item.save()
 
     def get_item_total_price(self):

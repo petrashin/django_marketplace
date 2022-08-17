@@ -35,21 +35,15 @@
                             </div>
                             <div class="Cart-block Cart-block_row">
                                 <div class="Cart-block Cart-block_price">
-                                    <div class="Cart-price">{{ item.price }}
+                                    <div class="Cart-price">{{ item.price }} руб.
                                     </div>
                                 </div>
+                                 <div class="Cart-price">{{ item.shop }}
+                                    </div>
                                 <div class="Cart-block Cart-block_seller">
                                     <form class="form-select" action="{% url 'cart_update_price' item.id %}" method="post">
                                     {% csrf_token %}
-                                        <select class='form-select'>
-{#                                        {{ item.shops_form }}#}
-                                     <option value='{{ item.shop }}' selected='selected'>{{ item.shop }}
-                                        </option>
-                                            {% for shop in item.shops %}
-                                        <option value='{{ shop }}' >{{ shop }}
-                                        </option>
-                                                {% endfor %}
-                                        </select>
+                                       {{ item.shops_form }}
                                         <input type='submit' value='Обновить'>
                                     </form>
                                 </div>

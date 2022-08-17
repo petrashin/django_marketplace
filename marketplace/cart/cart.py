@@ -1,3 +1,22 @@
+from django import forms
+
+from .models import CartItems
+
+
+class CartShopsForm(forms.Form):
+    def __init__(self, product, *args, **kwargs):
+        self.product = product
+
+        super(CartShopsForm, self).__init__(*args, **kwargs)
+        shops = CartItems().get_shops_for_cart_item(self.product)
+        shop_tuple = tuple((shop.shop, shop.shop.name) for shop in shops)
+        self.shop = forms.ChoiceField(choices=shop_tuple)
+        self.item_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
+
+
+
+
+
 # TODO удалить после тестирования модели Cart_items
 
 # from decimal import Decimal
