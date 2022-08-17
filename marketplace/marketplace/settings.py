@@ -35,7 +35,10 @@ INSTALLED_APPS = [
     'app_shops.apps.AppShopsConfig',
     'cart',
     'app_account',
-	'app_order.apps.AppOrderConfig',
+    'app_order.apps.AppOrderConfig',
+    'app_payment',
+
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +149,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
+# REDIS related settings
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
