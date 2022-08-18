@@ -69,8 +69,10 @@
                     </label>
                     {% if not name_correct %}
                       <p style="color:red;">{{ name_error }}</p>
+                      <input class="form-input" id="name" name="name" type="text" style="border-color:red" value="{{ name }}" data-validate="require"/>
+                    {% else %}
+                      <input class="form-input" id="name" name="name" type="text" value="{{ name }}" data-validate="require"/>
                     {% endif %}
-                    <input class="form-input" id="name" name="name" type="text" value="{{ name }}" data-validate="require"/>
                   </div>
                 </div>
                 <div class="row-block">
@@ -79,32 +81,40 @@
                     </label>
                     {% if not phone_correct %}
                       <p style="color:red;">{{ phone_error }}</p>
+                      <input class="form-input" id="phone" name="phone" type="text" style="border-color:red" value="{{ phone }}"/>
+                    {% else %}
+                      <input class="form-input" id="phone" name="phone" type="text" value="{{ phone }}"/>
                     {% endif %}
-                    <input class="form-input" id="phone" name="phone" type="text" value="{{ phone }}"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="mail">E-mail
                     </label>
                     {% if not email_correct %}
                       <p style="color:red;">{{ email_error }}</p>
+                      <input class="form-input" id="mail" name="mail" type="text" style="border-color:red" value="{{ email }}" data-validate="require"/>
+                    {% else %}
+                      <input class="form-input" id="mail" name="mail" type="text" value="{{ email }}" data-validate="require"/>
                     {% endif %}
-                    <input class="form-input" id="mail" name="mail" type="text" value="{{ email }}" data-validate="require"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="password">Пароль
                     </label>
                     {% if not password_correct %}
                       <p style="color:red;">{{ password_error }}</p>
+                      <input class="form-input" id="password" name="password" type="password" style="border-color:red" placeholder="Тут можно изменить пароль"/>
+                    {% else %}
+                      <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>
                     {% endif %}
-                    <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="passwordReply">Подтверждение пароля
                     </label>
                     {% if not password_reply_correct %}
                       <p style="color:red;">{{ password_reply_error }}</p>
+                      <input class="form-input" id="passwordReply" name="passwordReply" type="password" style="border-color:red" placeholder="Введите пароль повторно"/>
+                    {% else %}
+                      <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
                     {% endif %}
-                    <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
                   </div>
                   <div class="form-group">
                     <div class="Profile-btn">
