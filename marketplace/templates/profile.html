@@ -53,8 +53,8 @@
                   <div class="form-group">
                     <label class="form-label" for="avatar">Аватар
                     </label>
-                    {% if not avatar_correct %}
-                      <p>Размер файла аватарки превышает 2 Мбайт</p>
+                    {% if not avatar_correct and avatar_changed %}
+                      <p style="color:red;">{{ avatar_error }}</p>
                     {% endif %}
                     <div class="Profile-avatar Profile-avatar_noimg">
                       <div class="Profile-img"><img src=""/>
@@ -68,9 +68,9 @@
                     <label class="form-label" for="name">ФИО
                     </label>
                     {% if not name_correct %}
-                      <p>Вы неправильно указали ФИО</p>
+                      <p style="color:red;">{{ name_error }}</p>
                     {% endif %}
-                    <input class="form-input" id="name" name="name" type="text" value="{{ full_name }}" data-validate="require"/>
+                    <input class="form-input" id="name" name="name" type="text" value="{{ name }}" data-validate="require"/>
                   </div>
                 </div>
                 <div class="row-block">
@@ -78,31 +78,31 @@
                     <label class="form-label" for="phone">Телефон
                     </label>
                     {% if not phone_correct %}
-                      <p>Вы неправильно указали номер телефона</p>
+                      <p style="color:red;">{{ phone_error }}</p>
                     {% endif %}
-                    <input class="form-input" id="phone" name="phone" type="text" value="{{ phone_number }}"/>
+                    <input class="form-input" id="phone" name="phone" type="text" value="{{ phone }}"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="mail">E-mail
                     </label>
                     {% if not email_correct %}
-                      <p>Вы неправильно указали email</p>
+                      <p style="color:red;">{{ email_error }}</p>
                     {% endif %}
                     <input class="form-input" id="mail" name="mail" type="text" value="{{ email }}" data-validate="require"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="password">Пароль
                     </label>
-                    {% if not passwords_correct %}
-                      <p>Вы неправильно указали один из паролей</p>
+                    {% if not password_correct %}
+                      <p style="color:red;">{{ password_error }}</p>
                     {% endif %}
                     <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="passwordReply">Подтверждение пароля
                     </label>
-                    {% if not passwords_correct %}
-                      <p>Вы неправильно указали один из паролей</p>
+                    {% if not password_reply_correct %}
+                      <p style="color:red;">{{ password_reply_error }}</p>
                     {% endif %}
                     <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
                   </div>
