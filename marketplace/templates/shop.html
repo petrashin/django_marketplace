@@ -154,17 +154,20 @@
 
             {% for product in products %}
                 <div class="Card">
-                  <a class="Card-picture" href="{% url 'product_detail' product.product__slug %}">
-                    <img src="/media/{{ product.product__product_images__main_image }}" alt="card.jpg"/></a>
+                {% for image in product.product.product_images.all %}
+                  <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
+                    <img src="{{ image.main_image.url }}" alt="card.jpg"/>
+                  </a>
+                    {% endfor %}
                   <div class="Card-content">
-                    <strong class="Card-title"><a href="{% url 'product_detail' product.product__slug %}">{{ product.product__name }}</a>
+                    <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
                     </strong>
                     <div class="Card-description">
                       <div class="Card-cost">
-                        {% if product.price_type__discount > 0%}
+                        {% if product.product.discount.discount_value > 0%}
                         <span class="Card-priceOld">{{ product.old_price }} руб.</span>
                         {% endif %}
-                        <span class="Card-price">{{ product.current_price }} руб.</span>
+                        <span class="Card-price">{{ product.get_current_price }} руб.</span>
                       </div>
                       <div class="Card-category">Games / xbox
                       </div>
@@ -174,8 +177,8 @@
                       </div>
                     </div>
                   </div>
-                  {% if product.price_type__discount > 0%}
-                  <div class="Card-sale">-{{product.price_type__discount}}%
+                  {% if product.product.discount.discount__value > 0%}
+                  <div class="Card-sale">-{{product.product.discount.discount_value}}%
                   </div>
                   {% endif %}
                 </div>

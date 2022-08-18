@@ -1,21 +1,16 @@
+from statistics import mean
+
 from django.contrib.auth.models import User
-from django.db.models import Avg, Max, IntegerField
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic.edit import FormMixin
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView
 
 from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
 from cart.forms import CartAddProductForm
 
-
-# class ProductsListView(ListView):
-#     model = Product
-#     context_object_name = 'goods'
-#     queryset = Product.objects.prefetch_related('product_images').all()
-#     template_name = 'shop.html'
 
 class ProductDetailView(FormMixin, DetailView):
     """ Представление для получения детальной информации о продукте
@@ -34,17 +29,12 @@ class ProductDetailView(FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # считаем среднюю цену товара по магазинам без скидки и со скидкой и максимальную скидку в %
-        # и добавляем в контекст
-        context['aver_price'] = ShopProduct.objects.filter(product=self.object.id). \
-            aggregate(discounted_price=Avg('current_price', output_field=IntegerField()),
-                      base_price=Avg('old_price', output_field=IntegerField()),
-                      discount=Max('price_type__discount')
-                      )
-        # добавляем в контекст магазины и цену товара в них
-        context['shops'] = ShopProduct.objects.filter(product=self.object.id). \
-            select_related('shop', 'product', 'price_type'). \
-            values('shop__name', 'current_price', 'quantity')
+        # считаем среднюю цену товара по магазинам без скидки и со скидкой и добавляем в контекст
+        products = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')
+        context['price'] = round(mean([product.price for product in products]), 2)
+        context['discounted_aver_price'] = round(mean([product.get_discounted_price() for product in products]), 2)
+        context['shops'] = products
+
         return context
 
 
@@ -64,3 +54,4 @@ class AddReview(View):
             form.save()
 
         return redirect(product.get_absolute_url())
+
