@@ -85,9 +85,9 @@
         </nav>
         <div class="row-block">
           <div class="CartBlock"><a class="CartBlock-block" href="#"><img class="CartBlock-img" src="{% static 'assets/img/icons/exchange.svg' %}" alt="exchange.svg"/><span class="CartBlock-amount">4</span></a>
-              {% with total_items=cart_items|length %}
+              {% with total_items=cart|length %}
               <a class="CartBlock-block" href="{% url 'cart_detail' %}"><img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg"/><span class="CartBlock-amount">{{ total_items }}</span></a>
-            <div class="CartBlock-block"><span class="CartBlock-price">{{ total_cost }}</span>
+            <div class="CartBlock-block"><span class="CartBlock-price">{{ cart.get_total_price }}</span>
             </div>
               {% endwith %}
           </div>
