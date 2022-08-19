@@ -4,6 +4,7 @@ from app_users.models import Profile, Image
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.core.files.storage import FileSystemStorage
 
 
 def account_view(request):
@@ -57,11 +58,16 @@ def validate_passwords(password, password_reply):
         return True, None, False, "Пароли не совпадают"
 
 
+def validate_avatar(request):
+    if request.FILES['avatar'].size > 2 * 1024 * 1024:
+        return False, "Размер файла превышает 2 Мбайт"
+    return True, None
+
+
 class EditProfile(View):
     def get(self, request):
         profile = Profile.objects.filter(user_id=request.user.id).get()
         data = {
-            "avatar_changed": False,
             "avatar_correct": True,
             "avatar_error": None,
 
@@ -88,16 +94,19 @@ class EditProfile(View):
         return render(request, "profile.html", context=data)
 
     def post(self, request):
-        # TODO: добавить изменение аватарки + валидация
-        # TODO: добавить border color в случае ошибки в profile.html
-
         profile = Profile.objects.filter(user_id=request.user.id).get()
+        data = {}
 
-        data = {
-            "avatar_changed": False,
-            "avatar_correct": True,
-            "avatar_error": None,
-        }
+        if request.FILES:
+            new_avatar = request.FILES['avatar']
+            data["avatar_correct"], data["avatar_error"] = validate_avatar(request)
+            if data["avatar_correct"]:
+                fs = FileSystemStorage(location='media/avatars')
+                if not fs.exists(new_avatar.name):
+                    fs.save(new_avatar.name, new_avatar)
+                Image.objects.filter(profile_id=profile.id).update(avatar=f"/avatars/{new_avatar.name}")
+        else:
+            data["avatar_correct"], data["avatar_error"] = True, None
 
         new_name = request.POST.get("name")
         data["name_correct"], data["name_error"], data["name"] = validate_fullname(profile.fullname, new_name)
