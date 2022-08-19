@@ -38,12 +38,11 @@ class CartItems(models.Model):
 
     def get_session_id(self, request):
         """
-          Получение id корзины из cookies для пользователя,
-          или установка новых cookies если не существуют
-          _модификатор для видимости в пределах модуля
+          Получение id корзины из cookies для пользователя
           """
         self.session = request.session
-        session_id = self.session.get(settings.CART_SESSION_ID)
+        # session_id = self.session.get(settings.CART_SESSION_ID)
+        session_id = self.session.session_key
         return session_id
 
     def get_user_or_session_id(self, request):

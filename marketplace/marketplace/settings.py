@@ -17,7 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-CART_SESSION_ID = 'cart'
+CART_SESSION_ID = 'session_id'
 
 INSTALLED_APPS = [
     'modeltranslation',

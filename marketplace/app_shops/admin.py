@@ -13,4 +13,3 @@ class ShopAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
     inlines = (ShopProductInline, )
-

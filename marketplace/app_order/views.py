@@ -9,7 +9,7 @@ from django.http import HttpResponseBadRequest
 from app_users.models import Profile
 from app_goods.models import Product
 from django.db import transaction
-from cart.cart import Cart
+from cart.models import CartItems
 from django.conf import settings
 
 
