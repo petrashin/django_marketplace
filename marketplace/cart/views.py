@@ -58,7 +58,6 @@ def cart_shop_add(request, slug):
     form = CartAddProductShopForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
-        print(cd)
         cart.add(request=request,
                  product=product,
                  quantity=cd['quantity']

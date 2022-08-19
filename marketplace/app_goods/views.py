@@ -38,7 +38,6 @@ class ProductDetailView(FormMixin, DetailView):
             context['shops'].shop_add_form = CartAddProductShopForm(initial={'quantity': 1,
                                                                              'shop': shop.shop.name
                                                                              })
-            print(context['shops'].shop_add_form)
 
         return context
 
