@@ -36,7 +36,7 @@ class CartItems(models.Model):
                                                 verbose_name='количество')
     added_at = models.DateTimeField(auto_now_add=True, verbose_name='дата добавления товара')
 
-    def _session_id(self, request):
+    def get_session_id(self, request):
         """
           Получение id корзины из cookies для пользователя,
           или установка новых cookies если не существуют
@@ -51,11 +51,11 @@ class CartItems(models.Model):
         user = request.user
         if user.is_anonymous:
             user = 0
-            session_id = self._session_id(request)
+            session_id = self.get_session_id(request)
 
         else:
             user = user.id
-            session_id = self._session_id(request)
+            session_id = self.get_session_id(request)
         return [user, session_id]
 
     def get_cart_items(self, request):

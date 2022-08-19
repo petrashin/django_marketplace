@@ -3,7 +3,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
 from app_goods.models import Product
-from .forms import CartAddProductForm, CartShopsForm, CartUpdateQuantityProductForm
+from .forms import CartAddProductForm, CartAddProductShopForm, CartShopsForm, CartUpdateQuantityProductForm
 from .models import CartItems
 
 
@@ -43,6 +43,22 @@ def cart_add(request, slug):
     form = CartAddProductForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
+        cart.add(request=request,
+                 product=product,
+                 quantity=cd['quantity']
+                 )
+    return redirect('cart_detail')
+
+
+@require_POST
+def cart_shop_add(request, slug):
+    cart = CartItems()
+    product = get_object_or_404(Product, slug=slug)
+
+    form = CartAddProductShopForm(request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        print(cd)
         cart.add(request=request,
                  product=product,
                  quantity=cd['quantity']

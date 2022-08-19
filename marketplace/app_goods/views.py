@@ -9,7 +9,7 @@ from django.views.generic import DetailView
 from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
-from cart.forms import CartAddProductForm
+from cart.forms import CartAddProductForm, CartAddProductShopForm
 
 
 class ProductDetailView(FormMixin, DetailView):
@@ -34,6 +34,11 @@ class ProductDetailView(FormMixin, DetailView):
         context['price'] = round(mean([product.price for product in products]), 2)
         context['discounted_aver_price'] = round(mean([product.get_discounted_price() for product in products]), 2)
         context['shops'] = products
+        for shop in context['shops']:
+            context['shops'].shop_add_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                             'shop': shop.shop.name
+                                                                             })
+            print(context['shops'].shop_add_form)
 
         return context
 
@@ -54,4 +59,3 @@ class AddReview(View):
             form.save()
 
         return redirect(product.get_absolute_url())
-
