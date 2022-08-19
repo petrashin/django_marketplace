@@ -17,7 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-CART_SESSION_ID = 'session_id'
+CART_SESSION_ID = 'cart'
 
 INSTALLED_APPS = [
     'modeltranslation',
@@ -34,7 +34,8 @@ INSTALLED_APPS = [
     'app_goods.apps.AppGoodsConfig',
     'app_shops.apps.AppShopsConfig',
     'cart',
-    'app_account'
+    'app_account',
+	'app_order.apps.AppOrderConfig',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +62,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.cart_items_processor',
+                'cart.context_processors.cart',
                 'app_shops.context_processors.categories_processor',
             ],
         },
