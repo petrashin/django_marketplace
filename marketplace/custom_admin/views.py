@@ -1,31 +1,142 @@
-from django.shortcuts import render
-from django.views import View
-from .forms import ImportGoodsForm
-from app_goods.models import Product
 import json
+import os
+import shutil
+from django.shortcuts import render, redirect
+from django.views import View
+from .forms import ImportGoodsForm, DefaultSettingsForm, EmailForReportImport
+from .models import DefaultSettings, File
+from app_goods.models import Product, Price, PriceType, Category
+from app_shops.models import Shop
+from django.contrib import messages
+from django.conf import settings
 
 
-def admin_custom_settings(request):
-	return render(request, template_name='admin/admin_custom_settings.html')
+class AdminCustomSettings(View):
 	
+	@staticmethod
+	def get(request):
+		default_settings = DefaultSettings.objects.all()
+		custom_settings_form = DefaultSettingsForm()
+		if default_settings:
+			custom_settings_form = DefaultSettingsForm(instance=default_settings[0])
+		return render(request, template_name='admin/admin_custom_settings.html',
+		              context={'custom_settings_form': custom_settings_form})
 	
+	@staticmethod
+	def post(request):
+		default_settings = DefaultSettings.objects.all()
+		custom_settings_form = DefaultSettingsForm(request.POST)
+		if default_settings:
+			custom_settings_form = DefaultSettingsForm(request.POST, instance=default_settings[0])
+		if custom_settings_form.is_valid():
+			delivery_express_coast = custom_settings_form.cleaned_data.get('delivery_express_coast')
+			min_order = custom_settings_form.cleaned_data.get('min_order')
+			delivery_min = custom_settings_form.cleaned_data.get('delivery_min')
+			
+			if default_settings:
+				default_settings[0].delivery_express_coast = delivery_express_coast
+				default_settings[0].min_order = min_order
+				default_settings[0].delivery_min = delivery_min
+				default_settings[0].save()
+			else:
+				DefaultSettings.objects.create(delivery_express_coast=delivery_express_coast,
+				                               min_order=min_order,
+				                               delivery_min=delivery_min)
+		else:
+			messages.error(request, 'Error default settings. Bad values')
+		messages.success(request, 'Default settings installed successfully')
+		return redirect('/admin/')
+
+
 class ImportGoodsView(View):
 	
 	@staticmethod
 	def get(request):
+		# admin_email = User.objects.get(id=request.user.id).email
+		admin_email = request.user.email
 		file_form = ImportGoodsForm()
-		return render(request, 'admin/admin_import_goods.html', context={'file_form': file_form})
+		email_form = EmailForReportImport(instance=request.user)
+		return render(request, 'admin/admin_import_goods.html', context={'file_form': file_form,
+		                                                                 'email_form': email_form})
 	
-	@staticmethod
-	def post(request):
+	def post(self, request):
 		user = request.user
 		upload_file_form = ImportGoodsForm(request.POST, request.FILES)
 		if upload_file_form.is_valid():
-			print(upload_file_form.cleaned_data.get('file').read())
-			list_goods = upload_file_form.cleaned_data.get('file').read().decode('utf-8')
-			for product in list_goods:
-				title, created_at = product.split(';')
-				if not Product.objects.filter(title=title):
-					new_product = Product.objects.create(title=title, created_at=created_at, user=user)
-					new_product.save()
-			return HttpResponseRedirect('/')
+			files = request.FILES.getlist('file_field')
+			for file in files:
+				
+				try:
+					list_goods = json.loads(file.read().decode('utf-8'))
+					
+					for product in list_goods.values():
+						name = product['name']
+						description = product['description']
+						quantity = product['quantity']
+						name_shop = product['shop']
+						name_category = product['category']
+						value_price = product['price']
+						
+						if not Shop.objects.filter(name=name_shop):
+							shop = Shop.objects.create(name=name_shop)
+						else:
+							shop = Shop.objects.get(name=name_shop)
+						
+						if not Category.objects.filter(name=name_category):
+							category = Category.objects.create(name=name_category)
+						else:
+							category = Category.objects.get(name=name_category)
+						
+						if not PriceType.objects.all():
+							PriceType.objects.create(name='базовая')
+						
+						price_type = PriceType.objects.get(id=1)
+						price = Price.objects.create(price_type=price_type, base_price=value_price)
+						
+						try:
+							product = Product.objects.filter(name=name)
+							if product:
+								product = Product.objects.get(name=name)
+								product.quantity += quantity
+							else:
+								product = Product.objects.create(name=name, description=description, quantity=quantity,
+								                                 price=price)
+								product.shop.add(shop)
+								product.category.add(category)
+							product.save()
+						except Exception:
+							messages.error(request, 'Error updating products. Bad values')
+							return redirect('/admin/')
+					messages.success(request, 'Products updated successfully')
+					self.save_file(shop, file)
+
+				except Exception:
+					messages.error(request, 'Error updating products. Bad file')
+					self.save_file(None, file)
+			return redirect('/admin/')
+		else:
+			pass
+		
+		email_form = EmailForReportImport(request.POST)
+		if email_form.is_valid():
+			print("OK")
+			pass
+
+
+	def save_file(self, shop, file):
+		
+		if shop:
+			file_for_import = File.objects.create(file=file, shop=shop)
+			if not os.path.exists(f'media/import/successful/shop_{shop.id}'):
+				os.makedirs(f'media/import/successful/shop_{shop.id}')
+			file_name = file_for_import.file.name.split('import/')[-1]
+			destination_path = os.path.abspath(f'{settings.MEDIA_ROOT}/import/successful/shop_{shop.id}/{file_name}')
+		else:
+			if not os.path.exists(f'media/import/unsuccessful'):
+				os.makedirs(f'media/import/unsuccessful')
+			file_for_import = File.objects.create(file=file)
+			file_name = file_for_import.file.name.split('import/')[-1]
+			destination_path = os.path.abspath(f'{settings.MEDIA_ROOT}/import/unsuccessful/{file_name}')
+		
+		source_path = os.path.abspath(f'{settings.MEDIA_ROOT}/{file_for_import.file.name}')
+		shutil.move(source_path, destination_path)
