@@ -2,7 +2,12 @@
 {% load i18n static %}
 {% block content %}
 <div>
-  TEST
-</div>
+       <p style="font-size: 14px;">Установка дефолтных настроек</p>
+           <form method="post" enctype="multipart/form-data">
+               {% csrf_token %}
+               {{ custom_settings_form.as_p }}
+               <button type="submit">Сохранить настройки</button>
+           </form>
+   </div>
     {{ block.super }}
 {% endblock %}

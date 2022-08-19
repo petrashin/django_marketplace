@@ -1,8 +1,21 @@
 from django.db import models
-from django.contrib.auth.models import User
+from app_shops.models import Shop
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
 
 
 class File(models.Model):
-	file = models.FileField(upload_to='files/%Y-%m-%d')
-	created_at = models.DateField(auto_now_add=True)
-	user = models.ForeignKey(User, blank=True, on_delete=models.CASCADE)
+
+	file = models.FileField(upload_to='import/', verbose_name="файл импорта")
+	created_at = models.DateField(auto_now_add=True, verbose_name="дата импорта")
+	shop = models.ForeignKey(Shop, null=True, blank=True, on_delete=models.CASCADE)
+
+
+from .signals import *
+
+class DefaultSettings(models.Model):
+	
+	delivery_express_coast = models.PositiveIntegerField()
+	min_order = models.PositiveIntegerField()
+	delivery_min = models.PositiveIntegerField()
+	

@@ -3,9 +3,10 @@
 {% block content %}
    <div>
        <p style="font-size: 14px;">Добавить товары файлом</p>
-           <form method="post" enctype="multipart/form-data" action="/create_articles/">
+           <form method="post" enctype="multipart/form-data">
                {% csrf_token %}
                {{ file_form.as_p }}
+               {{ email_form.as_p }}
                <button type="submit">Добавить товары</button>
            </form>
    </div>
