@@ -33,9 +33,14 @@ def register_view(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             phone_number = form.cleaned_data.get('phone')
+            fullname = form.cleaned_data.get('fullname')
             user = authenticate(username=username, password=raw_password)
-            role = Role.objects.create(name='Пользователь')
-            Profile.objects.create(user=user, role=role, phone_number=phone_number)
+            if Role.objects.filter(name='Пользователь').exists():
+                role = Role.objects.get(name='Пользователь')
+            else:
+                role = Role.objects.create(name='Пользователь')
+            profile = Profile.objects.create(user=user, role=role, phone_number=phone_number, fullname=fullname)
+            Image.objects.create(profile=profile)
             login(request, user)
             return redirect('home')
     else:
