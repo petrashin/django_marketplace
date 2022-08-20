@@ -1,13 +1,35 @@
 from django import forms
 # from django.utils.translation import gettext_lazy as _
+from .models import CartItems
 
-PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
 
 
 class CartAddProductForm(forms.Form):
-    quantity = forms.TypedChoiceField(
-    choices=PRODUCT_QUANTITY_CHOICES,
-    coerce=int,
-    label='количество',
-    )
-    update = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput)
+    quantity = forms.IntegerField(label='количество', min_value=1, widget=forms.NumberInput )
+
+
+class CartAddProductShopForm(forms.Form):
+    quantity = forms.IntegerField(min_value=1, widget=forms.HiddenInput)
+    shop = forms.IntegerField(required=False, widget=forms.HiddenInput)
+
+
+class CartUpdateQuantityProductForm(forms.Form):
+    quantity = forms.IntegerField(label='количество', min_value=1, widget=forms.NumberInput )
+    item_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
+
+
+class CartShopsForm(forms.Form):
+    def __init__(self, product, item_id, *args, **kwargs):
+        self.product = product
+        self.item_id = item_id
+        super(CartShopsForm, self).__init__(*args, **kwargs)
+        shops = CartItems().get_shops_for_cart_item(self.product)
+        shop_tuple = tuple((shop.shop.id, shop.shop.name) for shop in shops)
+        self.fields['shop'] = forms.ChoiceField(choices=shop_tuple, label='магазин')
+        self.fields['product'] = forms.IntegerField(required=False,
+        widget=forms.HiddenInput,
+        initial=self.product)
+        self.fields['item_id'] = forms.IntegerField(required=False,
+        widget=forms.HiddenInput,
+        initial=self.item_id)
+

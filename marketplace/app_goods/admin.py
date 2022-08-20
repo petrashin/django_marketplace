@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
 
 from .models import *
 
@@ -22,8 +21,8 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]
 
 
-@admin.register(PriceType)
-class PriceTypeAdmin(admin.ModelAdmin):
+@admin.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
     pass
 
 
