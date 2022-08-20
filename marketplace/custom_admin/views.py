@@ -9,6 +9,7 @@ from app_goods.models import Product, Price, PriceType, Category
 from app_shops.models import Shop
 from django.contrib import messages
 from django.conf import settings
+from django.contrib.auth.models import User
 
 
 class AdminCustomSettings(View):
@@ -52,10 +53,12 @@ class ImportGoodsView(View):
 	
 	@staticmethod
 	def get(request):
-		# admin_email = User.objects.get(id=request.user.id).email
-		admin_email = request.user.email
+		user = User.objects.get(id=request.user.id)
 		file_form = ImportGoodsForm()
-		email_form = EmailForReportImport(instance=request.user)
+		email_form = EmailForReportImport()
+		if request.user.email:
+			print(request.user.email, '!!!')
+			email_form = EmailForReportImport(initial={'email': request.user.email}, instance=user)
 		return render(request, 'admin/admin_import_goods.html', context={'file_form': file_form,
 		                                                                 'email_form': email_form})
 	
