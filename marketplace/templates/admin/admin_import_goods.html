@@ -5,8 +5,9 @@
        <p style="font-size: 14px;">Добавить товары файлом</p>
            <form method="post" enctype="multipart/form-data">
                {% csrf_token %}
-               {{ file_form.as_p }}
-               {{ email_form.as_p }}
+               <p>{{ file_form.file_field }}</p>
+               <p style="font-size: 14px;">Отправить отчет на email</p>
+               <p>{{ email_form.email }}</p>
                <button type="submit">Добавить товары</button>
            </form>
    </div>

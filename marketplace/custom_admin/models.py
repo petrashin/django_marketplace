@@ -11,8 +11,6 @@ class File(models.Model):
 	shop = models.ForeignKey(Shop, null=True, blank=True, on_delete=models.CASCADE)
 
 
-from .signals import *
-
 class DefaultSettings(models.Model):
 	
 	delivery_express_coast = models.PositiveIntegerField()
