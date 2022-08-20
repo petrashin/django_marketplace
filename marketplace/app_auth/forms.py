@@ -11,10 +11,11 @@ class SignUpForm(UserCreationForm):
                                  message="Phone number must be entered in the format: '+999999999'. Up to 15 digits "
                                          "allowed.")
     phone = forms.CharField(validators=[phone_regex], max_length=17)
+    fullname = forms.CharField(max_length=256, required=True)
 
     class Meta:
         model = User
-        fields = ("username", "email", "phone", "first_name", "last_name")
+        fields = ("username", "email", "phone", "fullname")
 
     def clean(self):
        email = self.cleaned_data.get('email')

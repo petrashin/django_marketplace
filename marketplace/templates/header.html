@@ -29,7 +29,7 @@
                 {% if request.user.is_authenticated %}
                 <div class="row-block">
                     <a class="ControlPanel-title" href="{% url 'account' %}">{{ request.user.username }} /</a>
-                    <a class="ControlPanel-title" href="account.html">Profile /</a>
+                    <a class="ControlPanel-title" href="{% url 'profile' %}">Profile /</a>
                     <a class="ControlPanel-title" href="{% url 'logout' %}">Logout</a>
               </div>
                 <!-- Вход или регистрация для неавторизованного пользователя-->
@@ -84,10 +84,14 @@
           </div>
         </nav>
         <div class="row-block">
-          <div class="CartBlock"><a class="CartBlock-block" href="#"><img class="CartBlock-img" src="{% static 'assets/img/icons/exchange.svg' %}" alt="exchange.svg"/><span class="CartBlock-amount">4</span></a>
+          <div class="CartBlock"><a class="CartBlock-block" href="#">
+              <img class="CartBlock-img" src="{% static 'assets/img/icons/exchange.svg' %}" alt="exchange.svg"/>
+              <span class="CartBlock-amount">4</span></a>
               {% with total_items=cart|length %}
-              <a class="CartBlock-block" href="{% url 'cart_detail' %}"><img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg"/><span class="CartBlock-amount">{{ total_items }}</span></a>
-            <div class="CartBlock-block"><span class="CartBlock-price">{{ cart.get_total_price }}</span>
+              <a class="CartBlock-block" href="{% url 'cart_detail' %}">
+                  <img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg"/>
+                  <span class="CartBlock-amount">{{ total_items }}</span></a>
+            <div class="CartBlock-block"><span class="CartBlock-price">{{ cart.get_total_cost }}</span>
             </div>
               {% endwith %}
           </div>

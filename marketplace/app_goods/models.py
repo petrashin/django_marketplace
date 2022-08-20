@@ -3,6 +3,36 @@ from django.db import models
 from django.urls import reverse
 
 
+class Discount(models.Model):
+    """ Модель Скидка """
+    discount_type = models.CharField(max_length=50,
+                                     verbose_name='вид скидки',
+                                     help_text='вид скидки')
+    discount_value = models.PositiveSmallIntegerField(null=True,
+                                                      default=0,
+                                                      blank=True,
+                                                      verbose_name='скидка',
+                                                      help_text='скидка в %')
+    description = models.TextField(verbose_name='описание скидки', blank=True)
+    start_date = models.DateTimeField(verbose_name='начало акции',
+                                      null=True,
+                                      blank=True,
+                                      help_text='дата и время начала действия скидки')
+    end_date = models.DateTimeField(verbose_name='конец акции',
+                                    null=True,
+                                    blank=True,
+                                    help_text='дата и время окончания действия скидки')
+    active = models.BooleanField(default=True, verbose_name='активна')
+
+    def __str__(self):
+        return self.discount_type
+
+    class Meta:
+        db_table = 'discounts'
+        verbose_name = 'скидка'
+        verbose_name_plural = 'скидки'
+
+
 class Category(models.Model):
     """ Модель Категория """
     name = models.CharField(max_length=255, verbose_name='наименование')
@@ -25,35 +55,6 @@ class Category(models.Model):
         verbose_name_plural = 'категории'
 
 
-class PriceType(models.Model):
-    """ Модель Тип цены """
-    name = models.CharField(max_length=200,
-                            verbose_name='наименование',
-                            help_text='наименование типа цены')
-    discount = models.PositiveSmallIntegerField(null=True,
-                                                default=0,
-                                                blank=True,
-                                                verbose_name='скидка',
-                                                help_text='скидка в %')
-    start_date = models.DateTimeField(verbose_name='начало акции',
-                                      null=True,
-                                      blank=True,
-                                      help_text='дата и время начала действия скидки')
-    end_date = models.DateTimeField(verbose_name='конец акции',
-                                    null=True,
-                                    blank=True,
-                                    help_text='дата и время окончания действия скидки')
-    active = models.BooleanField(default=True, verbose_name='активна')
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = 'price_types'
-        verbose_name = 'тип цены'
-        verbose_name_plural = 'типы цен'
-
-
 class Product(models.Model):
     """ Модель Товар """
     name = models.CharField(max_length=255, verbose_name='наименование')
@@ -67,6 +68,14 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='дата и время обновления')
     category = models.ManyToManyField(Category, verbose_name='категория', related_name='products')
+    discount = models.ForeignKey(Discount,
+                                 null=True,
+                                 blank=True,
+                                 verbose_name='скидка',
+                                 on_delete=models.CASCADE,
+                                 related_name='products',
+                                 help_text='связь с моделью Discount'
+                                 )
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
     sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
 
