@@ -1,0 +1,66 @@
+[
+   {
+      "model":"app_order.order",
+      "pk":1,
+      "fields":{
+         "user":1,
+         "date_order":"2022-08-20",
+         "total_cost":"1000.00",
+         "status_pay":true,
+         "delivery":1,
+         "city":"Москва",
+         "address":"Боровское шоссе",
+         "pay_method":1,
+         "order_comment":null,
+         "payment_error":""
+      }
+   },
+   {
+      "model":"app_order.order",
+      "pk":2,
+      "fields":{
+         "user":1,
+         "date_order":"2022-08-23",
+         "total_cost":"2000.00",
+         "status_pay":false,
+         "delivery":1,
+         "city":"Москва",
+         "address":"Боровское шоссе",
+         "pay_method":2,
+         "order_comment":null,
+         "payment_error":"На счету недостаточно денег"
+      }
+   },
+   {
+      "model":"app_order.order",
+      "pk":3,
+      "fields":{
+         "user":1,
+         "date_order":"2022-08-24",
+         "total_cost":"3000.00",
+         "status_pay":true,
+         "delivery":2,
+         "city":"Москва",
+         "address":"Боровское шоссе",
+         "pay_method":2,
+         "order_comment":null,
+         "payment_error":""
+      }
+   },
+   {
+      "model":"app_order.order",
+      "pk":4,
+      "fields":{
+         "user":1,
+         "date_order":"2022-08-21",
+         "total_cost":"10000.00",
+         "status_pay":false,
+         "delivery":2,
+         "city":"Москва",
+         "address":"Боровское шоссе",
+         "pay_method":1,
+         "order_comment":null,
+         "payment_error":"На карте недостаточно денег"
+      }
+   }
+]
