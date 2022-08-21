@@ -158,3 +158,8 @@ class OrderListView(generic.ListView):
     context_object_name = 'order_list'
     queryset = Order.objects.order_by('-date_order')
 
+
+class OrderDetailView(generic.DetailView):
+    model = Order
+    template_name = 'order_detail.html'
+
