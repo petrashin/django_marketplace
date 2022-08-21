@@ -1,7 +1,9 @@
 import re
 from django.shortcuts import render
 from app_users.models import Profile, Image
+from app_order.models import Order
 from django.views import View
+from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
@@ -10,9 +12,11 @@ from django.core.files.storage import FileSystemStorage
 def account_view(request):
     profile = Profile.objects.filter(user_id=request.user.id).get()
     avatar_object = Image.objects.filter(profile_id=profile)
+    last_order = Order.objects.order_by('-date_order').first()
     data = {
         "full_name": profile.fullname,
-        "avatar": avatar_object[0].avatar
+        "avatar": avatar_object[0].avatar,
+        "order": last_order,
     }
     return render(request, "account.html", context=data)
 
@@ -146,3 +150,11 @@ class EditProfile(View):
             data["changed_successfully"] = False
 
         return render(request, "profile.html", context=data)
+
+
+class OrderListView(generic.ListView):
+    model = Order
+    template_name = "historyorder.html"
+    context_object_name = 'order_list'
+    queryset = Order.objects.order_by('-date_order')
+

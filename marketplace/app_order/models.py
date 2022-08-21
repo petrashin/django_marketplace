@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from app_goods.models import Product
 
 
 class Delivery(models.Model):
@@ -31,9 +30,11 @@ class PayMethod(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     date_order = models.DateField(auto_now_add=True)
+    total_cost = models.DecimalField(verbose_name="общая стоимость", max_digits=10, decimal_places=2, blank=False, default=0)
     status_pay = models.BooleanField(default=False)
     delivery = models.ForeignKey(Delivery, on_delete=models.DO_NOTHING, verbose_name='вариант доставки')
     city = models.CharField(max_length=30, verbose_name='город')
     address = models.CharField(max_length=100, verbose_name='адрес')
     pay_method = models.ForeignKey(PayMethod, blank=True, on_delete=models.DO_NOTHING, verbose_name='вариант оплаты')
     order_comment = models.CharField(max_length=150, null=True, blank=True, verbose_name='комментарий к заказу')
+    payment_error = models.CharField(max_length=256, default=None, verbose_name='текст ошибки, возникшей при оплате', blank=True)
