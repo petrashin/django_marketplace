@@ -58,6 +58,8 @@ class ShopProduct(models.Model):
 
     def get_discounted_price(self):
         """ Получаем цену со скидкой """
+        if not self.product.discount:
+            return self.price
         if self.product.discount.discount_value > 0:
             discount = self.product.discount.discount_value
             discounted_price = self.price - (self.price * discount / 100)
