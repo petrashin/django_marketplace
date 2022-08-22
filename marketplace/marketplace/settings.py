@@ -17,6 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
+
 CART_SESSION_ID = 'session_id'
 
 INSTALLED_APPS = [
@@ -33,7 +34,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'app_goods.apps.AppGoodsConfig',
     'app_shops.apps.AppShopsConfig',
-    'cart',
+    'cart.apps.CartConfig',
     'app_account',
 	'app_order.apps.AppOrderConfig',
 ]
