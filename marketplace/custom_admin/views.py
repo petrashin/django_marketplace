@@ -5,11 +5,16 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .forms import ImportGoodsForm, DefaultSettingsForm, EmailForReportImport
 from .models import DefaultSettings, File
-from app_goods.models import Product, Price, PriceType, Category
-from app_shops.models import Shop
+from app_goods.models import PriceType, Category, Product
+from app_shops.models import Shop, ShopProduct
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.mail import BadHeaderError, send_mail
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
 
 
 class AdminCustomSettings(View):
@@ -57,76 +62,80 @@ class ImportGoodsView(View):
 		file_form = ImportGoodsForm()
 		email_form = EmailForReportImport()
 		if request.user.email:
-			print(request.user.email, '!!!')
 			email_form = EmailForReportImport(initial={'email': request.user.email}, instance=user)
 		return render(request, 'admin/admin_import_goods.html', context={'file_form': file_form,
 		                                                                 'email_form': email_form})
 	
 	def post(self, request):
-		user = request.user
+		log = ''
+		user = User.objects.get(id=request.user.id)
 		upload_file_form = ImportGoodsForm(request.POST, request.FILES)
-		if upload_file_form.is_valid():
-			files = request.FILES.getlist('file_field')
-			for file in files:
-				
-				try:
-					list_goods = json.loads(file.read().decode('utf-8'))
+		try:
+			if upload_file_form.is_valid():
+				files = request.FILES.getlist('file_field')
+				for file in files:
 					
-					for product in list_goods.values():
-						name = product['name']
-						description = product['description']
-						quantity = product['quantity']
-						name_shop = product['shop']
-						name_category = product['category']
-						value_price = product['price']
+					try:
+						list_goods = json.loads(file.read().decode('utf-8'))
 						
-						if not Shop.objects.filter(name=name_shop):
-							shop = Shop.objects.create(name=name_shop)
-						else:
+						for product in list_goods.values():
+							name = product['name']
+							description = product['description']
+							quantity = product['quantity']
+							name_shop = product['shop']
+							name_category = product['category']
+							value_price = product['price']
+							
+							if not Shop.objects.filter(name=name_shop):
+								Shop.objects.create(name=name_shop)
+							
+							if not Category.objects.filter(name=name_category):
+								Category.objects.create(name=name_category)
+							
+							if not PriceType.objects.all():
+								PriceType.objects.create(name='базовая')
+							
+							price_type = PriceType.objects.get(id=1)
 							shop = Shop.objects.get(name=name_shop)
-						
-						if not Category.objects.filter(name=name_category):
-							category = Category.objects.create(name=name_category)
-						else:
 							category = Category.objects.get(name=name_category)
-						
-						if not PriceType.objects.all():
-							PriceType.objects.create(name='базовая')
-						
-						price_type = PriceType.objects.get(id=1)
-						price = Price.objects.create(price_type=price_type, base_price=value_price)
-						
-						try:
-							product = Product.objects.filter(name=name)
-							if product:
-								product = Product.objects.get(name=name)
-								product.quantity += quantity
-							else:
-								product = Product.objects.create(name=name, description=description, quantity=quantity,
-								                                 price=price)
-								product.shop.add(shop)
-								product.category.add(category)
-							product.save()
-						except Exception:
-							messages.error(request, 'Error updating products. Bad values')
-							return redirect('/admin/')
-					messages.success(request, 'Products updated successfully')
-					self.save_file(shop, file)
+							try:
+								product = Product.objects.filter(name=name)
+								if product:
+									shop_product = ShopProduct.objects.get(product=product[0])
+									shop_product.quantity += quantity
+									shop_product.save()
+								else:
+									product = Product.objects.create(name=name, description=description)
+									product.category.add(category)
+									product.save()
+									
+									ShopProduct.objects.create(shop=shop, product=product, price_type=price_type,
+									                           old_price=value_price, quantity=quantity)
+							
+							except Exception as ex:
+								log += (f'import {file} error Bad values - {ex}\n')
+								messages.error(request, 'Error updating products. Bad values')
+							
+						log += (f'import {file} - successfully\n')
+						messages.success(request, 'Products updated successfully')
+						self.save_file(request, shop, file)
+							
+					except Exception as ex:
+						log += (f'import {file} error Bad file - {ex}\n')
+						messages.error(request, 'Error updating products. Bad file')
+						self.save_file(request, None, file)
+	
+		except Exception as ex:
+			log += (f'import error load file - {ex}')
+			messages.error(request, 'Error load file')
 
-				except Exception:
-					messages.error(request, 'Error updating products. Bad file')
-					self.save_file(None, file)
-			return redirect('/admin/')
-		else:
-			pass
-		
 		email_form = EmailForReportImport(request.POST)
 		if email_form.is_valid():
-			print("OK")
-			pass
-
-
-	def save_file(self, shop, file):
+			email = email_form.cleaned_data.get('email')
+			self.send_message_for_admin(request, email, log)
+		return redirect('/admin/')
+	
+	def save_file(self, request, shop, file):
 		
 		if shop:
 			file_for_import = File.objects.create(file=file, shop=shop)
@@ -143,3 +152,22 @@ class ImportGoodsView(View):
 		
 		source_path = os.path.abspath(f'{settings.MEDIA_ROOT}/{file_for_import.file.name}')
 		shutil.move(source_path, destination_path)
+		file.close()
+		self.delete_file(request, file_name)
+	
+	@staticmethod
+	def delete_file(request, file_name):
+		file_path  = os.path.abspath(f'{settings.MEDIA_ROOT}/for_import/{file_name}')
+		print(os.path.isfile(file_path))
+		try:
+			os.remove(file_path)
+		except Exception as ex:
+			print(ex)
+			messages.error(request, 'Error deleting file')
+	
+	@staticmethod
+	def send_message_for_admin(request, email, log):
+		try:
+			send_mail("Report Import", log, settings.EMAIL_HOST_USER, [email], fail_silently=False)
+		except BadHeaderError:
+			return HttpResponse('Invalid header found.')
