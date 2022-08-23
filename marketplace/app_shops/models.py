@@ -83,7 +83,7 @@ class ShopProduct(models.Model):
     def save(self, *args, **kwargs):
         """ Сохраняем цену со скидкой в поле current_price """
         self.current_price = self.get_current_price()
-        print(self.current_price)
+        # print(self.current_price)
         super(ShopProduct, self).save(*args, **kwargs)
 
     def __str__(self):
