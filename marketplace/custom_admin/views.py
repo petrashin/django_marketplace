@@ -14,7 +14,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from .forms import ImportGoodsForm, DefaultSettingsForm, EmailForReportImport
 from .models import DefaultSettings, File
-from app_goods.models import PriceType, Category, Product
+from app_goods.models import Discount, Category, Product
 from app_shops.models import Shop, ShopProduct
 
 
@@ -97,10 +97,10 @@ class ImportGoodsView(View):
 							if not Category.objects.filter(name=name_category):
 								Category.objects.create(name=name_category)
 							
-							if not PriceType.objects.all():
-								PriceType.objects.create(name='базовая')
+							if not Discount.objects.all():
+								Discount.objects.create(name='базовая')
 							
-							price_type = PriceType.objects.get(id=1)
+							discount = Discount.objects.get(id=1)
 							shop = Shop.objects.get(name=name_shop)
 							category = Category.objects.get(name=name_category)
 							try:
@@ -114,7 +114,7 @@ class ImportGoodsView(View):
 									product.category.add(category)
 									product.save()
 									
-									ShopProduct.objects.create(shop=shop, product=product, price_type=price_type,
+									ShopProduct.objects.create(shop=shop, product=product, discount=discount,
 									                           old_price=value_price, quantity=quantity)
 							
 							except Exception as ex:

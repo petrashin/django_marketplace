@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.db import models
 from django.urls import reverse
 
-from app_goods.models import Product, PriceType
+from app_goods.models import Product, Discount
 
 
 class Shop(models.Model):
@@ -43,7 +43,7 @@ class ShopProduct(models.Model):
                                 related_name='shop_products',
                                 help_text='связь с моделью Product'
                                 )
-    price_type = models.ForeignKey(PriceType,
+    discount = models.ForeignKey(Discount,
                                    null=True,
                                    verbose_name='тип цены',
                                    on_delete=models.CASCADE,
