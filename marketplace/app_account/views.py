@@ -2,6 +2,7 @@ import re
 from django.shortcuts import render
 from app_users.models import Profile, Image
 from app_order.models import Order
+from app_shops.models import ShopProduct
 from django.views import View
 from django.views import generic
 from django.contrib.auth.models import User
@@ -162,4 +163,14 @@ class OrderListView(generic.ListView):
 class OrderDetailView(generic.DetailView):
     model = Order
     template_name = 'order_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        order = Order.objects.get(pk=self.object.id)
+        products = {}
+        for product_id, quantity in order.order_goods.items():
+            new_product = ShopProduct.objects.get(product_id=product_id)
+            products[new_product] = quantity
+        context['products'] = products
+        return context
 
