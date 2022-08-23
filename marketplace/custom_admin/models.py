@@ -1,7 +1,5 @@
 from django.db import models
 from app_shops.models import Shop
-from django.db.models.signals import pre_delete
-from django.dispatch.dispatcher import receiver
 
 
 class File(models.Model):

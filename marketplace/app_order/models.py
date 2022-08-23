@@ -37,3 +37,9 @@ class Order(models.Model):
     address = models.CharField(max_length=100, verbose_name='адрес')
     pay_method = models.ForeignKey(PayMethod, blank=True, on_delete=models.DO_NOTHING, verbose_name='вариант оплаты')
     order_comment = models.CharField(max_length=150, null=True, blank=True, verbose_name='комментарий к заказу')
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
+
+    class Meta:
+	    db_table = 'app_order_order'
+	    verbose_name = 'заказы'
+	    verbose_name_plural = 'заказы'

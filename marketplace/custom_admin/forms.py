@@ -1,6 +1,6 @@
 from django import forms
-from .models import DefaultSettings
 from django.contrib.auth.models import User
+from .models import DefaultSettings
 
 
 class ImportGoodsForm(forms.Form):
