@@ -28,6 +28,7 @@ class ProductAdmin(admin.ModelAdmin):
 	    return False
 
 
+
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
     pass
