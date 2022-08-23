@@ -98,13 +98,16 @@ class ImportGoodsView(View):
 							
 							if not Category.objects.filter(name=name_category):
 								Category.objects.create(name=name_category)
-
+							
+							if not Discount.objects.all():
+								Discount.objects.create(name='базовая')
+							
+							discount = Discount.objects.get(id=1)
 							shop = Shop.objects.get(name=name_shop)
 							category = Category.objects.get(name=name_category)
 							try:
 								product = Product.objects.filter(name=name)
 								if product:
-									print(product)
 									shop_product = ShopProduct.objects.get(product=product[0])
 									shop_product.quantity += quantity
 									shop_product.save()
@@ -112,11 +115,9 @@ class ImportGoodsView(View):
 									product = Product.objects.create(name=name, description=description)
 									product.category.add(category)
 									product.save()
-									print(shop, product, value_price, quantity)
-									ShopProduct.objects.create(shop=shop,
-									                           product=product,
-									                           price=value_price,
-									                           quantity=quantity)
+									
+									ShopProduct.objects.create(shop=shop, product=product, discount=discount,
+									                           old_price=value_price, quantity=quantity)
 							
 							except Exception as ex:
 								logger.error(f'import {file} error Bad values - {ex}')
