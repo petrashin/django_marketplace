@@ -174,3 +174,13 @@ class OrderDetailView(generic.DetailView):
         context['products'] = products
         return context
 
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        order = Order.objects.get(pk=self.object.id)
+        products = {}
+        for product_id, quantity in order.order_goods.items():
+            new_product = ShopProduct.objects.get(product_id=product_id)
+            products[new_product] = quantity
+        context['products'] = products
+        return context
+
