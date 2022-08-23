@@ -103,29 +103,38 @@
                 </div>
               </div>
               <div class="Cart Cart_order">
-
                 <!-- TODO: Отображение товаров из заказа -->
-                {% for product, quantity in order.order_goods.items %}
+                {% for product, quantity in products.items %}
                   <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
-                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/sale/product.png" alt="product.png"/></a>
+                      <div class="Cart-block Cart-block_pict">
+                        <a class="Cart-pict" href="{% url 'product_detail' product.product.slug %}">
+                          {% for image in product.product.product_images.all %}
+                            <img class="Cart-img" src="{{ image.main_image.url }}"/>
+                          {% endfor %}
+                        </a>
                       </div>
-                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">Планшет</a>
-                        <div class="Cart-desc">Это планшет с современным железом. Процессор последнего поколения
+                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
+                        <div class="Cart-desc">{{ product.product.description }}
                         </div>
                       </div>
                       <div class="Cart-block Cart-block_price">
-                        <div class="Cart-price_old">60.99$
-                        </div>
-                        <div class="Cart-price">40.99$
-                        </div>
+                        {% if product.price != product.get_discounted_price %}
+                          <div class="Cart-price_old">{{ product.price }}$
+                          </div>
+                          <div class="Cart-price">{{ product.get_discounted_price }}$
+                          </div>
+                        {% else %}
+                          <div class="Cart-price">{{ product.price }}$
+                          </div>
+                        {% endif %}
                       </div>
                     </div>
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_seller">
                         <div>Продавец:
                         </div>
-                        <div>shop kke ываыва ыа ываыв а
+                        <div>{{ product.shop.name }}
                         </div>
                       </div>
                       <div class="Cart-block Cart-block_amount">{{ quantity }} шт.
