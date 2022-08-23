@@ -23,5 +23,6 @@ db.sqlite3
 *.sublime-workspace
 
 .env
-
-
+debug.log
+test*.docx
+test*.json

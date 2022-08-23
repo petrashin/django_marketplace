@@ -49,6 +49,7 @@ class Category(models.Model):
                             verbose_name='url',
                             help_text='уникальный фрагмент url на основе наименования товара'
                             )
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def __str__(self):
         return self.name
@@ -83,6 +84,7 @@ class Product(models.Model):
                                  )
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
     sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def __str__(self):
         return self.name
@@ -134,6 +136,7 @@ class Reviews(models.Model):
     text = models.TextField(verbose_name="сообщение", max_length=5000)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время создания')
     product = models.ForeignKey(Product, verbose_name="товар", on_delete=models.CASCADE)
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def __str__(self):
         return f"{self.product} - {self.user.username}"

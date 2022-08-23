@@ -1,12 +1,9 @@
 import json
 import os
 import shutil
+import logging
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import ImportGoodsForm, DefaultSettingsForm, EmailForReportImport
-from .models import DefaultSettings, File
-from app_goods.models import PriceType, Category, Product
-from app_shops.models import Shop, ShopProduct
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -15,6 +12,14 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
+from .forms import ImportGoodsForm, DefaultSettingsForm, EmailForReportImport
+from .models import DefaultSettings, File
+from app_goods.models import PriceType, Category, Product
+from app_shops.models import Shop, ShopProduct
+
+
+
+logger = logging.getLogger(__name__)
 
 
 class AdminCustomSettings(View):
@@ -113,22 +118,26 @@ class ImportGoodsView(View):
 									                           old_price=value_price, quantity=quantity)
 							
 							except Exception as ex:
-								log += (f'import {file} error Bad values - {ex}\n')
+								logger.error(f'import {file} error Bad values - {ex}')
+								log += f'import {file} error Bad values - {ex}\n'
 								messages.error(request, 'Error updating products. Bad values')
-							
-						log += (f'import {file} - successfully\n')
+						
+						logger.info(f'import {file} - successfully')
+						log += f'import {file} - successfully\n'
 						messages.success(request, 'Products updated successfully')
 						self.save_file(request, shop, file)
-							
+					
 					except Exception as ex:
-						log += (f'import {file} error Bad file - {ex}\n')
+						logger.error(f'import {file} error Bad file - {ex}')
+						log += f'import {file} error Bad file - {ex}\n'
 						messages.error(request, 'Error updating products. Bad file')
 						self.save_file(request, None, file)
-	
+		
 		except Exception as ex:
-			log += (f'import error load file - {ex}')
+			logger.error(f'import error load file - {ex}')
+			log += f'import error load file - {ex}'
 			messages.error(request, 'Error load file')
-
+		
 		email_form = EmailForReportImport(request.POST)
 		if email_form.is_valid():
 			email = email_form.cleaned_data.get('email')
@@ -152,22 +161,21 @@ class ImportGoodsView(View):
 		
 		source_path = os.path.abspath(f'{settings.MEDIA_ROOT}/{file_for_import.file.name}')
 		shutil.move(source_path, destination_path)
-		file.close()
-		self.delete_file(request, file_name)
 	
-	@staticmethod
-	def delete_file(request, file_name):
-		file_path  = os.path.abspath(f'{settings.MEDIA_ROOT}/for_import/{file_name}')
-		print(os.path.isfile(file_path))
-		try:
-			os.remove(file_path)
-		except Exception as ex:
-			print(ex)
-			messages.error(request, 'Error deleting file')
+	# @staticmethod
+	# def delete_file(request, file_name):
+	# 	file_path = os.path.abspath(f'{settings.MEDIA_ROOT}/for_import/{file_name}')
+	# 	print(os.path.isfile(file_path))
+	# 	try:
+	# 		os.remove(file_path)
+	# 	except Exception as ex:
+	# 		print(ex)
+	# 		messages.error(request, 'Error deleting file')
 	
 	@staticmethod
 	def send_message_for_admin(request, email, log):
 		try:
 			send_mail("Report Import", log, settings.EMAIL_HOST_USER, [email], fail_silently=False)
-		except BadHeaderError:
-			return HttpResponse('Invalid header found.')
+		except Exception as ex:
+			logger.error(f'Failed message sending - {ex}')
+			return HttpResponse('Failed message sending')

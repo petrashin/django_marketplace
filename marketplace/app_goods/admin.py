@@ -11,14 +11,21 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ['name', 'slug', 'published']
     prepopulated_fields = {'slug': ('name',)}
+	
+    def has_delete_permission(self, *args, **kwargs):
+        return False
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'published']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline]
+
+    def has_delete_permission(self, *args, **kwargs):
+	    return False
 
 
 @admin.register(Discount)
@@ -27,5 +34,5 @@ class DiscountAdmin(admin.ModelAdmin):
 
 
 @admin.register(Reviews)
-class ProfileAdmin(admin.ModelAdmin):
-    pass
+class ReviewsAdmin(admin.ModelAdmin):
+    list_display = ['product', 'text', 'user', 'published']
