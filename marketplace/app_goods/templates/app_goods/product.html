@@ -162,9 +162,9 @@
                                         <form action="{% url 'cart_add' product.slug %}" method="post">
                                         {% csrf_token %}
                                         {{ shop.shop_add_form }}
-                                        <a class="btn btn_primary" href="{% url 'cart_detail' %}">
+                                            <input type="submit" class="btn btn_primary" value="Купить">
                                             <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
-                                            alt="cart_white.svg"/><span class="btn-content">Купить</span></a>
+                                            alt="cart_white.svg"/>
                                         </form>
                                     </div>
                                 </div>

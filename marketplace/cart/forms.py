@@ -3,29 +3,33 @@ from django import forms
 from .models import CartItems
 
 
-
 class CartAddProductForm(forms.Form):
+    """Форма для добавления товара в корзину"""
     quantity = forms.IntegerField(label='количество', min_value=1, widget=forms.NumberInput )
 
 
 class CartAddProductShopForm(forms.Form):
+    """Форма для добавления товара выбранного магазина в корзину"""
     quantity = forms.IntegerField(min_value=1, widget=forms.HiddenInput)
-    shop = forms.IntegerField(required=False, widget=forms.HiddenInput)
+    product = forms.IntegerField(required=False, widget=forms.HiddenInput)
+    shop = forms.CharField(required=False, widget=forms.HiddenInput)
 
 
 class CartUpdateQuantityProductForm(forms.Form):
-    quantity = forms.IntegerField(label='количество', min_value=1, widget=forms.NumberInput )
+    """Форма для обновления количества товара на странице корзины"""
+    quantity = forms.IntegerField(label='количество', min_value=0, widget=forms.NumberInput )
     item_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
 
 class CartShopsForm(forms.Form):
+    """Форма для изменения магазина и цены товара на странице корзины"""
     def __init__(self, product, item_id, *args, **kwargs):
         self.product = product
         self.item_id = item_id
         super(CartShopsForm, self).__init__(*args, **kwargs)
         shops = CartItems().get_shops_for_cart_item(self.product)
         shop_tuple = tuple((shop.shop.id, shop.shop.name) for shop in shops)
-        self.fields['shop'] = forms.ChoiceField(choices=shop_tuple, label='магазин')
+        self.fields['shop'] = forms.ChoiceField(choices=shop_tuple, label='')
         self.fields['product'] = forms.IntegerField(required=False,
         widget=forms.HiddenInput,
         initial=self.product)

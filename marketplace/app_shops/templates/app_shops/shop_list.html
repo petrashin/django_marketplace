@@ -155,10 +155,10 @@
                 </strong>
                 <div class="Card-description">
                   <div class="Card-cost">
-                    {% if item.price_type.discount > 0 %}
-                    <span class="Card-priceOld">{{ item.old_price }} руб.</span>
+                    {% if item.product.discount.discount_value > 0 %}
+                    <span class="Card-priceOld">{{ item.price }} руб.</span>
                     {% endif %}
-                    <span class="Card-price">{{ item.current_price }} руб.</span>
+                    <span class="Card-price">{{ item.get_discounted_price }} руб.</span>
                   </div>
                   {% for cat in item.product.category.all %}
                   <div class="Card-category">{{ cat.name }}
@@ -171,8 +171,8 @@
                   </div>
                 </div>
               </div>
-              {% if item.price_type.discount > 0 %}
-              <div class="Card-sale">-{{ item.price_type.discount }}
+              {% if item.product.discount.discount_value > 0 %}
+              <div class="Card-sale">-{{ item.product.discount.discount_value }}
               </div>
               {% endif %}
             </div>

@@ -24,7 +24,7 @@ class BaseTemplateView(TemplateView):
 
 class ShopListView(ListView):
     context_object_name = 'products'
-    template_name = 'shop_list.html'
+    template_name = 'app_shops/shop_list.html'
     queryset = ShopProduct.objects.select_related('shop', 'product'). \
         filter(is_available=True). \
         prefetch_related('product__category', 'product__product_images')
@@ -34,7 +34,7 @@ class ShopDetailView(DetailView):
     """ Детальная страница магазина """
     model = Shop
     context_object_name = 'shop'
-    template_name = 'shop.html'
+    template_name = 'app_shops/shop.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
