@@ -3,20 +3,13 @@ from rest_framework import serializers
 from .models import Billing
 
 
-class GetOrderSerializer(serializers.ModelSerializer):
+class GetBillingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Billing
-        fields = ('order_id')
+        fields = ('order',)
 
 
-class PostOrderSerializer(serializers.ModelSerializer):
+class PostBillingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Billing
-        fields = ('order_id', 'card_num', 'payment_amount')
-
-#
-# {
-# "order_id": 1,
-# "card_num": 113,
-# "payment_amount": 12
-# }
+        fields = ('order', 'card_num', 'payment_amount')
