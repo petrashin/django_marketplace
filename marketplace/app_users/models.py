@@ -17,6 +17,7 @@ class Profile(models.Model):
     balance = models.DecimalField(verbose_name="Баланс", max_digits=10, decimal_places=2, default=0)
     role = models.ForeignKey(Role, verbose_name="Роль", on_delete=models.PROTECT)
     fullname = models.CharField(max_length=256, verbose_name="ФИО", blank=True)
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def __str__(self):
         return self.user.get_full_name()
