@@ -1,7 +1,10 @@
 import re
 from django.shortcuts import render
 from app_users.models import Profile, Image
+from app_order.models import Order
+from app_shops.models import ShopProduct
 from django.views import View
+from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
@@ -10,9 +13,11 @@ from django.core.files.storage import FileSystemStorage
 def account_view(request):
     profile = Profile.objects.filter(user_id=request.user.id).get()
     avatar_object = Image.objects.filter(profile_id=profile)
+    last_order = Order.objects.order_by('-date_order').first()
     data = {
         "full_name": profile.fullname,
-        "avatar": avatar_object[0].avatar
+        "avatar": avatar_object[0].avatar,
+        "order": last_order,
     }
     return render(request, "account.html", context=data)
 
@@ -146,3 +151,26 @@ class EditProfile(View):
             data["changed_successfully"] = False
 
         return render(request, "profile.html", context=data)
+
+
+class OrderListView(generic.ListView):
+    model = Order
+    template_name = "historyorder.html"
+    context_object_name = 'order_list'
+    queryset = Order.objects.order_by('-date_order')
+
+
+class OrderDetailView(generic.DetailView):
+    model = Order
+    template_name = 'order_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        order = Order.objects.get(pk=self.object.id)
+        products = {}
+        for product_id, quantity in order.order_goods.items():
+            new_product = ShopProduct.objects.get(product_id=product_id)
+            products[new_product] = quantity
+        context['products'] = products
+        return context
+
