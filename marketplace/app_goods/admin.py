@@ -13,7 +13,7 @@ class ProductImageInline(admin.TabularInline):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'published']
     prepopulated_fields = {'slug': ('name',)}
-	
+
     def has_delete_permission(self, *args, **kwargs):
         return False
 
@@ -25,8 +25,7 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]
 
     def has_delete_permission(self, *args, **kwargs):
-	    return False
-
+        return False
 
 
 @admin.register(Discount)
