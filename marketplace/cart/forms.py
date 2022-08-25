@@ -36,4 +36,3 @@ class CartShopsForm(forms.Form):
         self.fields['item_id'] = forms.IntegerField(required=False,
         widget=forms.HiddenInput,
         initial=self.item_id)
-

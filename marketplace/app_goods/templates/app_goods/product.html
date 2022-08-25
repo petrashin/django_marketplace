@@ -159,10 +159,10 @@
                                         </strong>
                                     </div>
                                     <div class="Categories-block Categories-button">
-                                        <form action="{% url 'cart_add' product.slug %}" method="post">
-                                        {% csrf_token %}
-                                        {{ shop.shop_add_form }}
-                                            <input type="submit" class="btn btn_primary" value="Купить">
+                                        <form action="{% url 'cart_shop_add' product.slug %}" method="post">
+                                            {% csrf_token %}
+                                            {{ shop.shop_add_form }}
+                                            <button type="submit" class="btn btn_primary" value="Купить">
                                             <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
                                             alt="cart_white.svg"/>
                                         </form>

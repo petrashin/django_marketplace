@@ -48,11 +48,13 @@ class CartItemsListView(ListView):
 def cart_add(request, slug):
     cart = CartItems()
     product = get_object_or_404(Product, slug=slug)
+    shop = None
     form = CartAddProductForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
         cart.add(request=request,
                  product=product,
+                 shop=shop,
                  quantity=cd['quantity']
                  )
     return redirect('cart_detail')
@@ -63,12 +65,11 @@ def cart_shop_add(request, slug):
     cart = CartItems()
     product = get_object_or_404(Product, slug=slug)
     form = CartAddProductShopForm(request.POST)
-    print('form:', form)
     if form.is_valid():
         cd = form.cleaned_data
-        print('cd: ', cd)
         cart.add(request=request,
                  product=product,
+                 shop=cd['shop'],
                  quantity=cd['quantity']
                  )
     return redirect('cart_detail')
@@ -77,7 +78,7 @@ def cart_shop_add(request, slug):
 def cart_remove(request, **kwargs):
     item_id = kwargs['pk']
     cart = CartItems()
-    cart.remove_cart_item(request, item_id)
+    cart.remove_cart_item(item_id)
     return redirect('cart_detail')
 
 
