@@ -8,7 +8,7 @@
           <h1 class="Middle-title">About {{shop.name}}
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="index.html">home</a>
+            <li class="breadcrumbs-item"><a href="../../../templates/index.html">home</a>
             </li>
             <li class="breadcrumbs-item breadcrumbs-item_current"><span>About Us</span>
             </li>
@@ -153,34 +153,41 @@
           <div class="Cards">
 
             {% for product in products %}
+                {% for image in product.product.product_images.all %}
                 <div class="Card">
-                  <a class="Card-picture" href="{% url 'product_detail' product.product__slug %}">
-                    <img src="/media/{{ product.product__product_images__main_image }}" alt="card.jpg"/></a>
+                  <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
+                    <img src="{{ image.main_image.url }}" alt="card.jpg"/></a>
                   <div class="Card-content">
-                    <strong class="Card-title"><a href="{% url 'product_detail' product.product__slug %}">{{ product.product__name }}</a>
+                    <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
                     </strong>
                     <div class="Card-description">
                       <div class="Card-cost">
-                        {% if product.price_type__discount > 0%}
-                        <span class="Card-priceOld">{{ product.old_price }} руб.</span>
+                        {% if product.product.discount.discount_value > 0%}
+                        <span class="Card-priceOld">{{ product.price }} руб.</span>
                         {% endif %}
-                        <span class="Card-price">{{ product.current_price }} руб.</span>
+                        <span class="Card-price">{{ product.get_discounted_price }} руб.</span>
                       </div>
                       <div class="Card-category">Games / xbox
                       </div>
                       <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                        <a class="Card-btn" href="{% url 'cart_detail' %}"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+                          <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
+                          {% csrf_token %}
+                          {{ product.add_to_cart_form }}
+                          <button type="submit" class="Card-btn">
+                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
+                          </button>
+                      </form>
                         <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
                       </div>
                     </div>
                   </div>
-                  {% if product.price_type__discount > 0%}
-                  <div class="Card-sale">-{{product.price_type__discount}}%
+                  {% if product.product.discount.discount_value > 0%}
+                  <div class="Card-sale">-{{product.product.discount.discount_value}}%
                   </div>
                   {% endif %}
                 </div>
+                {% endfor %}
             {% endfor %}
-
           </div>
         </div>
       </div>
