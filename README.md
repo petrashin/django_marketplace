@@ -1,28 +1,13 @@
-## Установка и запуск redis и celery:
+## Зпуск проекта из docker'а:
 
-Устанавливаем docker
+1.Устанавливаем docker
 
-В консоли выпоняем команду:
+2.Переходим в дерикторию
 
-```bash
-docker pull redis
-```
+python_django_group_diploma/marketplace
 
-Запускаем редис:
+3.В консоли выпоняем команду:
 
 ```bash
-docker run -d -p 6379:6379 redis
-```
-
-Запустить веб-сервер проекта:
-
-```bash
-python manage.py runserver
-```
-
-Запускаем celery:
-
-Из папки, где у нас manage.py
-```bash
-celery -A marketplace worker -l info
+docker compose up
 ```
