@@ -79,25 +79,49 @@
           </div>
         </div>
         <div class="Section-content">
-          <div class="Sort">
+          <div class="Sort"> {# сортировка #}
             <div class="Sort-title">Сортировать по:
             </div>
-            <div class="Sort-variants"><a class="Sort-sortBy Sort-sortBy_dec" href="#">Популярности</a><a class="Sort-sortBy" href="#">Цене</a><a class="Sort-sortBy" href="#">Отзывам</a><a class="Sort-sortBy Sort-sortBy_inc" href="#">Новизне</a>
+            <div class="Sort-variants"> {# виды сортировки #}
+                <a
+                {% if request.GET.sort == 'popularity' and request.GET.type == 'ascending' %} class="Sort-sortBy Sort-sortBy_inc" href="?sort=popularity&type=descending"
+                {% elif request.GET.sort == 'popularity' and request.GET.type == 'descending' %} class="Sort-sortBy Sort-sortBy_dec" href="?sort=popularity&type=ascending"
+                {% else %} class="Sort-sortBy" href="?sort=popularity&type=ascending"{% endif %}>
+                Популярности
+                </a>
+                <a
+                {% if request.GET.sort == 'price' and request.GET.type == 'ascending' %} class="Sort-sortBy Sort-sortBy_inc" href="?sort=price&type=descending"
+                {% elif request.GET.sort == 'price' and request.GET.type == 'descending' %} class="Sort-sortBy Sort-sortBy_dec" href="?sort=price&type=ascending"
+                {% else %} class="Sort-sortBy" href="?sort=price&type=ascending"{% endif %}>
+                Цене
+                </a>
+                <a
+                {% if request.GET.sort == 'reviews' and request.GET.type == 'ascending' %} class="Sort-sortBy Sort-sortBy_inc" href="?sort=reviews&type=descending"
+                {% elif request.GET.sort == 'reviews' and request.GET.type == 'descending' %} class="Sort-sortBy Sort-sortBy_dec" href="?sort=reviews&type=ascending"
+                {% else %} class="Sort-sortBy" href="?sort=reviews&type=ascending"{% endif %}>
+                Отзывам
+                </a>
+                <a
+                {% if request.GET.sort == 'new' and request.GET.type == 'ascending' %} class="Sort-sortBy Sort-sortBy_inc" href="?sort=new&type=descending"
+                {% elif request.GET.sort == 'new' and request.GET.type == 'descending' %} class="Sort-sortBy Sort-sortBy_dec" href="?sort=new&type=ascending"
+                {% else %} class="Sort-sortBy" href="?sort=new&type=ascending"{% endif %}>
+                Новизне
+                </a>
             </div>
-          </div>
-          <div class="Cards">
+          </div> {# /сортировка #}
+          <div class="Cards"> {# карточки продуктов #}
           {% if object_list %}
             {% for product in object_list %}
-              <div class="Card"><a class="Card-picture" href="#"><img src={% static 'assets/img/content/home/card.jpg' %} alt="card.jpg"/></a>
+              <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.product.slug %}"><img src={% static 'assets/img/content/home/card.jpg' %} alt="card.jpg"/></a>
                 <div class="Card-content">
-                  <strong class="Card-title"><a href="../app_goods/templates/app_goods/product.html">{{ product.category.all.0 }} {{ product.name }}</a>
+                  <strong class="Card-title"><a href="product.html">{{ product.product.category.all.0 }} {{ product.product.name }}</a>
                   </strong>
                   <div class="Card-description">
                     <div class="Card-cost">
-                      <span class="Card-priceOld">{{ product.price.base_price }}</span>
-                      <span class="Card-price">{{ product.price.discounted_price }}</span>
+                      <span class="Card-priceOld">{{ product.price }}</span>
+                      <span class="Card-price">{{ product.get_discounted_price }}</span>
                     </div>
-                    <div class="Card-category">{{ product.category.all.1 }} - {{ product.category.all.0 }}
+                    <div class="Card-category">{{ product.product.category.all.1 }} - {{ product.product.category.all.0 }}
                       </div>
                         <div class="Card-hover">
                           <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/bookmark.svg' %} alt="bookmark.svg"/></a>
@@ -111,32 +135,32 @@
               </div>
             {% endfor %}
           {% else %} {% include 'empty_category.html' %} {% endif %}
-          </div>
-          {% if object_list.has_other_pages %}
+          </div> {# /карточки продуктов #}
+          {% if object_list.has_other_pages %} {# пагинация #}
           <div class="Pagination">
             <div class="Pagination-ins">
               {% if object_list.has_previous %}
-                <a class="Pagination-element Pagination-element_prev" href="?page={{ object_list.previous_page_number }}">
+                <a class="Pagination-element Pagination-element_prev" href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&type={{ request.GET.type }}&{% endif %}page={{ object_list.previous_page_number }}">
                 <img src={% static 'assets/img/icons/prevPagination.svg' %} alt="prevPagination.svg"/></a>
                   {% endif %}
                     {% for page_number in object_list.paginator.page_range %}
                       {% if page_number > object_list.number|add:-2 and page_number < object_list.number|add:2 %}
                         {% if object_list.number == page_number %}
-                          <a class="Pagination-element Pagination-element_current" href="?page={{ page_number }}">
+                          <a class="Pagination-element Pagination-element_current" href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&type={{ request.GET.type }}&{% endif %}page={{ page_number }}">
                           <span class="Pagination-text">{{ page_number }}</span></a>
                         {% else %}
-                          <a class="Pagination-element" href="?page={{ page_number }}">
+                          <a class="Pagination-element" href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&type={{ request.GET.type }}&{% endif %}page={{ page_number }}">
                           <span class="Pagination-text">{{ page_number }}</span></a>
                         {% endif %}
                       {% endif %}
                     {% endfor %}
                   {% if object_list.has_next %}
-                   <a class="Pagination-element Pagination-element_prev" href="?page={{ object_list.next_page_number }}">
+                   <a class="Pagination-element Pagination-element_prev" href="?{% if request.GET.sort %}sort={{ request.GET.sort }}&type={{ request.GET.type }}&{% endif %}page={{ object_list.next_page_number }}">
                    <img src={% static 'assets/img/icons/nextPagination.svg' %} alt="nextPagination.svg"/></a>
                  {% endif %}
                 </div>
               </div>
-            {% endif %}
+            {% endif %} {# /пагинация #}
           </div>
         </div>
       </div>

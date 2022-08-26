@@ -91,7 +91,7 @@
               <a class="CartBlock-block" href="{% url 'cart_detail' %}">
                   <img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg"/>
                   <span class="CartBlock-amount">{{ total_items }}</span></a>
-            <div class="CartBlock-block"><span class="CartBlock-price">{{ cart_total_cost }}руб.</span>
+            <div class="CartBlock-block"><span class="CartBlock-price">{{ cart.get_total_cost }}</span>
             </div>
               {% endwith %}
           </div>

@@ -1,3 +1,7 @@
+import os
+
+from decimal import Decimal
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
@@ -38,12 +42,14 @@ class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name='наименование')
     parent_category = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True,
                                         related_name="sub", verbose_name="родительская категория")
-    category_icon = models.FileField(upload_to="icons/categories/", verbose_name="иконка категории", null=True)
+    category_icon = models.FileField(upload_to="icons/categories/", verbose_name="иконка категории",
+                                     default=os.path.abspath(f'{settings.BASE_DIR}/media/icons/categories/test_category_icon.jpg'))
     slug = models.SlugField(max_length=255,
                             db_index=True,
                             verbose_name='url',
                             help_text='уникальный фрагмент url на основе наименования товара'
                             )
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def __str__(self):
         return self.name
@@ -78,6 +84,7 @@ class Product(models.Model):
                                  )
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
     sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def __str__(self):
         return self.name
@@ -129,6 +136,7 @@ class Reviews(models.Model):
     text = models.TextField(verbose_name="сообщение", max_length=5000)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время создания')
     product = models.ForeignKey(Product, verbose_name="товар", on_delete=models.CASCADE)
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def __str__(self):
         return f"{self.product} - {self.user.username}"
