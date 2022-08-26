@@ -46,6 +46,7 @@ class CartItemsListView(ListView):
 
 @require_POST
 def cart_add(request, slug):
+    """ Представление для добавления товара в корзину из детальной страницы товара без выбора продавца """
     cart = CartItems()
     product = get_object_or_404(Product, slug=slug)
     shop = None
@@ -62,6 +63,7 @@ def cart_add(request, slug):
 
 @require_POST
 def cart_shop_add(request, slug):
+    """ Представление для добавления товара в корзину с выбранным продавцом """
     cart = CartItems()
     product = get_object_or_404(Product, slug=slug)
     form = CartAddProductShopForm(request.POST)
@@ -76,6 +78,7 @@ def cart_shop_add(request, slug):
 
 
 def cart_remove(request, **kwargs):
+    """ Представление для удаления товара из корзины """
     item_id = kwargs['pk']
     cart = CartItems()
     cart.remove_cart_item(item_id)
@@ -83,6 +86,7 @@ def cart_remove(request, **kwargs):
 
 
 def cart_update_quantity(request, **kwargs):
+    """ Представление для обновления количества товара в корзине """
     item_id = kwargs['pk']
     cart = CartItems()
     cart.update_cart_quantity(request, item_id)
@@ -90,6 +94,7 @@ def cart_update_quantity(request, **kwargs):
 
 
 def cart_update_price(request, **kwargs):
+    """ Представление для обновления магазина и цены товара в корзине """
     item_id = kwargs['pk']
     cart = CartItems()
     cart.update_cart_price(request, item_id)

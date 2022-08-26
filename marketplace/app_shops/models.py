@@ -67,7 +67,8 @@ class ShopProduct(models.Model):
                 return Decimal(discounted_price)
             else:
                 return Decimal(1)
-        return self.price
+        else:
+            return self.price
 
     def __str__(self):
         return f'{self.shop.name}:{self.product.name}'

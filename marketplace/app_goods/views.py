@@ -34,12 +34,19 @@ class ProductDetailView(FormMixin, DetailView):
         context['price'] = round(mean([product.price for product in products]), 2)
         context['discounted_aver_price'] = round(mean([product.get_discounted_price() for product in products]), 2)
         context['shops'] = products
-        for shop in context['shops']:
-            shop.shop_add_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                 'shop': shop.shop.name,
-                                                                 'product': self.object.id
-                                                                 })
-
+        if context['shops']:
+            if len(context['shops']) > 1:
+                for shop in context['shops']:
+                    shop.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                            'shop': shop.shop.name,
+                                                                            'product': self.object.id
+                                                                            })
+            else:
+                shop = context['shops'][0]
+                shop.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                        'shop': shop.shop.name,
+                                                                        'product': self.object.id
+                                                                        })
         return context
 
 

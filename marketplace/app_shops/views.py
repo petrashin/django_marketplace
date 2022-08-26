@@ -2,6 +2,7 @@ from django.core.paginator import Paginator
 from django.views.generic import TemplateView, DetailView, ListView
 from app_goods.models import Product
 from app_shops.models import ShopProduct, Shop
+from cart.forms import CartAddProductShopForm
 
 
 class CatalogTemplateView(TemplateView):
@@ -29,6 +30,15 @@ class ShopListView(ListView):
         filter(is_available=True). \
         prefetch_related('product__category', 'product__product_images')
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for product in self.object_list:
+            product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                       'shop': product.shop.name,
+                                                                       'product': product.product.id
+                                                                       })
+        return context
+
 
 class ShopDetailView(DetailView):
     """ Детальная страница магазина """
@@ -43,4 +53,18 @@ class ShopDetailView(DetailView):
             filter(shop__slug=self.object.slug, is_available=True). \
             select_related('product'). \
             prefetch_related('product__product_images', 'product__category')
+        if context['products']:
+            if len(context['products']) > 1:
+                for product in context['products']:
+                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                               'shop': self.object.name,
+                                                                               'product': product.product.id
+                                                                               })
+            else:
+                product = context['products'][0]
+                product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                           'shop': self.object.name,
+                                                                           'product': product.product.id
+                                                                           })
+
         return context
