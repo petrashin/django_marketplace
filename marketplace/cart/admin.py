@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import CartItems
+
+
+@admin.register(CartItems)
+class CartItemsAdmin(admin.ModelAdmin):
+    list_display = ['user', 'session_id', 'product', 'shop', 'price', 'quantity', 'added_at']
+

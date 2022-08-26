@@ -35,17 +35,17 @@
                             </div>
                             <div class="Cart-block Cart-block_row">
                                 <div class="Cart-block Cart-block_price">
+                                    <div class="Cart-price_old">{{ item.old_price }}</div>
                                     <div class="Cart-price">{{ item.price }} руб.
                                     </div>
                                 </div>
                                 <div class="Cart-block Cart-block_seller">
                                     <form class="form-select" action="{% url 'cart_update_price' item.id %}" method="post">
-                                    {% csrf_token %}
-                                       {{ item.shops_form }}
+                                        {% csrf_token %}
+                                        {{ item.shop }}
+                                        {{ item.shops_form }}
                                         <input type='submit' value='Обновить'>
                                     </form>
-                                    <div class="Cart-price">{{ item.shop }}
-                                    </div>
                                 </div>
                             </div>
                             <div class="Cart-block Cart-block_amount">
@@ -75,7 +75,7 @@
             <div class="Cart-block Cart-block_total">
                 <strong class="Cart-title">Итого:
                 </strong><span class="Cart-price">{{ total_cost }}</span><span
-                    class="Cart-price_old">250.99$</span>
+                    class="Cart-price_old">{{ old_total_cost }}</span>
             </div>
             <div class="Cart-block"><a class="btn btn_success btn_lg" href="order.html">Оформить заказ</a>
             </div>

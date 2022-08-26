@@ -155,10 +155,10 @@
                 </strong>
                 <div class="Card-description">
                   <div class="Card-cost">
-                    {% if item.price_type.discount > 0 %}
-                    <span class="Card-priceOld">{{ item.old_price }} руб.</span>
+                    {% if item.product.discount.discount_value > 0 %}
+                    <span class="Card-priceOld">{{ item.price }} руб.</span>
                     {% endif %}
-                    <span class="Card-price">{{ item.current_price }} руб.</span>
+                    <span class="Card-price">{{ item.get_discounted_price }} руб.</span>
                   </div>
                   {% for cat in item.product.category.all %}
                   <div class="Card-category">{{ cat.name }}
@@ -166,13 +166,19 @@
                   {% endfor %}
                   <div class="Card-hover">
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+                      <form action="{% url 'cart_shop_add' item.product.slug %}" method="post">
+                          {% csrf_token %}
+                          {{ item.add_to_cart_form }}
+                          <button type="submit" class="Card-btn">
+                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
+                          </button>
+                      </form>
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
                   </div>
                 </div>
               </div>
-              {% if item.price_type.discount > 0 %}
-              <div class="Card-sale">-{{ item.price_type.discount }}
+              {% if item.product.discount.discount_value > 0 %}
+              <div class="Card-sale">-{{ item.product.discount.discount_value }}
               </div>
               {% endif %}
             </div>
