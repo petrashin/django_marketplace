@@ -5,7 +5,8 @@ from .models import CartItems
 
 class CartAddProductForm(forms.Form):
     """Форма для добавления товара в корзину"""
-    quantity = forms.IntegerField(label='количество', min_value=1, widget=forms.NumberInput )
+    quantity = forms.IntegerField(label='количество', min_value=1,
+    widget=forms.NumberInput(attrs={'style':'max-width: 5em'}))
 
 
 class CartAddProductShopForm(forms.Form):
@@ -17,7 +18,8 @@ class CartAddProductShopForm(forms.Form):
 
 class CartUpdateQuantityProductForm(forms.Form):
     """Форма для обновления количества товара на странице корзины"""
-    quantity = forms.IntegerField(label='количество', min_value=0, widget=forms.NumberInput )
+    quantity = forms.IntegerField(label='количество', min_value=0,
+    widget=forms.NumberInput(attrs={'style':'max-width: 5em'}) )
     item_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
 
@@ -29,7 +31,8 @@ class CartShopsForm(forms.Form):
         super(CartShopsForm, self).__init__(*args, **kwargs)
         shops = CartItems().get_shops_for_cart_item(self.product)
         shop_tuple = tuple((shop.shop.id, shop.shop.name) for shop in shops)
-        self.fields['shop'] = forms.ChoiceField(choices=shop_tuple, label='')
+        self.fields['shop'] = forms.ChoiceField(choices=shop_tuple, label='',
+        widget=forms.Select(attrs={'style': 'min-height: 2em'}))
         self.fields['product'] = forms.IntegerField(required=False,
         widget=forms.HiddenInput,
         initial=self.product)
