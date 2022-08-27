@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block js %}
+<script>
+</script>
+{% endblock %}
 {% block content %}
+
 <div class="Middle Middle_top">
     <div class="Middle-top">
         <div class="wrap">
@@ -66,13 +71,14 @@
                         </div>
                         <div class="ProductCard-cart">
                             <div class="ProductCard-cartElement ProductCard-cartElement_amount">
-                                <div class="Amount Amount_product">
+                                <div class="ProductCard-cartElement">
                                     <form action="{% url 'cart_add' product.slug %}" method="post">
                                         {{ form }}
                                         {% csrf_token %}
-                                        <input type="submit" class="btn btn_primary" value="Добавить в корзину"><img
+                                        <button type="submit" class="btn btn_primary" value="Добавить в корзину"><img
                                             class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
-                                            alt="cart_white.svg"/>
+                                            alt="cart_white.svg"/><span class="btn-content">Добавить в корзину</span>
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -81,12 +87,14 @@
                             <div class="ProductCard-tags">
                                 <strong class="ProductCard-tagsTitle">Tags:
                                 </strong>
+                            {% if product.category %}
                                 {% for category in product.category.all %}
                                 <a href="#">{{ category.name }}</a>,
 <!--                                <a href="#">Creative</a>,-->
 <!--                                <a href="#">Design</a>,-->
 <!--                                <a href="#">Gaming</a>-->
                                 {% endfor %}
+                            {% endif %}
                             </div>
                         </div>
                     </div>
@@ -144,6 +152,7 @@
                         </div>
                         <div class="Tabs-block" id="sellers">
                             <div class="Categories Categories_product">
+                            {% if shops %}
                                 {% for shop in shops %}
                                 <div class="Categories-row">
 
@@ -170,6 +179,7 @@
                                     </div>
                                 </div>
                                 {% endfor %}
+                            {% endif %}
 
                             </div>
                         </div>

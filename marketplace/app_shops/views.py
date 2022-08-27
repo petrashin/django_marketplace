@@ -36,6 +36,22 @@ class CatalogTemplateView(TemplateView):
         page = self.request.GET.get('page', 1)
         products = Paginator(products_qs, 8).get_page(page)
         context['object_list'] = products
+
+        # добавляем в контекст форму для добавления товара в корзину из каталога
+        if products:
+            if len(products) > 1:
+                for product in products:
+                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                               'shop': product.shop.name,
+                                                                               'product': product.product.id
+                                                                               })
+            else:
+                product = products[0]
+                product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                           'shop': product.shop.name,
+                                                                           'product': product.product.id
+                                                                           })
+
         return context
 
 
@@ -54,11 +70,20 @@ class ShopListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        for product in self.object_list:
-            product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                       'shop': product.shop.name,
-                                                                       'product': product.product.id
-                                                                       })
+        products = self.object_list
+        if products:
+            if len(products) > 1:
+                for product in products:
+                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                               'shop': product.shop.name,
+                                                                               'product': product.product.id
+                                                                               })
+            else:
+                product = products[0]
+                product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                           'shop': product.shop.name,
+                                                                           'product': product.product.id
+                                                                           })
         return context
 
 

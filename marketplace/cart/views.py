@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
@@ -58,7 +59,8 @@ def cart_add(request, slug):
                  shop=shop,
                  quantity=cd['quantity']
                  )
-    return redirect('cart_detail')
+        messages.success(request, f'{product.name} успешно добавлен в корзину!')
+    return redirect('product_detail', slug=slug)
 
 
 @require_POST
@@ -74,7 +76,8 @@ def cart_shop_add(request, slug):
                  shop=cd['shop'],
                  quantity=cd['quantity']
                  )
-    return redirect('cart_detail')
+        messages.success(request, f'{product.name} успешно добавлен в корзину!')
+    return redirect('shops')
 
 
 def cart_remove(request, **kwargs):
