@@ -112,27 +112,42 @@
           <div class="Cards"> {# карточки продуктов #}
           {% if object_list %}
             {% for product in object_list %}
-              <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.product.slug %}"><img src={% static 'assets/img/content/home/card.jpg' %} alt="card.jpg"/></a>
-                <div class="Card-content">
-                  <strong class="Card-title"><a href="../app_goods/templates/app_goods/product.html">{{ product.product.category.all.0 }} {{ product.product.name }}</a>
-                  </strong>
-                  <div class="Card-description">
-                    <div class="Card-cost">
-                      <span class="Card-priceOld">{{ product.price }}</span>
-                      <span class="Card-price">{{ product.get_discounted_price }}</span>
-                    </div>
-                    <div class="Card-category">{{ product.product.category.all.1 }} - {{ product.product.category.all.0 }}
-                      </div>
-                        <div class="Card-hover">
-                          <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/bookmark.svg' %} alt="bookmark.svg"/></a>
-                          <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/cart.svg' %} alt="cart.svg"/></a>
-                          <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/change.svg' %} alt="change.svg"/></a>
-                        </div>
-                      </div>
-                    </div>
-                  <div class="Card-sale">-60%
+                {% if product.product.product_images %}
+                    {% for image in product.product.product_images.all %}
+                      <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.product.slug %}"><img src={{ image.main_image.url }} alt="card.jpg"/></a>
+                        <div class="Card-content">
+                          <strong class="Card-title"><a href="../app_goods/templates/app_goods/product.html">{{ product.product.category.all.0 }} {{ product.product.name }}</a>
+                          </strong>
+                          <div class="Card-description">
+                            <div class="Card-cost">
+                              <span class="Card-priceOld">{{ product.price }}</span>
+                              <span class="Card-price">{{ product.get_discounted_price }}</span>
+                            </div>
+                            <div class="Card-category">{{ product.product.category.all.1 }} - {{ product.product.category.all.0 }}
+                              </div>
+                                <div class="Card-hover">
+                                  <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/bookmark.svg' %} alt="bookmark.svg"/></a>
+
+                                    <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
+                                    {% csrf_token %}
+                                    {{ product.add_to_cart_form }}
+                                    <button type="submit" class="Card-btn">
+                                    <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
+                                    </button>
+                                    </form>
+
+                                  <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/change.svg' %} alt="change.svg"/></a>
+                                </div>
+                              </div>
+                            </div>
+                      {% endfor %}
+                  {% if product.product.discount.discount_value > 0 %}
+                  <div class="Card-sale">-{{ product.product.discount.discount_value }}
                 </div>
+              {% endif %}
               </div>
+
+                {% endif %}
             {% endfor %}
           {% else %} {% include 'empty_category.html' %} {% endif %}
           </div> {# /карточки продуктов #}
