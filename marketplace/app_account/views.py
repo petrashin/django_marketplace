@@ -1,6 +1,6 @@
 import re
 from django.shortcuts import render
-from app_users.models import Profile, Image
+from app_users.models import Profile, Image, Role
 from app_order.models import Order
 from app_shops.models import ShopProduct
 from django.views import View
@@ -11,9 +11,18 @@ from django.core.files.storage import FileSystemStorage
 
 
 def account_view(request):
-    profile = Profile.objects.filter(user_id=request.user.id).get()
+    if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
+        if Role.objects.filter(name='Администратор').exists():
+            role = Role.objects.get(name='Администратор')
+        else:
+            role = Role.objects.create(name='Администратор')
+        profile = Profile.objects.create(user=request.user, role=role)
+        Image.objects.create(profile=profile)
+    else:
+        profile = Profile.objects.filter(user_id=request.user.id).get()
+
     avatar_object = Image.objects.filter(profile_id=profile)
-    last_order = Order.objects.order_by('-date_order').first()
+    last_order = Order.objects.filter(user=request.user).order_by('-date_order').first()
     data = {
         "full_name": profile.fullname,
         "avatar": avatar_object[0].avatar,
@@ -157,7 +166,9 @@ class OrderListView(generic.ListView):
     model = Order
     template_name = "historyorder.html"
     context_object_name = 'order_list'
-    queryset = Order.objects.order_by('-date_order')
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user).order_by('-date_order')
 
 
 class OrderDetailView(generic.DetailView):
