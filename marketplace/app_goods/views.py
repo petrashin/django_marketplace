@@ -17,7 +17,7 @@ class ProductDetailView(FormMixin, DetailView):
     и добавления его в корзину"""
     model = Product
     context_object_name = 'product'
-    template_name = 'product.html'
+    template_name = 'app_goods/product.html'
     form_class = CartAddProductForm
     extra_context = {'title': 'Товар', 'review_form': ReviewForm, 'reviews': Reviews.objects.all}
 
@@ -34,12 +34,21 @@ class ProductDetailView(FormMixin, DetailView):
         context['price'] = round(mean([product.price for product in products]), 2)
         context['discounted_aver_price'] = round(mean([product.get_discounted_price() for product in products]), 2)
         context['shops'] = products
-        for shop in context['shops']:
-            context['shops'].shop_add_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                             'shop': shop.shop.name
-                                                                             })
-
+        if context['shops']:
+            if len(context['shops']) > 1:
+                for shop in context['shops']:
+                    shop.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                            'shop': shop.shop.name,
+                                                                            'product': self.object.id
+                                                                            })
+            else:
+                shop = context['shops'][0]
+                shop.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                        'shop': shop.shop.name,
+                                                                        'product': self.object.id
+                                                                        })
         return context
+
 
 
 class AddReview(View):
