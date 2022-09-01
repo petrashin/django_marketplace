@@ -50,7 +50,6 @@ class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
 
         return context
 
-
 class AddReview(View):
     """ Отзыв """
 
