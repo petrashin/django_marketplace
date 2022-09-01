@@ -12,8 +12,8 @@ SORT_OPTIONS = {
 }
 
 SORT_DIRECTIONS = {
-    'ascending': '-',
-    'descending': '',
+    'ascending': '',
+    'descending': '-',
 }
 
 DEFAULT_OPTION = F('id')
