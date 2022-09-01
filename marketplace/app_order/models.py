@@ -1,5 +1,5 @@
 from django.db import models
-from app_shops.models import ShopProduct, Shop
+from app_shops.models import ShopProduct
 from django.contrib.auth.models import User
 
 
@@ -39,7 +39,7 @@ class Order(models.Model):
     pay_method = models.ForeignKey(PayMethod, on_delete=models.DO_NOTHING, verbose_name='вариант оплаты', blank=True, null=True)
     order_comment = models.CharField(max_length=150, null=True, blank=True, verbose_name='комментарий к заказу')
     published = models.BooleanField(default=True, verbose_name='опубликовать')
-    payment_status = models.CharField(max_length=256, default=None, verbose_name='статус оплаты', blank=True, null=True)
+    payment_error = models.CharField(max_length=256, default=None, verbose_name='текст ошибки, возникшей при оплате', blank=True, null=True)
 
     class Meta:
         db_table = 'app_order_order'
@@ -49,19 +49,15 @@ class Order(models.Model):
     def get_total_cost(self):
         """Функция получения стоимости заказа без скидок"""
         total_cost = 0
-        for shop in self.order_goods:
-            for key, value in self.order_goods[shop].items():
-                shop_id = Shop.objects.get(name=shop).id
-                product = ShopProduct.objects.get(product_id=key, shop=shop_id)
-                total_cost += product.price * value
+        for key, value in self.order_goods.items():
+            product = ShopProduct.objects.get(product_id=key)
+            total_cost += product.price * value
         return float(total_cost)
 
     def get_total_cost_with_discount(self):
-        """Функция получения стоимости заказа с учетом скидок"""
+        """Фукнция получения стоимости заказа с учетом скидок"""
         total_cost = 0
-        for shop in self.order_goods:
-            for key, value in self.order_goods[shop].items():
-                shop_id = Shop.objects.get(name=shop).id
-                product = ShopProduct.objects.get(product_id=key, shop=shop_id)
-                total_cost += product.get_discounted_price() * value
+        for key, value in self.order_goods.items():
+            product = ShopProduct.objects.get(product_id=key)
+            total_cost += product.get_discounted_price() * value
         return float(total_cost)
