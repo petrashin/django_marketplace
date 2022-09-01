@@ -29,14 +29,22 @@
                 <div class="ProductCard">
                     <div class="ProductCard-look">
                         <div class="ProductCard-photo">
+
+                            {# Иконка с размером скидки #}
                             {% if product.discount.discount_value > 0%}
                             <div class="ProductCard-sale">-{{product.discount.discount_value}}%
                             </div>
                             {% endif %}
-                            {% for image in product.product_images.all %}
-                            <img src="{{ image.main_image.url }}" alt="bigGoods.png"/>
-                            {% endfor %}
+
+                            {# Большое изображение товара #}
+                            {% if product.product_images.first.main_image %}
+                                <img src="{{ product.product_images.first.main_image.url }}" alt="bigGoods.png"/>
+                            {%  else %}
+                                <img src="{% static "assets/img/content/home/bigGoods.png" %}" alt="card.jpg"/>
+                            {% endif %}
+
                         </div>
+
                         <div class="ProductCard-picts">
                             <a class="ProductCard-pict ProductCard-pict_ACTIVE"
                                href="{% static 'assets/img/content/home/bigGoods.png' %}"><img
@@ -46,6 +54,7 @@
                             <a class="ProductCard-pict" href="{% static 'assets/img/content/home/videoca.png' %}"><img
                                     src="assets/img/content/home/videoca.png" alt="videoca.png"/></a>
                         </div>
+
                     </div>
                     <div class="ProductCard-desc">
                         <div class="ProductCard-header">
