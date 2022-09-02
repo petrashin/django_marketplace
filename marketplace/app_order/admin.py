@@ -18,13 +18,3 @@ class OrderAdmin(admin.ModelAdmin):
 	
 	def has_delete_permission(self, *args, **kwargs):
 		return False
-
-
-	#
-	# def __init__(self, *args, **kwargs):
-	# 	super(OrderAdmin, self).__init__(*args, **kwargs)
-	# 	self.list_display_links = (None,)
-	#
-	# # to hide change and add buttons on main page:
-	# def get_model_perms(self, request):
-	# 	return {'view': True}
