@@ -116,56 +116,42 @@
                   <h2 class="Section-title">История просмотров
                   </h2>
                 </header>
-                <div class="Cards Cards_account">
-                  <div class="Card"><a class="Card-picture" href="#"><img src="../static/assets/img/content/home/card.jpg" alt="card.jpg"/></a>
-                    <div class="Card-content">
-                      <strong class="Card-title"><a href="#">Corsair Carbide Series Arctic White Steel</a>
-                      </strong>
-                      <div class="Card-description">
-                        <div class="Card-cost"><span class="Card-priceOld">$115.00</span><span class="Card-price">$85.00</span>
+                {% if recent_views %}
+                  <div class="Cards Cards_account">
+                  {% for product in recent_views %}
+                      <div class="Card">
+                        <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
+                          {% for image in product.product.product_images.all %}
+                            <img class="Cart-img" src="{{ image.main_image.url }}"/>
+                          {% endfor %}
+                        </a>
+                        <div class="Card-content">
+                          <strong class="Card-title"><a href="#">{{ product.product.name }}</a>
+                          </strong>
+                          <div class="Card-description">
+                            {% if product.get_discounted_price != product.price %}
+                              <div class="Card-cost"><span class="Card-priceOld">${{ product.get_discounted_price }}</span><span class="Card-price">${{ product.price }}</span>
+                              </div>
+                            {% else %}
+                              <div class="Card-cost"><span class="Card-price">${{ product.get_discounted_price }}</span>
+                              </div>
+                            {% endif %}
+                            <div class="Card-category">{{ product.product.category.first.name }}
+                            </div>
+                            <div class="Card-hover"><a class="Card-btn" href="{% url 'product_detail' product.product.slug %}"><img src="../static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
+                            </div>
+                          </div>
                         </div>
-                        <div class="Card-category">Games / xbox
-                        </div>
-                        <div class="Card-hover"><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
-                        </div>
+                        {% if product.product.discount.discount_value > 0 %}
+                          <div class="Card-sale">-{{ product.product.discount.discount_value }}%
+                          </div>
+                        {% endif %}
                       </div>
-                    </div>
-                    <div class="Card-sale">-60%
-                    </div>
+                  {% endfor %}
                   </div>
-                  <div class="Card hide_700"><a class="Card-picture" href="#"><img src="../static/assets/img/content/home/card.jpg" alt="card.jpg"/></a>
-                    <div class="Card-content">
-                      <strong class="Card-title"><a href="#">Barand New Phone Smart Business</a>
-                      </strong>
-                      <div class="Card-description">
-                        <div class="Card-cost"><span class="Card-priceOld">$115.00</span><span class="Card-price">$85.00</span>
-                        </div>
-                        <div class="Card-category">Games / xbox
-                        </div>
-                        <div class="Card-hover"><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="Card-sale">-60%
-                    </div>
-                  </div>
-                  <div class="Card hide_md"><a class="Card-picture" href="#"><img src="../static/assets/img/content/home/card.jpg" alt="card.jpg"/></a>
-                    <div class="Card-content">
-                      <strong class="Card-title"><a href="#">Mavic PRO Mini Drones Hobby RC Quadcopter</a>
-                      </strong>
-                      <div class="Card-description">
-                        <div class="Card-cost"><span class="Card-priceOld">$115.00</span><span class="Card-price">$185.00</span>
-                        </div>
-                        <div class="Card-category">Digital / xbox
-                        </div>
-                        <div class="Card-hover"><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="Card-sale">-60%
-                    </div>
-                  </div>
-                </div>
+                {% else %}
+                  <p> У вас нет просмотренных товаров </p>
+                {% endif %}
                 <div class="Account-editLink Account-editLink_view"><a href="historyview.html">Перейти на полный список</a>
                 </div>
               </div>

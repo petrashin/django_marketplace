@@ -10,6 +10,7 @@ from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
 from cart.forms import CartAddProductForm, CartAddProductShopForm
+from app_users.models import Profile
 
 
 class ProductDetailView(FormMixin, DetailView):
@@ -29,6 +30,8 @@ class ProductDetailView(FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        profile = Profile.objects.filter(user_id=self.request.user.id).get()  # добавление товара в историю просмотра
+        profile.recent_views.add(self.object.id)
         # считаем среднюю цену товара по магазинам без скидки и со скидкой и добавляем в контекст
         products = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')
         context['price'] = round(mean([product.price for product in products]), 2)
