@@ -5,7 +5,7 @@ from .models import Billing, PayStatus
 
 @admin.register(Billing)
 class BillingAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ["order", "time_stamp", "card_num", "payment_amount", "payment_status"]
 
 
 @admin.register(PayStatus)
