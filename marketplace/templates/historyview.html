@@ -64,8 +64,13 @@
                         <div class="Card-cost"><span class="Card-price">${{ product.get_discounted_price }}</span>
                         </div>
                       {% endif %}
-                      <div class="Card-category">{{ product.product.category.first.name }}
-                      </div>
+                      {% if product.product.category.first.parent_category is null %}
+                        <div class="Card-category"> {{ product.product.category.first.name }}
+                        </div>
+                      {% else %}
+                        <div class="Card-category"> {{ product.product.category.first.parent_category.name }} / {{ product.product.category.first.name }}
+                        </div>
+                      {% endif %}
                       <div class="Card-hover"><a class="Card-btn" href="{% url 'product_detail' product.product.slug %}"><img src="../static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
                       </div>
                     </div>

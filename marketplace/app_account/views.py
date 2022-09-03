@@ -28,7 +28,7 @@ def account_view(request):
         "full_name": profile.fullname,
         "avatar": avatar_object[0].avatar,
         "order": last_order,
-        "recent_views": recent_views,
+        "recent_views": recent_views[:3],
     }
     return render(request, "account.html", context=data)
 
