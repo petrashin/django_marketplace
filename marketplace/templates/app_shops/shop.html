@@ -154,9 +154,9 @@
 
             {% for product in products %}
                 <div class="Card">
-                  {% if product.product.product_images.first.main_image %}
+                  {% if product.product.product_images.main_image %}
                   <a class="Cart-pict" href="{% url 'product_detail' product.product.slug %}">
-                    <img class="Cart-img" src="{{ product.product.product_images.first.main_image.url }}" alt="card.jpg"/>
+                    <img class="Cart-img" src="{{ product.product.product_images.main_image.url }}" alt="card.jpg"/>
                   </a>
                   {% else %}
                   <a class="Cart-pict" href="{% url 'product_detail' product.product.slug %}">
@@ -179,7 +179,7 @@
                           <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
                           {% csrf_token %}
                           {{ product.add_to_cart_form }}
-                          <button type="submit" class="Card-btn">
+                          <button type="submit" class="Card-btn buy">
                               <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
                           </button>
                       </form>
