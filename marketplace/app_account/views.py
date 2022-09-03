@@ -186,3 +186,15 @@ class OrderDetailView(generic.DetailView):
             products[new_product] = quantity
         context['products'] = products
         return context
+
+
+class HistoryViewListView(generic.ListView):
+    model = Profile
+    template_name = 'historyview.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HistoryViewListView, self).get_context_data(**kwargs)
+        profile = Profile.objects.filter(user_id=self.request.user.id).get()
+        recent_views = profile.recent_views.all()
+        context['recent_views'] = recent_views
+        return context

@@ -37,7 +37,7 @@
                   </li>
                   <li class="menu-item"><a class="menu-link" href="{% url 'orderhistory' %}">История заказов</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="historyview.html">История просмотра</a>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'viewhistory' %}">История просмотра</a>
                   </li>
                 </ul>
               </div>
@@ -126,11 +126,11 @@
                           {% endfor %}
                         </a>
                         <div class="Card-content">
-                          <strong class="Card-title"><a href="#">{{ product.product.name }}</a>
+                          <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
                           </strong>
                           <div class="Card-description">
                             {% if product.get_discounted_price != product.price %}
-                              <div class="Card-cost"><span class="Card-priceOld">${{ product.get_discounted_price }}</span><span class="Card-price">${{ product.price }}</span>
+                              <div class="Card-cost"><span class="Card-price">${{ product.get_discounted_price }}</span> <span class="Card-priceOld">${{ product.price }}</span>
                               </div>
                             {% else %}
                               <div class="Card-cost"><span class="Card-price">${{ product.get_discounted_price }}</span>
@@ -152,7 +152,7 @@
                 {% else %}
                   <p> У вас нет просмотренных товаров </p>
                 {% endif %}
-                <div class="Account-editLink Account-editLink_view"><a href="historyview.html">Перейти на полный список</a>
+                <div class="Account-editLink Account-editLink_view"><a href="{% url 'viewhistory' %}">Перейти на полный список</a>
                 </div>
               </div>
             </div>
