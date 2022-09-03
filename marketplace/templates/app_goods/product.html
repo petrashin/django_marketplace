@@ -37,8 +37,8 @@
                             {% endif %}
 
                             {# Большое изображение товара #}
-                            {% if product.product_images.first.main_image %}
-                                <img src="{{ product.product_images.first.main_image.url }}" alt="bigGoods.png"/>
+                            {% if product.product_images.main_image %}
+                                <img src="{{ product.product_images.main_image.url }}" alt="bigGoods.png"/>
                             {%  else %}
                                 <img src="{% static 'assets/img/content/home/bigGoods.png' %}" alt="card.jpg"/>
                             {% endif %}
