@@ -25,9 +25,9 @@
                     <div class="Cart-product">
                         <div class="Cart-block Cart-block_row">
                             <div class="Cart-block Cart-block_pict">
-                                {% if product.product_images.first.main_image %}
+                                {% if product.product_images.main_image %}
                                 <a class="Cart-pict" href="{{ product.get_absolute_url }}">
-                                <img class="Cart-img" src="{{ product.product_images.first.main_image.url }}" alt="card.jpg"/></a>
+                                <img class="Cart-img" src="{{ product.product_images.main_image.url }}" alt="card.jpg"/></a>
                                 {% else %}
                                 <a class="Cart-pict" href="{{ product.get_absolute_url }}">
                                     <img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
