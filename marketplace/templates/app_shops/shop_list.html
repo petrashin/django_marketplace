@@ -83,7 +83,8 @@
                 </div>
               </div>
               <div class="BannersHomeBlock-block">
-                <div class="BannersHomeBlock-img"><img src="{% static 'assets/img/content/home/videoca.png' %}" alt="videoca.png"/>
+                <div class="BannersHomeBlock-img">
+                  <img src="{% static 'assets/img/content/home/videoca.png' %}" alt="videoca.png"/>
                 </div>
               </div>
             </div></a>
@@ -146,8 +147,14 @@
 
           <div class="Cards">
             {% for item in products %}
-            {% for image in item.product.product_images.all %}
-            <div class="Card"><a class="Card-picture" href="{% url 'product_detail' item.product.slug %}"><img src="{{image.main_image.url}}" alt="card.jpg"/></a>
+            <div class="Card">
+              {% if item.product.product_images.first.main_image %}
+              <a class="Cart-pict" href="{% url 'product_detail' item.product.slug %}">
+                <img class="Cart-img" src="{{ item.product.product_images.first.main_image.url }}" alt="card.jpg"/></a>
+              {% else %}
+              <a class="Cart-pict" href="{% url 'product_detail' item.product.slug %}">
+                <img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
+              {% endif %}
               <div class="Card-content">
                 <strong class="Card-title"><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
                 </strong>
@@ -182,7 +189,6 @@
               </div>
               {% endif %}
             </div>
-            {% endfor %}
             {% endfor %}
 
 <!--            {% for card in top_goods_hide_md %}-->
