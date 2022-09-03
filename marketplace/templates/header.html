@@ -87,13 +87,13 @@
           <div class="CartBlock"><a class="CartBlock-block" href="#">
               <img class="CartBlock-img" src="{% static 'assets/img/icons/exchange.svg' %}" alt="exchange.svg"/>
               <span class="CartBlock-amount">4</span></a>
-              {% with total_items=cart|length %}
+
               <a class="CartBlock-block" href="{% url 'cart_detail' %}">
                   <img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg"/>
-                  <span class="CartBlock-amount">{{ total_items }}</span></a>
+                  <span class="CartBlock-amount">{{ cart_total_quantity }}</span></a>
             <div class="CartBlock-block"><span class="CartBlock-price">{{ cart_total_cost }} руб.</span>
             </div>
-              {% endwith %}
+
           </div>
         </div>
         <div class="row-block Header-trigger"><a class="menuTrigger" href="#navigate">

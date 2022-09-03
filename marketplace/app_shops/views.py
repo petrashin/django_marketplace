@@ -1,3 +1,5 @@
+from datetime import time
+
 from django.core.paginator import Paginator
 from django.db.models import Count, F
 from django.views.generic import TemplateView, DetailView, ListView
