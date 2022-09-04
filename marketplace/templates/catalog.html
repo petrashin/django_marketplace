@@ -113,13 +113,13 @@
           {% if object_list %}
             {% for product in object_list %}
               <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
-                  {% if product.product.product_images.first.main_image %}
-                      <img src="{{ product.product.product_images.first.main_image.url }}" alt="card.jpg"/></a>
+                  {% if product.product.product_images.main_image %}
+                      <img src="{{ product.product.product_images.main_image.url }}" alt="card.jpg"/></a>
                   {%  else %}
-                      <img src="{% static "assets/img/content/home/card.jpg" %}" alt="card.jpg"/></a>
+                      <img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>
                   {% endif %}
                 <div class="Card-content">
-                  <strong class="Card-title"><a href="../app_goods/templates/app_goods/product.html">{{ product.product.category.all.0 }} {{ product.product.name }}</a>
+                  <strong class="Card-title"><a href="app_goods/product.html">{{ product.product.category.all.0 }} {{ product.product.name }}</a>
                   </strong>
                   <div class="Card-description">
                     <div class="Card-cost">
@@ -134,7 +134,7 @@
                             <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
                             {% csrf_token %}
                             {{ product.add_to_cart_form }}
-                            <button type="submit" class="Card-btn">
+                            <button type="submit" class="Card-btn buy">
                             <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
                             </button>
                             </form>

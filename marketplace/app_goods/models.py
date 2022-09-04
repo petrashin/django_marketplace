@@ -1,6 +1,5 @@
 import os
 
-from decimal import Decimal
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -43,7 +42,8 @@ class Category(models.Model):
     parent_category = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True,
                                         related_name="sub", verbose_name="родительская категория")
     category_icon = models.FileField(upload_to="icons/categories/", verbose_name="иконка категории",
-                                     default=os.path.abspath(f'{settings.BASE_DIR}/media/icons/categories/test_category_icon.jpg'))
+                                     default=os.path.abspath(
+                                         f'{settings.BASE_DIR}/media/icons/categories/test_category_icon.jpg'))
     slug = models.SlugField(max_length=255,
                             db_index=True,
                             verbose_name='url',
@@ -103,11 +103,11 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product,
-                                on_delete=models.CASCADE,
-                                verbose_name='товар',
-                                related_name='product_images'
-                                )
+    product = models.OneToOneField(Product,
+                                   on_delete=models.CASCADE,
+                                   verbose_name='товар',
+                                   related_name='product_images'
+                                   )
     main_image = models.ImageField(upload_to='product_image/',
                                    blank=True,
                                    null=True,
