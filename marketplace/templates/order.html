@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">РћС„РѕСЂРјР»РµРЅРёРµ Р·Р°РєР°Р·Р°
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="index.html">home</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>РћС„РѕСЂРјР»РµРЅРёРµ Р·Р°РєР°Р·Р°</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnRight Section_columnWide Order">
+      <div class="wrap">
+        <div class="Section-column">
+          <div class="Section-columnSection">
+            <header class="Section-header">
+              <strong class="Section-title">РџСЂРѕРіСЂРµСЃСЃ Р·Р°РїРѕР»РЅРµРЅРёСЏ
+              </strong>
+            </header>
+            <div class="Section-columnContent">
+              <ul class="menu menu_vt Order-navigate">
+                <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">РЁР°Рі 1. РџР°СЂР°РјРµС‚СЂС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ</a>
+                </li>
+                <li class="menu-item"><a class="menu-link" href="#step2">РЁР°Рі 2. РЎРїРѕСЃРѕР± РґРѕСЃС‚Р°РІРєРё</a>
+                </li>
+                <li class="menu-item"><a class="menu-link" href="#step3">РЁР°Рі 3. РЎРїРѕСЃРѕР± РѕРїР»Р°С‚С‹</a>
+                </li>
+                <li class="menu-item"><a class="menu-link" href="#step4">РЁР°Рі 4. РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ Р·Р°РєР°Р·Р°</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="Section-content">
+          <form class="form" method="post">
+            {% csrf_token %}
+            <div class="Order-block Order-block_OPEN" id="step1">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">РЁР°Рі 1. РџР°СЂР°РјРµС‚СЂС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+                </h2>
+              </header>
+              <div class="row">
+                <div class="row-block">
+                  <div class="form-group">
+                    <label class="form-label" for="name">Р¤Р?Рћ
+                    </label>
+                    <input class="form-input" id="name" name="name" type="text" value="{{ profile.fullname }}" required/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="phone">РўРµР»РµС„РѕРЅ
+                    </label>
+                    <input class="form-input" id="phone" name="phone" type="text" value="{{ profile.phone_number }}"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="mail">E-mail
+                    </label>
+                    <input class="form-input" id="mail" name="mail" type="text" value="{{ user.email }}" data-validate="require"/>
+                  </div>
+                </div>
+                <div class="row-block">
+                  <div class="form-group">
+                    <label class="form-label" for="password">РџР°СЂРѕР»СЊ
+                    </label>
+                    <input class="form-input" id="password" name="password" type="password" placeholder="РўСѓС‚ РјРѕР¶РЅРѕ РёР·РјРµРЅРёС‚СЊ РїР°СЂРѕР»СЊ"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="passwordReply">РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РїР°СЂРѕР»СЏ
+                    </label>
+                    <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ РїРѕРІС‚РѕСЂРЅРѕ"/>
+                  </div>
+                  <div class="form-group"><a class="btn btn_muted Order-btnReg" href="#auth">РЇ СѓР¶Рµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ</a>
+                  </div>
+                </div>
+              </div>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">Р”Р°Р»СЊС€Рµ</a>
+              </div>
+            </div>
+            <div class="Order-block" id="step2">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">РЁР°Рі 2. РЎРїРѕСЃРѕР± РґРѕСЃС‚Р°РІРєРё
+                </h2>
+              </header>
+              <div class="form-group">
+                <div>
+                  <label class="toggle">
+                    <input type="radio" name="delivery" value="ordinary" checked="checked"/><span class="toggle-box"></span><span class="toggle-text">РћР±С‹С‡РЅР°СЏ РґРѕСЃС‚Р°РІРєР°</span>
+                  </label>
+                </div>
+                <div>
+                  <label class="toggle">
+                    <input type="radio" name="delivery" value="express"/><span class="toggle-box"></span><span class="toggle-text">Р­РєСЃРїСЂРµСЃСЃ РґРѕСЃС‚Р°РІРєР°</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="city">Р“РѕСЂРѕРґ
+                </label>
+                <input class="form-input" id="city" name="city" type="text"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="address">РђРґСЂРµСЃ
+                </label>
+                <textarea class="form-textarea" name="address" id="address"></textarea>
+              </div>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3">Р”Р°Р»СЊС€Рµ</a>
+              </div>
+            </div>
+            <div class="Order-block" id="step3">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">РЁР°Рі 3. РЎРїРѕСЃРѕР± РѕРїР»Р°С‚С‹
+                </h2>
+              </header>
+              <div class="form-group">
+                <div>
+                  <label class="toggle">
+                    <input type="radio" name="pay" value="online" checked="checked"/><span class="toggle-box"></span><span class="toggle-text">РћРЅР»Р°Р№РЅ РєР°СЂС‚РѕР№</span>
+                  </label>
+                </div>
+                <div>
+                  <label class="toggle">
+                    <input type="radio" name="pay" value="someone"/><span class="toggle-box"></span><span class="toggle-text">РћРЅР»Р°Р№РЅ СЃРѕ СЃР»СѓС‡Р°Р№РЅРѕРіРѕ С‡СѓР¶РѕРіРѕ СЃС‡РµС‚Р°</span>
+                  </label>
+                </div>
+              </div>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4">Р”Р°Р»СЊС€Рµ</a>
+              </div>
+            </div>
+            <div class="Order-block" id="step4">
+              <header class="Section-header Section-header_sm">
+                <h2 class="Section-title">РЁР°Рі 4. РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ Р·Р°РєР°Р·Р°
+                </h2>
+              </header>
+              <!--+div.Order.-confirmation-->
+              <div class="Order-infoBlock">
+                <div class="Order-personal">
+                  <div class="row">
+                    <div class="row-block">
+                      <div class="Order-info">
+                        <div class="Order-infoType">Р¤Р?Рћ:
+                        </div>
+                        <div class="Order-infoContent">{{ profile.fullname }}
+                        </div>
+                      </div>
+                      <div class="Order-info">
+                        <div class="Order-infoType">РўРµР»РµС„РѕРЅ:
+                        </div>
+                        <div class="Order-infoContent">{{ profile.phone_number }}
+                        </div>
+                      </div>
+                      <div class="Order-info">
+                        <div class="Order-infoType">E-mail:
+                        </div>
+                        <div class="Order-infoContent">{{ user.email }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row-block">
+                      <div class="Order-info Order-info_delivery">
+                        <div class="Order-infoType">РўРёРї РґРѕСЃС‚Р°РІРєРё:
+                        </div>
+                        <div class="Order-infoContent">РћР±С‹С‡РЅР°СЏ РґРѕСЃС‚Р°РІРєР°
+                        </div>
+                      </div>
+                      <div class="Order-info">
+                        <div class="Order-infoType">Р“РѕСЂРѕРґ:
+                        </div>
+                        <div class="Order-infoContent">РњРѕСЃРєРІР°
+                        </div>
+                      </div>
+                      <div class="Order-info">
+                        <div class="Order-infoType">РђРґСЂРµСЃ:
+                        </div>
+                        <div class="Order-infoContent">РЈР». РђРєР°РґРµРјРёРєР° РђСЂС†РёРјРѕРІРёС‡Р°, Рґ. 10, РєРІ. 10
+                        </div>
+                      </div>
+                      <div class="Order-info Order-info_pay">
+                        <div class="Order-infoType">РћРїР»Р°С‚Р°:
+                        </div>
+                        <div class="Order-infoContent">РћРЅР»Р°Р№РЅ РєР°СЂС‚РѕР№
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="Cart Cart_order">
+                  {% for product in cart %}
+                  <div class="Cart-product">
+                    <div class="Cart-block Cart-block_row">
+                      <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="#"><img class="Cart-img" src="assets/img/content/home/card.jpg" alt="card.jpg"/></a>
+                      </div>
+                      <div class="Cart-block Cart-block_info"><a class="Cart-title" href="#">{{ product.product.name }}</a>
+                        <div class="Cart-desc">{{ product.product.description }}
+                        </div>
+                      </div>
+                      <div class="Cart-block Cart-block_price">
+                        <div class="Cart-price">{{ product.price }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="Cart-block Cart-block_row">
+                      <div class="Cart-block Cart-block_seller">
+                        <div>РџСЂРѕРґР°РІРµС†:
+                        </div>
+                        <div>{{ product.shop }}
+                        </div>
+                      </div>
+                      <div class="Cart-block Cart-block_amount">{{ product.quantity }}
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                  <div class="Cart-total">
+                    <div class="Cart-block Cart-block_total">
+                      <strong class="Cart-title">Р?С‚РѕРіРѕ:
+                      </strong><span class="Cart-price">{{ total_sum_with_discount }}</span><span class="Cart-price_old">{{ total_sum }}</span>
+                    </div>
+                    <div>
+                      {{ comment }}
+                    </div>
+                    <div class="Cart-block">
+                      <button class="btn btn_primary btn_lg" type="submit">РћРїР»Р°С‚РёС‚СЊ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
