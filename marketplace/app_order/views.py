@@ -171,8 +171,8 @@ class OrderTotal(View):
             for product in cart_products:
                 order_total_sum += product.price * product.quantity
 
-            # TODO номер карты никуда не сохряняется, добавить в функцию
-            handle_payment.delay(order.id, 112, order_total_sum)
+            card = Profile.objects.filter(user=request.user).values('card')[0]['card']
+            handle_payment.delay(order.id, card, order_total_sum)
 
         service_payment()
         return redirect('/')
