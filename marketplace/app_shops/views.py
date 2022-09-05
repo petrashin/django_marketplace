@@ -24,41 +24,6 @@ DEFAULT_OPTION = F('id')
 DEFAULT_DIRECTION = ''
 
 
-class CatalogTemplateView(TemplateView):
-    template_name = 'catalog.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CatalogTemplateView, self).get_context_data()
-
-        get_sort_key = self.request.GET.get('sort', DEFAULT_OPTION)
-        get_sort_direction = self.request.GET.get('type', DEFAULT_DIRECTION)
-        sort_key = SORT_OPTIONS.get(get_sort_key, DEFAULT_OPTION)
-        sort_direction = SORT_DIRECTIONS.get(get_sort_direction, DEFAULT_DIRECTION)
-
-        products_qs = ShopProduct.objects.filter(product__category=kwargs["category_id"]). \
-            annotate(count=sort_key).order_by(sort_direction + 'count')
-        page = self.request.GET.get('page', 1)
-        products = Paginator(products_qs, 8).get_page(page)
-        context['object_list'] = products
-
-        # добавляем в контекст форму для добавления товара в корзину из каталога
-        if products:
-            if len(products) > 1:
-                for product in products:
-                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                               'shop': product.shop.name,
-                                                                               'product': product.product.id
-                                                                               })
-            else:
-                product = products[0]
-                product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                           'shop': product.shop.name,
-                                                                           'product': product.product.id
-                                                                           })
-
-        return context
-
-
 class CatalogueView(ListView):
     template_name = 'catalog.html'
 
@@ -77,6 +42,21 @@ class CatalogueView(ListView):
         products = Paginator(sorted_qs, 8).get_page(page)
         context['filter'] = f
         context['products'] = products
+
+        if products:
+            if len(products) > 1:
+                for product in products:
+                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                               'shop': product.shop.name,
+                                                                               'product': product.product.id
+                                                                               })
+            else:
+                product = products[0]
+                product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                           'shop': product.shop.name,
+                                                                           'product': product.product.id
+                                                                           })
+
         return context
 
 
