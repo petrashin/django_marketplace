@@ -138,7 +138,7 @@
                             <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
                             {% csrf_token %}
                             {{ product.add_to_cart_form }}
-                            <button type="submit" class="Card-btn buy">
+                            <button type="submit" class="Card-btn">
                             <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
                             </button>
                             </form>
