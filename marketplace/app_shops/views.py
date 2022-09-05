@@ -60,27 +60,6 @@ class CatalogueView(ListView):
         return context
 
 
-class CatalogueView(ListView):
-    template_name = 'catalog.html'
-
-    def get_queryset(self):
-        return ShopProduct.objects.filter(product__category=self.kwargs["category_id"])
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(CatalogueView, self).get_context_data()
-        page = self.request.GET.get('page', 1)
-        get_sort_key = self.request.GET.get('sort', DEFAULT_OPTION)
-        get_sort_direction = self.request.GET.get('type', DEFAULT_DIRECTION)
-        sort_key = SORT_OPTIONS.get(get_sort_key, DEFAULT_OPTION)
-        sort_direction = SORT_DIRECTIONS.get(get_sort_direction, DEFAULT_DIRECTION)
-        f = ProductFilter(self.request.GET, queryset=self.get_queryset())
-        sorted_qs = f.qs.annotate(count=sort_key).order_by(sort_direction + 'count')
-        products = Paginator(sorted_qs, 8).get_page(page)
-        context['filter'] = f
-        context['products'] = products
-        return context
-
-
 class BaseTemplateView(TemplateView):
     """ Вьюха для демонстрации базового шаблона """
     template_name = 'index.html'
