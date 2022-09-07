@@ -922,6 +922,7 @@
 .Card-btn + .Card-btn {
   margin-left: 12px;
 }
+
 .Card-hover {
   position: absolute;
   left: 0;

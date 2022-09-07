@@ -30,6 +30,22 @@ class Discount(models.Model):
     def __str__(self):
         return self.discount_type
 
+    def get_start_day(self):
+        if self.start_date:
+            return self.start_date.date().strftime("%d-%b-%Y").split('-')[0]
+
+    def get_start_month(self):
+        if self.start_date:
+            return self.start_date.date().strftime("%d-%b-%Y").split('-')[1]
+
+    def get_end_day(self):
+        if self.end_date:
+            return self.end_date.date().strftime("%d-%b-%Y").split('-')[0]
+
+    def get_end_month(self):
+        if self.end_date:
+            return self.end_date.date().strftime("%d-%b-%Y").split('-')[1]
+
     class Meta:
         db_table = 'discounts'
         verbose_name = 'скидка'
@@ -85,6 +101,7 @@ class Product(models.Model):
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
     sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
     published = models.BooleanField(default=True, verbose_name='опубликовать')
+    limited_edition = models.BooleanField(default=False, verbose_name='ограниченный выпуск')
 
     def __str__(self):
         return self.name

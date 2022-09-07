@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic.edit import FormMixin
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
-from app_goods.models import Product, Reviews
+from app_goods.models import Product, Reviews, Discount
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
 from cart.forms import CartAddProductForm, CartAddProductShopForm
@@ -66,3 +66,13 @@ class AddReview(View):
             form.save()
 
         return redirect(product.get_absolute_url())
+
+
+class DiscountListView(ListView):
+    context_object_name = 'discounts'
+    model = Discount
+    template_name = 'app_goods/sale.html'
+    queryset = Discount.objects.filter(active=True)
+
+
+
