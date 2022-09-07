@@ -117,35 +117,35 @@
                   <div class="Cards">
                     {% for product in recent_views %}
                       <div class="Card">
-                        <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
-                          {% for image in product.product.product_images.all %}
+                        <a class="Card-picture" href="{% url 'product_detail' product.shop_product.product.slug %}">
+                          {% for image in product.shop_product.product.product_images.all %}
                             <img src="{{ image.main_image.url }}"/>
                           {% endfor %}
                         </a>
                         <div class="Card-content">
-                          <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
+                          <strong class="Card-title"><a href="{% url 'product_detail' product.shop_product.product.slug %}">{{ product.shop_product.product.name }}</a>
                           </strong>
                           <div class="Card-description">
-                            {% if product.get_discounted_price != product.price %}
-                              <div class="Card-cost"><span class="Card-price">${{ product.product.price }}</span> <span class="Card-priceOld">${{ product.price }}</span>
+                            {% if product.shop_product.get_discounted_price != product.shop_product.price %}
+                              <div class="Card-cost"><span class="Card-price">${{ product.shop_product.get_discounted_price }}</span> <span class="Card-priceOld">${{ product.shop_product.price }}</span>
                               </div>
                             {% else %}
-                              <div class="Card-cost"><span class="Card-price">${{ product.get_discounted_price }}</span>
+                              <div class="Card-cost"><span class="Card-price">${{ product.shop_product.price }}</span>
                               </div>
                             {% endif %}
-                            {% if product.product.category.first.parent_category is null %}
-                              <div class="Card-category"> {{ product.product.category.first.name }}
+                            {% if product.shop_product.product.category.first.parent_category is null %}
+                              <div class="Card-category"> {{ product.shop_product.product.category.first.name }}
                               </div>
                             {% else %}
-                              <div class="Card-category"> {{ product.product.category.first.parent_category.name }} / {{ product.product.category.first.name }}
+                              <div class="Card-category"> {{ product.shop_product.product.category.first.parent_category.name }} / {{ product.shop_product.product.category.first.name }}
                               </div>
                             {% endif %}
-                            <div class="Card-hover"><a class="Card-btn" href="{% url 'product_detail' product.product.slug %}"><img src="../static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
+                            <div class="Card-hover"><a class="Card-btn" href="{% url 'product_detail' product.shop_product.product.slug %}"><img src="../static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="../static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
                             </div>
                           </div>
                         </div>
-                        {% if product.product.discount.discount_value > 0 %}
-                          <div class="Card-sale">-{{ product.product.discount.discount_value }}%
+                        {% if product.shop_product.product.discount.discount_value > 0 %}
+                          <div class="Card-sale">-{{ product.shop_product.product.discount.discount_value }}%
                           </div>
                         {% endif %}
                       </div>
