@@ -1,6 +1,6 @@
 import re
 from django.shortcuts import render
-from app_users.models import Profile, Image, Role
+from app_users.models import Profile, Image, Role, ViewsHistory
 from app_order.models import Order
 from app_shops.models import ShopProduct
 from django.views import View
@@ -23,12 +23,12 @@ def account_view(request):
 
     avatar_object = Image.objects.filter(profile_id=profile)
     last_order = Order.objects.filter(user=request.user).order_by('-date_order').first()
-    recent_views = profile.recent_views.all()
+    recent_views = ViewsHistory.objects.filter(profile=profile).order_by('-viewed_at')[:3]
     data = {
         "full_name": profile.fullname,
         "avatar": avatar_object[0].avatar,
         "order": last_order,
-        "recent_views": recent_views[:3],
+        "recent_views": recent_views,
     }
     return render(request, "account.html", context=data)
 
@@ -189,12 +189,12 @@ class OrderDetailView(generic.DetailView):
 
 
 class HistoryViewListView(generic.ListView):
-    model = Profile
+    model = ViewsHistory
     template_name = 'historyview.html'
 
     def get_context_data(self, **kwargs):
         context = super(HistoryViewListView, self).get_context_data(**kwargs)
         profile = Profile.objects.filter(user_id=self.request.user.id).get()
-        recent_views = profile.recent_views.all()
+        recent_views = ViewsHistory.objects.filter(profile=profile).order_by('-viewed_at')
         context['recent_views'] = recent_views
         return context

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from app_shops.models import ShopProduct
+from app_goods.models import Product
 from django.db import models
 
 
@@ -19,7 +19,7 @@ class Profile(models.Model):
     role = models.ForeignKey(Role, verbose_name="Роль", on_delete=models.PROTECT)
     fullname = models.CharField(max_length=256, verbose_name="ФИО", blank=True)
     published = models.BooleanField(default=True, verbose_name='опубликовать')
-    recent_views = models.ManyToManyField(ShopProduct)
+    recent_views = models.ManyToManyField(Product)
 
 
     def __str__(self):
@@ -33,3 +33,9 @@ class Image(models.Model):
     avatar = models.ImageField(upload_to='avatars', verbose_name='аватарка',
                                help_text='Поле для сохранения аватарки пользователя',
                                default='default.jpg')
+
+
+class ViewsHistory(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now_add=True)
