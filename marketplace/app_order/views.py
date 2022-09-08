@@ -12,6 +12,8 @@ from django.db import transaction
 from cart.models import CartItems
 from django.conf import settings
 
+from app_payment.tasks import handle_payment
+
 
 class OrderUserView(View):
 
@@ -122,7 +124,7 @@ class OrderPayMethodView(View):
             order.save()
 
         order_total_sum = 0
-        cart_products = CartItems.objects.filter(user=1)
+        cart_products = CartItems.objects.filter(user=request.user.id)
         for product in cart_products:
             order_total_sum += product.price * product.quantity
 
@@ -161,6 +163,16 @@ class OrderTotal(View):
             order_comment = order_comment.cleaned_data.get('order_comment')
             order.order_comment = order_comment
             order.save()
+
+
+            # Передаю в модуль оплаты
+            order_total_sum = 0
+            cart_products = CartItems.objects.filter(user=request.user.id)
+            for product in cart_products:
+                order_total_sum += product.price * product.quantity
+
+            card = Profile.objects.filter(user=request.user).values('card')[0]['card']
+            handle_payment.delay(order.id, card, order_total_sum)
 
         service_payment()
         return redirect('/')
