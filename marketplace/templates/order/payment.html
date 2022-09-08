@@ -2,14 +2,14 @@
 {% load static %}
 {% block content %}
 
-  <div class="Middle Middle_top">
+<div class="Middle Middle_top">
     <div class="Middle-top">
       <div class="wrap">
         <div class="Middle-header">
           <h1 class="Middle-title">Оплата
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="index.html">home</a>
+            <li class="breadcrumbs-item"><a href="../index.html">home</a>
             </li>
             <li class="breadcrumbs-item breadcrumbs-item_current"><span>Оплата</span>
             </li>
@@ -19,7 +19,7 @@
     </div>
     <div class="Section">
       <div class="wrap">
-        <form class="form Payment" action="payment" method="post">
+        <form class="form Payment" action="order/payment" method="post">
           {% csrf_token %}
           <div class="Payment-card">
             <div class="form-group">

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">Оформление заказа
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="../index.html">home</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>Оформление заказа</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnRight Section_columnWide Order">
+      <div class="wrap">
+        <div class="Section-column">
+          <div class="Section-columnSection">
+            <header class="Section-header">
+              <strong class="Section-title">Прогресс заполнения
+              </strong>
+            </header>
+            <div class="Section-columnContent">
+              <ul class="menu menu_vt Order-navigate">
+                <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
+                </li>
+                <li {% if step == 2 %}class="menu-item_ACTIVE menu-item"{% else %}class="menu-item"{% endif %}><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                </li>
+                <li {% if step == 3 %}class="menu-item_ACTIVE menu-item"{% else %}class="menu-item"{% endif %}><a class="menu-link" href="#step3">Шаг 3. Способ оплаты</a>
+                </li>
+                <li {% if step == 4 %}class="menu-item_ACTIVE menu-item"{% else %}class="menu-item"{% endif %}><a class="menu-link" href="#step4">Шаг 4. Подтверждение заказа</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="Section-content">
+          {% if step == 1 %}
+            {% include "order/steps/step_1.html" %}
+          {% elif step == 2 %}
+            {% include "order/steps/step_2.html" %}
+          {% elif step == 3 %}
+            {% include "order/steps/step_3.html" %}
+          {% else %}
+            {% include "order/steps/step_4.html" %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
