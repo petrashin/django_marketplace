@@ -61,7 +61,7 @@
                     <div class="Order-info Order-info_delivery">
                       <div class="Order-infoType">Тип доставки:
                       </div>
-                      <div class="Order-infoContent">{{ order.delivery }}
+                      <div class="Order-infoContent">{{ order.delivery.get_title_display }}
                       </div>
                     </div>
                     <div class="Order-info">
@@ -79,23 +79,23 @@
                     <div class="Order-info Order-info_pay">
                       <div class="Order-infoType">Оплата:
                       </div>
-                      <div class="Order-infoContent">{{ order.pay_method }}
+                      <div class="Order-infoContent">{{ order.pay_method.get_title_display }}
                       </div>
                     </div>
                     <div class="Order-info Order-info_status">
                       <div class="Order-infoType">Статус:
                       </div>
-                      {% if order.status_pay and order.payment_status == 'Оплачено' %}
+                      {% if order.status_pay %}
                         <div class="Order-infoContent">Оплачен</div>
                       {% else %}
                         <div class="Order-infoContent">Не оплачен</div>
                       {% endif %}
                     </div>
-                    {% if order.payment_status != 'Оплачено' %}
+                    {% if not order.status_pay and order.payment_error %}
                       <div class="Order-info Order-info_error">
                         <div class="Order-infoType">Оплата не прошла:
                         </div>
-                        <div class="Order-infoContent">Оплата не выполнена, т.к. {{ order.payment_status }}
+                        <div class="Order-infoContent">Оплата не выполнена, т.к. {{ order.payment_error }}
                         </div>
                       </div>
                     {% endif %}
@@ -104,7 +104,7 @@
               </div>
               <div class="Cart Cart_order">
                 <!-- TODO: Отображение товаров из заказа -->
-                {% for product in cart %}
+                {% for product, quantity in products.items %}
                   <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_pict">
@@ -119,10 +119,10 @@
                         </div>
                       </div>
                       <div class="Cart-block Cart-block_price">
-                        {% if product.price != product.price_discount|floatformat:2 %}
+                        {% if product.price != product.get_discounted_price %}
                           <div class="Cart-price_old">{{ product.price }}$
                           </div>
-                          <div class="Cart-price">{{ product.price_discount|floatformat:2 }}$
+                          <div class="Cart-price">{{ product.get_discounted_price }}$
                           </div>
                         {% else %}
                           <div class="Cart-price">{{ product.price }}$
@@ -134,10 +134,10 @@
                       <div class="Cart-block Cart-block_seller">
                         <div>Продавец:
                         </div>
-                        <div>{{ product.shop }}
+                        <div>{{ product.shop.name }}
                         </div>
                       </div>
-                      <div class="Cart-block Cart-block_amount">{{ product.quantity }} шт.
+                      <div class="Cart-block Cart-block_amount">{{ quantity }} шт.
                       </div>
                     </div>
                   </div>
@@ -148,10 +148,9 @@
                     <strong class="Cart-title">Итого:<span class="Cart-price">{{ order.get_total_cost_with_discount }}$</span> <span class="Cart-price_old">{{ order.get_total_cost }}$</span>
                     </strong>
                   </div>
-                  {% if order.payment_status != 'Оплачено' %}
+                  {% if not order.status_pay %}
                     <!-- TODO: Перенаправление на страницу повторной оплаты -->
-                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="/cart">В корзину</a> </div>
-                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="repeat">Оплатить</a> </div>
+                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="">Оплатить</a> </div>
                   {% endif %}
                 </div>
               </div>

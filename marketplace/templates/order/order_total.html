@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!--Order Total-->
+<div class="container p-4" style="padding-left: 50px;">
+    <br>
+    <h2 class="font-weight-bold mt-3" style="text-align: center;">Итоговая информация по заказу:</h2>
+
+    <p>Заказ № - {{ order.id }}</p>
+    {% for product in products %}
+    <div class="Section">
+        <div class="wrap">
+            <div class="Cart-product">
+                <div class="Cart-block Cart-block_row">
+                    <div class="Cart-block Cart-block_pict" style="width: 20%;">
+                        <a class="Cart-pict" href="{{ product.get_absolute_url }}">
+                            <img class="Cart-img" src="{{ image.main_image.url }}" alt="card.jpg"/>
+                        </a>
+                    </div>
+                    <div class="Cart-block Cart-block_info">
+                        <a class="Cart-title" href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                        <div class="Cart-desc">{{ product.description }}</div>
+                    </div>
+
+                </div>
+
+
+                <div class="Cart-block Cart-block_price">
+                    <div class="Cart-price">{{ product.price.discounted_price }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if order_delivery_pay %}
+    <div class="Section">
+        <div class="wrap">
+            <div class="Cart-product">
+                <div class="Cart-block Cart-block_row">
+                    <div class="Cart-block Cart-block_pict" style="width: 20%;"></div>
+                    <div class="Cart-block Cart-block_info">Доставка</div>
+                </div>
+
+                <div class="Cart-block Cart-block_price">
+                    <div class="Cart-price">{{ order_delivery_pay }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="Section">
+        <div class="wrap">
+            <div class="Cart-total">
+                <div class="Cart-block Cart-block_total" style="margin: 0 0 0 auto;">
+                    <strong class="Cart-title">Итого:</strong>
+                    <span class="Cart-price">{{ cart.get_total_price|add:order_delivery_pay }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>Способ доставки - {{ order.delivery }}</p>
+    <p>город - {{ order.city }}</p>
+    <p>адрес - {{ order.address }}</p>
+    <p>Способ оплаты - {{ order.pay_method }}</p>
+
+    <form method="post" action="/cart/order/total">
+        {% csrf_token %}
+        <p>Комментарий к заказу - {{ order_comment.order_comment }}</p>
+        <button class="btn btn-primary" style="border: solid 1px grey;">Оплатить</button>
+    </form>
+
+</div>
+{% endblock %}
