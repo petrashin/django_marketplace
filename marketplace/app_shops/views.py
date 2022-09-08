@@ -3,6 +3,8 @@ from datetime import time
 from django.core.paginator import Paginator
 from django.db.models import Count, F
 from django.views.generic import TemplateView, DetailView, ListView
+
+from app_shops.filters import ProductFilter
 from app_shops.models import ShopProduct, Shop
 from cart.forms import CartAddProductShopForm
 
@@ -22,24 +24,25 @@ DEFAULT_OPTION = F('id')
 DEFAULT_DIRECTION = ''
 
 
-class CatalogTemplateView(TemplateView):
+class CatalogueView(ListView):
     template_name = 'catalog.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(CatalogTemplateView, self).get_context_data()
+    def get_queryset(self):
+        return ShopProduct.objects.filter(product__category=self.kwargs["category_id"])
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CatalogueView, self).get_context_data()
+        page = self.request.GET.get('page', 1)
         get_sort_key = self.request.GET.get('sort', DEFAULT_OPTION)
         get_sort_direction = self.request.GET.get('type', DEFAULT_DIRECTION)
         sort_key = SORT_OPTIONS.get(get_sort_key, DEFAULT_OPTION)
         sort_direction = SORT_DIRECTIONS.get(get_sort_direction, DEFAULT_DIRECTION)
+        f = ProductFilter(self.request.GET, queryset=self.get_queryset())
+        sorted_qs = f.qs.annotate(count=sort_key).order_by(sort_direction + 'count')
+        products = Paginator(sorted_qs, 8).get_page(page)
+        context['filter'] = f
+        context['products'] = products
 
-        products_qs = ShopProduct.objects.filter(product__category=kwargs["category_id"]). \
-            annotate(count=sort_key).order_by(sort_direction + 'count')
-        page = self.request.GET.get('page', 1)
-        products = Paginator(products_qs, 8).get_page(page)
-        context['object_list'] = products
-
-        # добавляем в контекст форму для добавления товара в корзину из каталога
         if products:
             if len(products) > 1:
                 for product in products:
