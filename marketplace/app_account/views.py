@@ -186,7 +186,7 @@ class OrderListView(generic.ListView):
 
 class OrderDetailView(generic.DetailView):
     model = Order
-    template_name = 'order_detail.html'
+    template_name = 'order/order_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(OrderDetailView, self).get_context_data(**kwargs)
