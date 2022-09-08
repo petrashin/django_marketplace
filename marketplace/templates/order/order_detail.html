@@ -100,7 +100,8 @@
                 </div>
               </div>
               <div class="Cart Cart_order">
-                {% for product, quantity in products.items %}
+                <!-- TODO: Отображение товаров из заказа -->
+                {% for product in cart %}
                   <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_pict">
@@ -144,7 +145,8 @@
                   </div>
                   {% if not order.status_pay %}
                     <!-- TODO: Перенаправление на страницу повторной оплаты -->
-                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="">{% trans 'Pay' %}</a> </div>
+                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="/cart">В корзину</a> </div>
+                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="repeat">Оплатить</a> </div>
                   {% endif %}
                 </div>
               </div>
@@ -155,4 +157,7 @@
     </div>
   </div>
 
+{% endblock %}
+
+{% block footer %}
 {% endblock %}
