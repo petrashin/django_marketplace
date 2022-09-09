@@ -17,6 +17,7 @@
             </div>
         </div>
         {% for item in cart_items %}
+          {% if item.published %}
             {% with product=item.product %}
                 {% for image in product.product_images.all %}
                     <div class="Section">
@@ -70,12 +71,13 @@
 {#                     </form>#}
                 {% endfor %}
             {% endwith %}
+          {% endif %}
         {% endfor %}
         <div class="Cart-total">
             <div class="Cart-block Cart-block_total">
                 <strong class="Cart-title">Итого:
                 </strong><span class="Cart-price">{{ total_cost }}</span><span
-                    class="Cart-price_old">250.99$</span>
+                    class="Cart-price_old"></span>
             </div>
             <div class="Cart-block"><a class="btn btn_success btn_lg" href="order">Оформить заказ</a>
             </div>
