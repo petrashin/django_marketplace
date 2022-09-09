@@ -234,7 +234,7 @@
                   <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
                       <strong class="Cart-title">Итого:
-                      </strong><span class="Cart-price">{{ total_sum_with_discount }}</span><span class="Cart-price_old">{{ total_sum }}</span>
+                      </strong><span class="Cart-price">{{ total_sum_with_discount|floatformat:2 }}</span><span class="Cart-price_old">{{ total_sum|floatformat:2 }}</span>
                     </div>
                     <div class="Cart-block">
                       <button class="btn btn_primary btn_lg" type="submit">Оплатить
