@@ -10,6 +10,7 @@ from app_shops.models import Shop, ShopProduct
 
 
 class CartItems(models.Model):
+    published = models.BooleanField(default=True, verbose_name='видимость/не оплачено')
     user = models.IntegerField(verbose_name='id покупателя',
                                null=True,
                                help_text='не null если покупатель авторизован')
