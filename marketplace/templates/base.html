@@ -69,7 +69,6 @@
   <script src="{% static 'assets/js/scripts.js' %}"></script>
 
     {#  настройки скрипта Sweetalert для сообщений #}
-{#    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>#}
      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         {% if messages %}
@@ -92,7 +91,7 @@
     {% endif %}
     </script>
 <script>
-  let buy_btn = document.querySelectorAll('.buy').forEach(function (element) {
+      document.querySelectorAll('.buy').forEach(function (element) {
       element.style.marginLeft = '12px'
       element.style.marginRight = '12px'
       element.style.border = 'white'
