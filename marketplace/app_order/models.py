@@ -1,5 +1,5 @@
 from django.db import models
-from app_shops.models import ShopProduct, Shop
+from app_shops.models import ShopProduct
 from django.contrib.auth.models import User
 
 
@@ -39,7 +39,7 @@ class Order(models.Model):
     pay_method = models.ForeignKey(PayMethod, on_delete=models.DO_NOTHING, verbose_name='вариант оплаты', blank=True, null=True)
     order_comment = models.CharField(max_length=150, null=True, blank=True, verbose_name='комментарий к заказу')
     published = models.BooleanField(default=True, verbose_name='опубликовать')
-    payment_error = models.CharField(max_length=256, default=None, verbose_name='текст ошибки, возникшей при оплате', blank=True)
+    payment_status = models.CharField(max_length=256, default=None, verbose_name='текст ошибки, возникшей при оплате', blank=True, null=True)
 
     class Meta:
         db_table = 'app_order_order'
