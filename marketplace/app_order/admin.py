@@ -15,7 +15,7 @@ class PayMethodAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-	readonly_fields = ["payment_error"]
+	readonly_fields = ["payment_status"]
 	
 	def has_delete_permission(self, *args, **kwargs):
 		return False

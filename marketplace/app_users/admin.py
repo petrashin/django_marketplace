@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Role, Image
+from .models import Profile, Role, Image, ViewsHistory
 
 
 @admin.register(Profile)
@@ -18,3 +18,8 @@ class RoleAdmin(admin.ModelAdmin):
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
 	list_display = ['id', 'profile', 'avatar']
+
+
+@admin.register(ViewsHistory)
+class ViewsHistoryAdmin(admin.ModelAdmin):
+	pass

@@ -134,20 +134,6 @@ class OrderPayMethodView(View):
         elif order_total_sum < 2000:
             order_delivery_pay = 200
 
-        # TODO Удалить, у нас не может быть человека без регистрации на этом этапе
-        # order_cart = request.session[settings.CART_SESSION_ID]
-        #
-        # products = Product.objects.filter(id__in=order_cart.keys())
-        # print(products[0].description)
-        # for id_product in order_cart.keys():
-        # 	product = Product.objects.filter(id=id_product)
-        # 	products.append(product)
-        #
-        # 	quantity = order_cart[id_product]['quantity']
-        # 	price = order_cart[id_product]['price']
-        #
-        #
-        # print(products)
         return render(request, template_name='order_total.html', context={'order': order, 'products': cart_products,
                                                                           'order_delivery_pay': order_delivery_pay,
                                                                           'order_comment': order_comment})

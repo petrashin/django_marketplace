@@ -73,6 +73,7 @@ class ShopProduct(models.Model):
         return f'{self.shop.name}:{self.product.name}'
 
     class Meta:
+        unique_together = ('shop', 'product')
         db_table = 'shop_products'
         verbose_name = 'товар в магазине'
         verbose_name_plural = 'товары в магазинах'

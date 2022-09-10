@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Avg
 from django.urls import reverse
 
 
@@ -88,6 +89,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_avg_price(self):
+        avg_price = self.shop_products.aggregate(avg_price=Avg('price')).get('avg_price')
+        return avg_price
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'slug': self.slug})

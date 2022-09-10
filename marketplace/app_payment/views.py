@@ -18,10 +18,10 @@ class OrderPayment(APIView):
         serializer = GetBillingSerializer(data=request.query_params)
         order_id = request.query_params['order']
         if serializer.is_valid():
-            order_status = Order.objects.filter(id=order_id).values('status_pay', 'payment_error')
+            order_status = Order.objects.filter(id=order_id).values('status_pay', 'payment_status')
             data = serializer.data
-            data['payment_status'] = order_status[0]['status_pay']
-            data['payment_error'] = order_status[0]['payment_error']
+            data['paid'] = order_status[0]['status_pay']
+            data['payment_status'] = order_status[0]['payment_status']
             return Response(data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
