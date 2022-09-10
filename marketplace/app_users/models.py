@@ -19,6 +19,7 @@ class Profile(models.Model):
     role = models.ForeignKey(Role, verbose_name="Роль", on_delete=models.PROTECT)
     fullname = models.CharField(max_length=256, verbose_name="ФИО", blank=True)
     published = models.BooleanField(default=True, verbose_name='опубликовать')
+    card = models.IntegerField(verbose_name='номер банковской карточки', blank=True, null=True)
     recent_views = models.ManyToManyField(ShopProduct)
 
 

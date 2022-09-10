@@ -12,14 +12,11 @@ from django.core.files.storage import FileSystemStorage
 
 def account_view(request):
     if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
-        if Role.objects.filter(name='Администратор').exists():
-            role = Role.objects.get(name='Администратор')
-        else:
-            role = Role.objects.create(name='Администратор')
+        role = Role.objects_get_or_create(name='Администратор')
         profile = Profile.objects.create(user=request.user, role=role)
         Image.objects.create(profile=profile)
     else:
-        profile = Profile.objects.filter(user_id=request.user.id).get()
+        profile = Profile.objects.get(user=request.user)
 
     avatar_object = Image.objects.filter(profile_id=profile)
     last_order = Order.objects.filter(user=request.user).order_by('-date_order').first()
@@ -194,7 +191,7 @@ class HistoryViewListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(HistoryViewListView, self).get_context_data(**kwargs)
-        profile = Profile.objects.filter(user_id=self.request.user.id).get()
+        profile = Profile.objects.get(user=self.request.user)
         recent_views = ViewsHistory.objects.filter(profile=profile).order_by('-viewed_at')
         context['recent_views'] = recent_views
         return context
