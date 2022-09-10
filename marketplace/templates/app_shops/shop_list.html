@@ -83,7 +83,8 @@
                 </div>
               </div>
               <div class="BannersHomeBlock-block">
-                <div class="BannersHomeBlock-img"><img src="{% static 'assets/img/content/home/videoca.png' %}" alt="videoca.png"/>
+                <div class="BannersHomeBlock-img">
+                  <img src="{% static 'assets/img/content/home/videoca.png' %}" alt="videoca.png"/>
                 </div>
               </div>
             </div></a>
@@ -146,8 +147,14 @@
 
           <div class="Cards">
             {% for item in products %}
-            {% for image in item.product.product_images.all %}
-            <div class="Card"><a class="Card-picture" href="{% url 'product_detail' item.product.slug %}"><img src="{{image.main_image.url}}" alt="card.jpg"/></a>
+            <div class="Card">
+              {% if item.product.product_images.main_image %}
+              <a class="Cart-pict" href="{% url 'product_detail' item.product.slug %}">
+                <img class="Cart-img" src="{{ item.product.product_images.main_image.url }}" alt="card.jpg"/></a>
+              {% else %}
+              <a class="Cart-pict" href="{% url 'product_detail' item.product.slug %}">
+                <img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
+              {% endif %}
               <div class="Card-content">
                 <strong class="Card-title"><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
                 </strong>
@@ -155,10 +162,10 @@
                 </strong>
                 <div class="Card-description">
                   <div class="Card-cost">
-                    {% if item.price_type.discount > 0 %}
-                    <span class="Card-priceOld">{{ item.old_price }} руб.</span>
+                    {% if item.product.discount.discount_value > 0 %}
+                    <span class="Card-priceOld">{{ item.price }} руб.</span>
                     {% endif %}
-                    <span class="Card-price">{{ item.current_price }} руб.</span>
+                    <span class="Card-price">{{ item.get_discounted_price }} руб.</span>
                   </div>
                   {% for cat in item.product.category.all %}
                   <div class="Card-category">{{ cat.name }}
@@ -166,17 +173,22 @@
                   {% endfor %}
                   <div class="Card-hover">
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+                      <form action="{% url 'cart_shop_add' item.product.slug %}" method="post">
+                          {% csrf_token %}
+                          {{ item.add_to_cart_form }}
+                          <button type="submit" class="Card-btn buy">
+                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
+                          </button>
+                      </form>
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
                   </div>
                 </div>
               </div>
-              {% if item.price_type.discount > 0 %}
-              <div class="Card-sale">-{{ item.price_type.discount }}
+              {% if item.product.discount.discount_value > 0 %}
+              <div class="Card-sale">-{{ item.product.discount.discount_value }}
               </div>
               {% endif %}
             </div>
-            {% endfor %}
             {% endfor %}
 
 <!--            {% for card in top_goods_hide_md %}-->

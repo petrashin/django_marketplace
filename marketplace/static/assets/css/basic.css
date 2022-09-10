@@ -777,13 +777,13 @@ textarea + select {
 }
 select {
   padding: 5px 25px;
-  min-height: 56px;
+  min-height: 30px;
   border: 1px solid #e0e0e0;
   background-color: #fff;
   display: block;
   font-size: 18px;
   box-sizing: border-box;
-  min-width: 100px;
+  min-width: 180px;
   color: #777;
   padding-left: 25px;
 }

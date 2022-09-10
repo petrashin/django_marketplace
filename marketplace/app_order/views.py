@@ -12,6 +12,8 @@ from django.db import transaction
 from cart.models import CartItems
 from django.conf import settings
 
+from app_payment.tasks import handle_payment
+
 
 class OrderUserView(View):
 
@@ -117,9 +119,14 @@ class OrderPayMethodView(View):
         order = Order.objects.filter(user=request.user).order_by('-id')[0]
         if pay_method_form.is_valid():
             id_pay_method = pay_method_form.cleaned_data.get('title')
-            pay_metod = PayMethod.objects.get(id=id_pay_method)
-            order.pay_method = pay_metod
+            pay_method = PayMethod.objects.get(id=id_pay_method)
+            order.pay_method = pay_method
             order.save()
+
+        order_total_sum = 0
+        cart_products = CartItems.objects.filter(user=request.user.id)
+        for product in cart_products:
+            order_total_sum += product.price * product.quantity
 
         order_delivery_pay = 0
         if order.delivery.title == 'Экспресс-Доставка':
@@ -127,10 +134,11 @@ class OrderPayMethodView(View):
         elif order_total_sum < 2000:
             order_delivery_pay = 200
 
-        order_cart = request.session[settings.CART_SESSION_ID]
-
-        products = Product.objects.filter(id__in=order_cart.keys())
-        print(products[0].description)
+        # TODO Удалить, у нас не может быть человека без регистрации на этом этапе
+        # order_cart = request.session[settings.CART_SESSION_ID]
+        #
+        # products = Product.objects.filter(id__in=order_cart.keys())
+        # print(products[0].description)
         # for id_product in order_cart.keys():
         # 	product = Product.objects.filter(id=id_product)
         # 	products.append(product)
@@ -140,7 +148,7 @@ class OrderPayMethodView(View):
         #
         #
         # print(products)
-        return render(request, template_name='order_total.html', context={'order': order, 'products': products,
+        return render(request, template_name='order_total.html', context={'order': order, 'products': cart_products,
                                                                           'order_delivery_pay': order_delivery_pay,
                                                                           'order_comment': order_comment})
 
@@ -155,6 +163,16 @@ class OrderTotal(View):
             order_comment = order_comment.cleaned_data.get('order_comment')
             order.order_comment = order_comment
             order.save()
+
+
+            # Передаю в модуль оплаты
+            order_total_sum = 0
+            cart_products = CartItems.objects.filter(user=request.user.id)
+            for product in cart_products:
+                order_total_sum += product.price * product.quantity
+
+            card = Profile.objects.filter(user=request.user).values('card')[0]['card']
+            handle_payment.delay(order.id, card, order_total_sum)
 
         service_payment()
         return redirect('/')
