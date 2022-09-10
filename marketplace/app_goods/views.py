@@ -34,12 +34,12 @@ class ProductDetailView(FormMixin, DetailView):
 
         # добавление товара в историю просмотра
         profile = Profile.objects.filter(user_id=self.request.user.id).get()
-        shop_product = ShopProduct.objects.get(product=self.object)
-        ViewsHistory.objects.create(profile=profile, shop_product=shop_product)
+        product = Product.objects.get(id=self.object.id)
+        ViewsHistory.objects.create(profile=profile, product=product)
 
         # считаем среднюю цену товара по магазинам без скидки и со скидкой и добавляем в контекст
         products = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')
-        context['price'] = round(mean([product.price for product in products]), 2)
+        context['price'] = product.get_avg_price()
         context['discounted_aver_price'] = round(mean([product.get_discounted_price() for product in products]), 2)
         context['shops'] = products
         if context['shops']:
