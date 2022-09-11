@@ -33,7 +33,7 @@ class ProductDetailView(FormMixin, DetailView):
         context = super().get_context_data(**kwargs)
 
         # добавление товара в историю просмотра
-        profile = Profile.objects.filter(user_id=self.request.user.id).get()
+        profile = Profile.objects.get(user_id=self.request.user.id)
         product = Product.objects.get(id=self.object.id)
         ViewsHistory.objects.create(profile=profile, product=product)
 
