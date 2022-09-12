@@ -20,7 +20,8 @@ class Profile(models.Model):
     fullname = models.CharField(max_length=256, verbose_name="ФИО", blank=True)
     published = models.BooleanField(default=True, verbose_name='опубликовать')
     card = models.IntegerField(verbose_name='номер банковской карточки', blank=True, null=True)
-    recent_views = models.ManyToManyField(Product, blank=True)
+    recent_views = models.ManyToManyField(Product, blank=True, related_name='recent_views')
+    compared_products = models.ManyToManyField(Product, blank=True, related_name='compared_products')
 
     def __str__(self):
         return self.user.get_full_name()
