@@ -12,7 +12,7 @@ from django.core.files.storage import FileSystemStorage
 
 def account_view(request):
     if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
-        role = Role.objects_get_or_create(name='Администратор')
+        role = Role.objects.get_or_create(name='Администратор')[0]
         profile = Profile.objects.create(user=request.user, role=role)
         Image.objects.create(profile=profile)
     else:
@@ -79,7 +79,13 @@ def validate_avatar(request):
 
 class EditProfile(View):
     def get(self, request):
-        profile = Profile.objects.filter(user_id=request.user.id).get()
+        if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
+            role = Role.objects.get_or_create(name='Администратор')[0]
+            profile = Profile.objects.create(user=request.user, role=role)
+            Image.objects.create(profile=profile)
+        else:
+            profile = Profile.objects.get(user=request.user)
+
         data = {
             "avatar_correct": True,
             "avatar_error": None,
@@ -107,7 +113,13 @@ class EditProfile(View):
         return render(request, "profile.html", context=data)
 
     def post(self, request):
-        profile = Profile.objects.filter(user_id=request.user.id).get()
+        if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
+            role = Role.objects.get_or_create(name='Администратор')[0]
+            profile = Profile.objects.create(user=request.user, role=role)
+            Image.objects.create(profile=profile)
+        else:
+            profile = Profile.objects.get(user=request.user)
+
         data = {}
 
         if request.FILES:
