@@ -40,3 +40,9 @@ class ViewsHistory(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=False, default=None)
     viewed_at = models.DateTimeField(auto_now_add=True)
+
+
+class ComparedProducts(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=False, default=None)
+    added_at = models.DateTimeField(auto_now_add=True)
