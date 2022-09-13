@@ -1,12 +1,13 @@
 from statistics import mean
 
+from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic.edit import FormMixin
 from django.views.generic import DetailView
 
-from app_users.models import ViewsHistory
+from app_users.models import ViewsHistory, ComparedProducts, Role, Image
 from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
@@ -74,3 +75,23 @@ class AddReview(View):
             form.save()
 
         return redirect(product.get_absolute_url())
+
+
+class CompareGoodsView(View):
+    """Вьюшка сравнения товаров"""
+
+    def get(self, request):
+        if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
+            role = Role.objects.get_or_create(name='Администратор')[0]
+            profile = Profile.objects.create(user=request.user, role=role)
+            Image.objects.create(profile=profile)
+        else:
+            profile = Profile.objects.get(user=request.user)
+
+        compared_products = ComparedProducts.objects.filter(profile=profile)
+
+        data = {
+            'compared_products': compared_products
+        }
+
+        return render(request, 'app_goods/compare.html', context=data)

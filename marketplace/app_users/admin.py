@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Role, Image, ViewsHistory
+from .models import Profile, Role, Image, ViewsHistory, ComparedProducts
 
 
 @admin.register(Profile)
@@ -22,4 +22,9 @@ class ImageAdmin(admin.ModelAdmin):
 
 @admin.register(ViewsHistory)
 class ViewsHistoryAdmin(admin.ModelAdmin):
+	pass
+
+
+@admin.register(ComparedProducts)
+class ComparedProductsAdmin(admin.ModelAdmin):
 	pass
