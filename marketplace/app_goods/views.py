@@ -80,6 +80,11 @@ class AddReview(View):
 class CompareGoodsView(View):
     """Вьюшка сравнения товаров"""
 
+    def parse_technical_specs(self, lst_of_tech_specs):
+        common_specs = []
+
+        return [], []
+
     def get(self, request):
         if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
             role = Role.objects.get_or_create(name='Администратор')[0]
@@ -88,10 +93,24 @@ class CompareGoodsView(View):
         else:
             profile = Profile.objects.get(user=request.user)
 
-        compared_products = ComparedProducts.objects.filter(profile=profile)
+        products = []
+        tech_specs = []
+
+        for obj in ComparedProducts.objects.filter(profile=profile):
+            product = Product.objects.get(pk=obj.product.id)
+            products.append(product)
+            tech_specs.append(product.technical_specs)
+
+        print(tech_specs)
+
+        different_specs, similar_specs = self.parse_technical_specs(tech_specs)
+        print(different_specs)
+        print(similar_specs)
+
+
 
         data = {
-            'compared_products': compared_products
+            'compared_products': products
         }
 
         return render(request, 'app_goods/compare.html', context=data)

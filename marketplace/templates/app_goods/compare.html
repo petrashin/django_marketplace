@@ -31,9 +31,9 @@
             <div class="Compare-products">
               {% for product in compared_products %}
                 <div class="Compare-product">
-                  <div class="Compare-nameProduct Compare-nameProduct_main">{{ product.product.name }}
+                  <div class="Compare-nameProduct Compare-nameProduct_main">{{ product.name }}
                   </div>
-                  <div class="Compare-feature"><img src="{{ product.product.product_images.main_image.url }}"/>
+                  <div class="Compare-feature"><img src="{{ product.product_images.main_image.url }}"/>
                   </div>
                 </div>
               {% endfor %}
@@ -301,7 +301,7 @@
               {% for product in compared_products %}
                 <div class="Compare-product">
                   <div class="Compare-feature">
-                    <strong class="Compare-price">${{ product.product.get_avg_price }}
+                    <strong class="Compare-price">${{ product.get_avg_price }}
                     </strong>
                   </div>
                 </div>
