@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="Middle Middle_top">
+    <div class="Middle-top">
+      <div class="wrap">
+        <div class="Middle-header">
+          <h1 class="Middle-title">История просмотра
+          </h1>
+          <ul class="breadcrumbs Middle-breadcrumbs">
+            <li class="breadcrumbs-item"><a href="{% url 'home' %}">home</a>
+            </li>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>История просмотра</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+      <div class="wrap">
+        <div class="Section-column">
+          <div class="Section-columnSection">
+            <header class="Section-header">
+              <strong class="Section-title">Навигация
+              </strong>
+            </header>
+            <div class="Section-columnContent">
+              <div class="NavigateProfile">
+                <ul class="menu menu_vt">
+                  <li class="menu-item"><a class="menu-link" href="{% url 'account' %}">Личный кабинет</a>
+                  </li>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'profile' %}">Профиль</a>
+                  </li>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'orderhistory' %}">История заказов</a>
+                  </li>
+                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'viewhistory' %}">История просмотра</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="Section-content">
+          {% if recent_views %}
+                  <div class="Cards">
+                    {% for product in recent_views %}
+                      <div class="Card">
+                        <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
+                          <img src="{{ product.product.product_images.main_image.url }}"/>
+                        </a>
+                        <div class="Card-content">
+                          <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
+                          </strong>
+                          <div class="Card-description">
+                              <div class="Card-cost"><span class="Card-price">${{ product.product.get_avg_price }}</span>
+                              </div>
+                            {% if product.product.category.first.parent_category is null %}
+                              <div class="Card-category"> {{ product.product.category.first.name }}
+                              </div>
+                            {% else %}
+                              <div class="Card-category"> {{ product.product.category.first.parent_category.name }} / {{ product.product.category.first.name }}
+                              </div>
+                            {% endif %}
+                            <div class="Card-hover"><a class="Card-btn" href="{% url 'product_detail' product.product.slug %}"><img src="/static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="/static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
+                            </div>
+                          </div>
+                        </div>
+                        {% if product.product.discount.discount_value > 0 %}
+                          <div class="Card-sale">-{{ product.product.discount.discount_value }}%
+                          </div>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <p> У вас нет просмотренных товаров </p>
+                {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

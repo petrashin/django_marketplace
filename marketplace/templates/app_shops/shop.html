@@ -8,7 +8,7 @@
           <h1 class="Middle-title">About {{shop.name}}
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="../../../templates/index.html">home</a>
+            <li class="breadcrumbs-item"><a href="../index.html">home</a>
             </li>
             <li class="breadcrumbs-item breadcrumbs-item_current"><span>About Us</span>
             </li>
@@ -153,10 +153,16 @@
           <div class="Cards">
 
             {% for product in products %}
-                {% for image in product.product.product_images.all %}
                 <div class="Card">
-                  <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
-                    <img src="{{ image.main_image.url }}" alt="card.jpg"/></a>
+                  {% if product.product.product_images.main_image %}
+                  <a class="Cart-pict" href="{% url 'product_detail' product.product.slug %}">
+                    <img class="Cart-img" src="{{ product.product.product_images.main_image.url }}" alt="card.jpg"/>
+                  </a>
+                  {% else %}
+                  <a class="Cart-pict" href="{% url 'product_detail' product.product.slug %}">
+                    <img class="Cart-img" src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/>
+                  </a>
+                  {% endif %}
                   <div class="Card-content">
                     <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
                     </strong>
@@ -173,7 +179,7 @@
                           <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
                           {% csrf_token %}
                           {{ product.add_to_cart_form }}
-                          <button type="submit" class="Card-btn">
+                          <button type="submit" class="Card-btn buy">
                               <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
                           </button>
                       </form>
@@ -186,7 +192,6 @@
                   </div>
                   {% endif %}
                 </div>
-                {% endfor %}
             {% endfor %}
           </div>
         </div>

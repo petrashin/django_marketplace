@@ -17,17 +17,20 @@
             </div>
         </div>
         {% for item in cart_items %}
-          {% if item.published %}
             {% with product=item.product %}
-                {% for image in product.product_images.all %}
                     <div class="Section">
                     <div class="wrap">
 {#                     <form class="form Cart" action="" method="">#}
                     <div class="Cart-product">
                         <div class="Cart-block Cart-block_row">
                             <div class="Cart-block Cart-block_pict">
+                                {% if product.product_images.main_image %}
                                 <a class="Cart-pict" href="{{ product.get_absolute_url }}">
-                                <img class="Cart-img" src="{{ image.main_image.url }}" alt="card.jpg"/></a>
+                                <img class="Cart-img" src="{{ product.product_images.main_image.url }}" alt="card.jpg"/></a>
+                                {% else %}
+                                <a class="Cart-pict" href="{{ product.get_absolute_url }}">
+                                    <img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
+                                {% endif %}
                             </div>
                             <div class="Cart-block Cart-block_info">
                                 <a class="Cart-title" href="{{ product.get_absolute_url }}">{{ product.name }}</a>
@@ -36,17 +39,17 @@
                             </div>
                             <div class="Cart-block Cart-block_row">
                                 <div class="Cart-block Cart-block_price">
+                                    <div class="Cart-price_old">{{ item.old_price }}</div>
                                     <div class="Cart-price">{{ item.price }} руб.
                                     </div>
                                 </div>
                                 <div class="Cart-block Cart-block_seller">
                                     <form class="form-select" action="{% url 'cart_update_price' item.id %}" method="post">
-                                    {% csrf_token %}
-                                       {{ item.shops_form }}
+                                        {% csrf_token %}
+                                        {{ item.shop }}
+                                        {{ item.shops_form }}
                                         <input type='submit' value='Обновить'>
                                     </form>
-                                    <div class="Cart-price">{{ item.shop }}
-                                    </div>
                                 </div>
                             </div>
                             <div class="Cart-block Cart-block_amount">
@@ -69,17 +72,16 @@
                     </div>
                     </div>
 {#                     </form>#}
-                {% endfor %}
             {% endwith %}
-          {% endif %}
         {% endfor %}
+
         <div class="Cart-total">
             <div class="Cart-block Cart-block_total">
                 <strong class="Cart-title">Итого:
                 </strong><span class="Cart-price">{{ total_cost }}</span><span
-                    class="Cart-price_old"></span>
+                    class="Cart-price_old">{{ old_total_cost }}</span>
             </div>
-            <div class="Cart-block"><a class="btn btn_success btn_lg" href="{% url 'order' %}">Оформить заказ</a>
+            <div class="Cart-block"><a class="btn btn_success btn_lg" href="order">Оформить заказ</a>
             </div>
         </div>
         </div>

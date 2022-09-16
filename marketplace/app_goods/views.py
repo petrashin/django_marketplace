@@ -6,10 +6,12 @@ from django.views import View
 from django.views.generic.edit import FormMixin
 from django.views.generic import DetailView
 
+from app_users.models import ViewsHistory
 from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
 from cart.forms import CartAddProductForm, CartAddProductShopForm
+from app_users.models import Profile
 
 
 class ProductDetailView(FormMixin, DetailView):
@@ -29,9 +31,15 @@ class ProductDetailView(FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # добавление товара в историю просмотра
+        profile = Profile.objects.get(user_id=self.request.user.id)
+        product = Product.objects.get(id=self.object.id)
+        ViewsHistory.objects.create(profile=profile, product=product)
+
         # считаем среднюю цену товара по магазинам без скидки и со скидкой и добавляем в контекст
         products = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')
-        context['price'] = round(mean([product.price for product in products]), 2)
+        context['price'] = product.get_avg_price()
         context['discounted_aver_price'] = round(mean([product.get_discounted_price() for product in products]), 2)
         context['shops'] = products
         if context['shops']:

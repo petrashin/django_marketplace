@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
 
-{% block header %}
-{% endblock %}
-
 {% block content %}
 
   <div class="Middle Middle_top">
@@ -103,15 +100,12 @@
                 </div>
               </div>
               <div class="Cart Cart_order">
-                <!-- TODO: Отображение товаров из заказа -->
                 {% for product, quantity in products.items %}
                   <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_pict">
                         <a class="Cart-pict" href="{% url 'product_detail' product.product.slug %}">
-                          {% for image in product.product.product_images.all %}
-                            <img class="Cart-img" src="{{ image.main_image.url }}"/>
-                          {% endfor %}
+                            <img class="Cart-img" src="{{ product.product.product_images.main_image.url }}"/>
                         </a>
                       </div>
                       <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
@@ -161,7 +155,4 @@
     </div>
   </div>
 
-{% endblock %}
-
-{% block footer %}
 {% endblock %}

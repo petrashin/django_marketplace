@@ -16,7 +16,7 @@ class PayStatus(models.Model):
                              default='Не оплачено')
 
     def __str__(self):
-        return self.title
+        return self.get_title_display()
 
 
 class Billing(models.Model):
@@ -27,7 +27,7 @@ class Billing(models.Model):
     payment_status = models.ForeignKey(PayStatus, blank=True, on_delete=models.DO_NOTHING, verbose_name='Статус оплаты')
 
     def __str__(self):
-        return f'order: {self.order.user} - status: {self.payment_status.title}'
+        return f'order: {self.order.id} - status: {self.payment_status.get_title_display()}'
 
     class Meta:
         verbose_name = 'платеж'

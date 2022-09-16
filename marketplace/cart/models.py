@@ -10,7 +10,6 @@ from app_shops.models import Shop, ShopProduct
 
 
 class CartItems(models.Model):
-    published = models.BooleanField(default=True, verbose_name='видимость/не оплачено')
     user = models.IntegerField(verbose_name='id покупателя',
                                null=True,
                                help_text='не null если покупатель авторизован')
@@ -162,7 +161,15 @@ class CartItems(models.Model):
         return self.price * self.quantity
 
     def get_total_quantity(self, request):
-        return self.get_cart_items(request).count()
+        cart_items = self.get_cart_items(request)
+        cart_total_quantity = 0
+        if cart_items:
+            if len(cart_items) > 1:
+                for item in cart_items:
+                    cart_total_quantity += item.quantity
+            elif len(cart_items) == 1:
+                cart_total_quantity = cart_items[0].quantity
+        return cart_total_quantity
 
     def get_total_cost(self, request):
         cart_items = self.get_cart_items(request)
