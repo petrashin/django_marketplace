@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 {% block content %}
     <div class="Middle Middle_top">
         <div class="Middle-top">
             <div class="wrap">
                 <div class="Middle-header">
-                    <h1 class="Middle-title">Корзина
+                    <h1 class="Middle-title">{% trans 'Cart' %}
                     </h1>
                     <ul class="breadcrumbs Middle-breadcrumbs">
-                        <li class="breadcrumbs-item"><a href="index.html">home</a>
+                        <li class="breadcrumbs-item"><a href="index.html">{% trans 'home' %}</a>
                         </li>
-                        <li class="breadcrumbs-item breadcrumbs-item_current"><span>Корзина</span>
+                        <li class="breadcrumbs-item breadcrumbs-item_current"><span>{% trans 'Cart' %}</span>
                         </li>
                     </ul>
                 </div>
@@ -40,7 +41,7 @@
                             <div class="Cart-block Cart-block_row">
                                 <div class="Cart-block Cart-block_price">
                                     <div class="Cart-price_old">{{ item.old_price }}</div>
-                                    <div class="Cart-price">{{ item.price }} руб.
+                                    <div class="Cart-price">{{ item.price }} {% trans 'rub' %}.
                                     </div>
                                 </div>
                                 <div class="Cart-block Cart-block_seller">
@@ -48,7 +49,7 @@
                                         {% csrf_token %}
                                         {{ item.shop }}
                                         {{ item.shops_form }}
-                                        <input type='submit' value='Обновить'>
+                                        <input type='submit' value='{% trans 'Update' %}'>
                                     </form>
                                 </div>
                             </div>
@@ -58,7 +59,7 @@
                                         <form class="form-select" action="{% url 'cart_update_quantity' item.id %}" method="post">
                                             {{ item.update_quantity_form.quantity }}
                                             {{ item.update_quantity_form.item_id }}
-                                            <input type="submit" value="Обновить">
+                                            <input type="submit" value="{% trans 'Update' %}">
                                             {% csrf_token %}
                                         </form>
                                     </div>
@@ -77,11 +78,11 @@
 
         <div class="Cart-total">
             <div class="Cart-block Cart-block_total">
-                <strong class="Cart-title">Итого:
+                <strong class="Cart-title">{% trans 'Total' %}:
                 </strong><span class="Cart-price">{{ total_cost }}</span><span
                     class="Cart-price_old">{{ old_total_cost }}</span>
             </div>
-            <div class="Cart-block"><a class="btn btn_success btn_lg" href="order">Оформить заказ</a>
+            <div class="Cart-block"><a class="btn btn_success btn_lg" href="order">{% trans 'Checkout' %}</a>
             </div>
         </div>
         </div>

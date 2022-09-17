@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!--END-->
 <!--END--><!DOCTYPE html><!--[if IE 7]>
 <html class="ie7" lang="ru">
@@ -67,20 +68,21 @@
   <script src="{% static 'assets/plg/range/ion.rangeSlider.min.js' %}"></script>
   <script src="{% static 'assets/plg/Slider/slick.min.js' %}"></script>
   <script src="{% static 'assets/js/scripts.js' %}"></script>
+  <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
 
     {#  настройки скрипта Sweetalert для сообщений #}
 {#    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>#}
-     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         {% if messages %}
         {% for msg in messages %}
             Swal.fire({
                         title: '{{ msg }}',
-                        text: 'Желаете продолжить покупки?',
+                        text: gettext('Would you like to continue shopping?'),
                         icon: 'success',
                         showDenyButton: true,
-                        confirmButtonText: 'Ok',
-                        denyButtonText: `Перейти к корзине`
+                        confirmButtonText: gettext('Continue'),
+                        denyButtonText: gettext(`To cart`)
             })
             .then(function(result) {
                  if (result.isDenied) {
@@ -91,6 +93,13 @@
         {% endfor %}
     {% endif %}
     </script>
+<script>
+    document.querySelectorAll('.buy').forEach(function (element) {
+        element.style.borderColor = 'white'
+        element.style.marginLeft = '12px'
+        element.style.marginRight = '12px'
+    })
+</script>
 
 </body>
 </html>
