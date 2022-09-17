@@ -28,7 +28,6 @@ def handle_payment(order_id: int, card_num: int, payment_amount: int):
 
 def _change_status(order_id: int, payment_result: bool):
     billing_max_id = Billing.objects.aggregate(id__max=Max('id'))
-    print(billing_max_id)
     billing = Billing.objects.filter(order__id=order_id, id=billing_max_id['id__max']).only('payment_status')[0]
     order = Order.objects.filter(id=order_id).only('status_pay', 'payment_status')
     order.update(status_pay=payment_result)

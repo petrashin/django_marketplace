@@ -28,15 +28,16 @@ class OrderPayment(APIView):
     def post(self, request):
         serializer = PostBillingSerializer(data=request.query_params)
         if serializer.is_valid():
+
             card = request.query_params['card_num']
             if int(card) % 2 == 0 and card[-1] != '0':
-                serializer.save(payment_status=PayStatus.objects.get(title=2))
+                serializer.save(payment_status=PayStatus.objects.get(id=2))
                 return Response(request.query_params, status=status.HTTP_200_OK)
             elif int(card) % 2 == 0 and card[-1] == '0':
                 code_err = random.randint(3, 5)
-                serializer.save(payment_status=PayStatus.objects.get(title=code_err))
+                serializer.save(payment_status=PayStatus.objects.get(id=code_err))
                 return Response(request.query_params, status=status.HTTP_406_NOT_ACCEPTABLE)
             else:
-                serializer.save(payment_status=PayStatus.objects.get(title=3))
+                serializer.save(payment_status=PayStatus.objects.get(id=3))
                 return Response(request.query_params, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
