@@ -86,7 +86,7 @@
             })
             .then(function(result) {
                  if (result.isDenied) {
-                     window.location.href = '/cart/'
+                     window.location.href = '{% url 'cart_detail' %}'
                  }
                 }
             )
