@@ -45,6 +45,8 @@ class CartItems(models.Model):
 
     published = models.BooleanField(default=True, verbose_name='опубликовать')
 
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
+
     def get_session_id(self, request):
         """ Получение id корзины из cookies для пользователя """
         self.session = request.session
