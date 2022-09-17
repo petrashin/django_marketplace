@@ -193,6 +193,7 @@ class HistoryViewListView(AddToCartFormMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(HistoryViewListView, self).get_context_data(**kwargs)
+        print(self.request.user)
         profile = Profile.objects.get(user=self.request.user)
         recent_views = ViewsHistory.objects.filter(profile=profile).order_by('-viewed_at')[:20]
         context['recent_views'] = recent_views

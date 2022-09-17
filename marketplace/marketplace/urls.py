@@ -4,7 +4,6 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 from custom_admin.views import ImportGoodsView, AdminCustomSettings
-from django.views.i18n import JavaScriptCatalog
 
 urlpatterns = [
     path('admin/custom_settings/', AdminCustomSettings.as_view(), name='admin_custom_settings'),
@@ -12,7 +11,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
 ] + i18n_patterns(
-    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path('i18n/', include('django.conf.urls.i18n')),
     path('cart/', include('cart.urls')),
     path('auth/', include('app_auth.urls')),

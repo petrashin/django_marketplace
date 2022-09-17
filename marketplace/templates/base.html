@@ -68,25 +68,25 @@
   <script src="{% static 'assets/plg/range/ion.rangeSlider.min.js' %}"></script>
   <script src="{% static 'assets/plg/Slider/slick.min.js' %}"></script>
   <script src="{% static 'assets/js/scripts.js' %}"></script>
-  <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
 
     {#  настройки скрипта Sweetalert для сообщений #}
 {#    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>#}
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         {% if messages %}
+            console.log('True')
         {% for msg in messages %}
             Swal.fire({
                         title: '{{ msg }}',
-                        text: gettext('Would you like to continue shopping?'),
+                        text: '{% trans "Would you like to continue shopping?" %}',
                         icon: 'success',
                         showDenyButton: true,
-                        confirmButtonText: gettext('Continue'),
-                        denyButtonText: gettext(`To cart`)
+                        confirmButtonText: '{% trans "Continue" %}',
+                        denyButtonText: '{% trans "To cart" %}'
             })
             .then(function(result) {
                  if (result.isDenied) {
-                     window.location.href = {% url 'cart_detail' %}
+                     window.location.href = '/cart/'
                  }
                 }
             )

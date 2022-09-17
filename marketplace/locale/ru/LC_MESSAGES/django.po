@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-16 18:42+0300\n"
+"POT-Creation-Date: 2022-09-17 20:43+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -340,7 +340,7 @@ msgstr "товар в магазине"
 msgid "products in the stores"
 msgstr "товары в магазинах"
 
-#: .\app_shops\views.py:91
+#: .\app_shops\views.py:88
 msgid "Megano"
 msgstr "Мегано"
 
@@ -416,11 +416,11 @@ msgstr "цена"
 msgid "added_at"
 msgstr "дата добавления"
 
-#: .\cart\models.py:197
+#: .\cart\models.py:198
 msgid "cart item"
 msgstr "товар в корзине"
 
-#: .\cart\models.py:198
+#: .\cart\models.py:199
 msgid "cart items"
 msgstr "товары в корзине"
 
@@ -691,6 +691,18 @@ msgstr "Популярные Товары"
 msgid "Shops"
 msgstr "Магазины"
 
+#: .\templates\base.html:82
+msgid "Would you like to continue shopping?"
+msgstr "Желаете продолжить покупки?"
+
+#: .\templates\base.html:85
+msgid "Continue"
+msgstr "Продолжить"
+
+#: .\templates\base.html:86
+msgid "To cart"
+msgstr "К корзине"
+
 #: .\templates\cart.html:9 .\templates\cart.html:14
 msgid "Cart"
 msgstr "Корзина"
@@ -833,7 +845,7 @@ msgstr "Способы Оплаты"
 msgid "Free Delivery"
 msgstr "Бесплатная Доставка"
 
-#: .\templates\header.html:41
+#: .\templates\header.html:40
 msgid "Go"
 msgstr "Выполнить"
 

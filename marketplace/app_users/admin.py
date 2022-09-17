@@ -4,7 +4,7 @@ from .models import Profile, Role, Image, ViewsHistory
 
 
 @admin.register(Profile)
-class ProfileAdmin(TranslationAdmin):
+class ProfileAdmin(admin.ModelAdmin):
 	list_display = ['id', 'user', 'phone_number', 'balance', 'role', 'published']
 	
 	def has_delete_permission(self, *args, **kwargs):
@@ -17,7 +17,7 @@ class RoleAdmin(TranslationAdmin):
 
 
 @admin.register(Image)
-class ImageAdmin(TranslationAdmin):
+class ImageAdmin(admin.ModelAdmin):
 	list_display = ['id', 'profile', 'avatar']
 
 
