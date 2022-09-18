@@ -47,20 +47,20 @@ class OrderView(View):
             total_sum_with_discount = 0
             for product in cart:
                 total_sum += product.total_sum
-                total_sum_with_discount += product.total_sum_with_discount
+                if product.total_sum_with_discount:
+                    total_sum_with_discount += product.total_sum_with_discount
+                else:
+                    total_sum_with_discount += product.total_sum
             context['cart'] = cart
             context['total_sum'] = total_sum
             context['total_sum_with_discount'] = total_sum_with_discount
 
-            return render(request, template_name='order/order1.html', context=context)
+            return render(request, template_name='order/order.html', context=context)
 
     @staticmethod
     def post(request):
-        comment = ''
-        comment_form = OrderCommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.cleaned_data.get('comment')
         data = request.POST
+        comment = data['comment']
         email = data['mail']
         user = User.objects.get(email=email)
         delivery = Delivery.objects.get(title=data['delivery'])
@@ -84,7 +84,6 @@ class OrderPayment(View):
 
     def post(self, request):
         card_num = request.POST['numero1'].replace(' ', '')
-        print(card_num)
         user = request.user
         profile = Profile.objects.get(user_id=user.id)
         order = Order.objects.filter(user=user).last()
@@ -99,7 +98,6 @@ class OrderPayment(View):
         user = request.user
         profile = Profile.objects.get(user_id=user.id)
         order = Order.objects.filter(user=user).last()
-        print(order.payment_status)
         # cart = CartItems.objects.filter(session_id=request.session.session_key).select_related('product')
         cart = CartItems.objects.filter(session_id=request.session.session_key, published=True).select_related(
             'product__discount').annotate(price_discount=ExpressionWrapper(
@@ -116,8 +114,8 @@ class OrderPayment(View):
                 else:
                     logger.error(f'Заказ не оформлен. Недостаточное количество товара {product.product}')
                     #order.payment_status = f'Недостаточное количество товара {product.product}'
-                    pay_status = PayStatus.objects.get(title='кол-во товаров')
-                    order.payment_status = pay_status
+                    pay_status = PayStatus.objects.get(title='недостаточное кол-во товаров')
+                    order.payment_status = pay_status.title
                     order.save()
                     return render(request, template_name='order/order_detail.html',
                                   context={'user': user,
@@ -126,10 +124,12 @@ class OrderPayment(View):
                                            'order': order
                                            })
             logger.info(f'Оформление заказа {order.id} пользователем {user.id}')
-            for product in cart:
-                product.published = False
-            CartItems.objects.bulk_update(cart, ['published'])
-            return render(request, template_name='cart.html')
+            cart.delete()
+            return render(request, template_name='order/order_detail.html',
+                          context={'user': user,
+                                   'profile': profile,
+                                   'order': order
+                                   })
         elif order.payment_status:
             logger.error('Ошибка оплаты')
             return render(request, template_name='order/order_detail.html', context={'user': user,
@@ -145,6 +145,6 @@ class OrderRepeat(View):
 
     def get(self, request):
         order = Order.objects.filter(user=request.user).last()
-        if order.pay_method == 1:
+        if order.pay_method_id == 1:
             return render(request, template_name='order/payment.html', )
         return render(request, template_name='order/payment_someone.html')
