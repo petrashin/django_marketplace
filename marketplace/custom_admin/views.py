@@ -2,6 +2,8 @@ import json
 import os
 import shutil
 import logging
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
@@ -160,10 +162,10 @@ class ImportGoodsView(View):
 		
 		source_path = os.path.abspath(f'{settings.MEDIA_ROOT}/{file_for_import.file.name}')
 		shutil.move(source_path, destination_path)
-	
+
 	# @staticmethod
 	# def delete_file(request, file_name):
-	# 	file_path = os.path.abspath(f'{settings.MEDIA_ROOT}/for_import/{file_name}')
+	# 	file_path = os.path.abspath(f'{settings.MEDIA_ROOT}/{file_name}')
 	# 	print(os.path.isfile(file_path))
 	# 	try:
 	# 		os.remove(file_path)
