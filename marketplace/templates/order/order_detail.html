@@ -85,17 +85,17 @@
                     <div class="Order-info Order-info_status">
                       <div class="Order-infoType">Статус:
                       </div>
-                      {% if order.status_pay %}
+                      {% if order.status_pay and order.payment_status == 'Оплачено' %}
                         <div class="Order-infoContent">Оплачен</div>
                       {% else %}
                         <div class="Order-infoContent">Не оплачен</div>
                       {% endif %}
                     </div>
-                    {% if not order.status_pay and order.payment_error %}
+                    {% if order.payment_status != 'Оплачено' %}
                       <div class="Order-info Order-info_error">
                         <div class="Order-infoType">Оплата не прошла:
                         </div>
-                        <div class="Order-infoContent">Оплата не выполнена, т.к. {{ order.payment_error }}
+                        <div class="Order-infoContent">Оплата не выполнена, т.к. {{ order.payment_status }}
                         </div>
                       </div>
                     {% endif %}
@@ -148,8 +148,9 @@
                     <strong class="Cart-title">Итого:<span class="Cart-price">{{ order.get_total_cost_with_discount }}$</span> <span class="Cart-price_old">{{ order.get_total_cost }}$</span>
                     </strong>
                   </div>
-                  {% if not order.status_pay %}
+                  {% if order.payment_status != 'Оплачено' %}
                     <!-- TODO: Перенаправление на страницу повторной оплаты -->
+                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="/cart">В корзину</a> </div>
                     <div class="Cart-block"><a class="btn btn_primary btn_lg" href="repeat">Оплатить</a> </div>
                   {% endif %}
                 </div>
