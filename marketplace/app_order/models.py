@@ -1,5 +1,5 @@
 from django.db import models
-from app_shops.models import ShopProduct
+from app_shops.models import ShopProduct, Shop
 from django.contrib.auth.models import User
 
 
