@@ -18,15 +18,15 @@ from decimal import Decimal
 from app_payment.tasks import handle_payment
 from custom_admin.views import logger
 from app_payment.models import PayStatus
+from decimal import *
+from app_auth.forms import SignUpForm
 
 
 class OrderView(View):
 
     @staticmethod
     def get(request):
-        comment = OrderCommentForm()
         context = dict()
-        context['comment'] = comment
         if request.user.is_authenticated:
             user = User.objects.get(id=request.user.id)
             context['user'] = user
@@ -38,28 +38,59 @@ class OrderView(View):
                 profile = Profile.objects.create(user=user, phone_number='', role=role)
             context['profile'] = profile
 
-            cart = CartItems.objects.filter(session_id=request.session.session_key, published=True).select_related(
+            cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
                 'product__discount').annotate(price_discount=ExpressionWrapper(
                 F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
-                output_field=FloatField()), total_sum=Sum(F('price') * F('quantity')),
+                output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
                 total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
+            
+            q_shops = CartItems.objects.filter(session_id=request.session.session_key).aggregate(q_shops=Count('shop', distinct=True))
+
             total_sum = 0
             total_sum_with_discount = 0
+            q = Decimal(10) ** -2
             for product in cart:
-                total_sum += product.total_sum
+                total_sum += product.total_sum.quantize(q)
                 if product.total_sum_with_discount:
-                    total_sum_with_discount += product.total_sum_with_discount
+                    total_sum_with_discount += product.total_sum_with_discount.quantize(q)
                 else:
-                    total_sum_with_discount += product.total_sum
+                    total_sum_with_discount += product.total_sum.quantize(q)
             context['cart'] = cart
-            context['total_sum'] = total_sum
-            context['total_sum_with_discount'] = total_sum_with_discount
+            context['total_sum'] = str(total_sum)
+            context['total_sum_with_discount'] = str(total_sum_with_discount)
+            context['q_shops'] = q_shops['q_shops']
 
             return render(request, template_name='order/order.html', context=context)
+        else:
+            cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
+                'product__discount').annotate(price_discount=ExpressionWrapper(
+                F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
+                output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
+                total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
+    
+            q_shops = CartItems.objects.filter(session_id=request.session.session_key).aggregate(
+                q_shops=Count('shop', distinct=True))
+    
+            total_sum = 0
+            total_sum_with_discount = 0
+            q = Decimal(10) ** -2
+            for product in cart:
+                total_sum += product.total_sum.quantize(q)
+                if product.total_sum_with_discount:
+                    total_sum_with_discount += product.total_sum_with_discount.quantize(q)
+                else:
+                    total_sum_with_discount += product.total_sum.quantize(q)
+            context['cart'] = cart
+            context['total_sum'] = str(total_sum)
+            context['total_sum_with_discount'] = str(total_sum_with_discount)
+            context['q_shops'] = q_shops['q_shops']
+            return render(request, template_name='order/order.html', context=context)
+        
 
     @staticmethod
     def post(request):
         data = request.POST
+        print(data)
         comment = data['comment']
         email = data['mail']
         user = User.objects.get(email=email)
@@ -71,10 +102,12 @@ class OrderView(View):
         products = CartItems.objects.filter(session_id=request.session.session_key).select_related('product')
         order_goods = {}
         for product in products:
-            order_goods[product.product_id] = product.quantity
+            if not product.shop in order_goods.keys():
+                order_goods[product.shop] = {}
+            order_goods[product.shop][product.product_id] = product.quantity
         Order.objects.create(user=user, order_goods=order_goods, delivery=delivery, city=city,
                              address=address, pay_method=pay_method, order_comment=comment, payment_status='')
-
+            
         if pay_method.id == 1:
             return render(request, template_name='order/payment.html', )
         return render(request, template_name='order/payment_someone.html')
@@ -86,11 +119,19 @@ class OrderPayment(View):
         card_num = request.POST['numero1'].replace(' ', '')
         user = request.user
         profile = Profile.objects.get(user_id=user.id)
+        profile.card = card_num
+        profile.save()
+        q_shops = CartItems.objects.filter(session_id=request.session.session_key).\
+            aggregate(q_shops=Count('shop', distinct=True))['q_shops']
         order = Order.objects.filter(user=user).last()
         payment_amount = order.get_total_cost()
         if order.get_total_cost_with_discount():
             payment_amount = order.get_total_cost_with_discount()
-        handle_payment.delay(order.id, card_num, payment_amount)
+        if order.delivery.id == 1 and (payment_amount < 2000 or q_shops > 1):
+            payment_amount += 200
+        elif order.delivery.id == 2:
+            payment_amount += 500
+        #handle_payment.delay(order.id, card_num, payment_amount)
         return render(request, template_name='order/progressPayment.html')
 
     @transaction.atomic
@@ -98,7 +139,6 @@ class OrderPayment(View):
         user = request.user
         profile = Profile.objects.get(user_id=user.id)
         order = Order.objects.filter(user=user).last()
-        # cart = CartItems.objects.filter(session_id=request.session.session_key).select_related('product')
         cart = CartItems.objects.filter(session_id=request.session.session_key, published=True).select_related(
             'product__discount').annotate(price_discount=ExpressionWrapper(
             F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),

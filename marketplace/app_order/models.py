@@ -1,5 +1,5 @@
 from django.db import models
-from app_shops.models import ShopProduct
+from app_shops.models import ShopProduct, Shop
 from django.contrib.auth.models import User
 
 
@@ -49,15 +49,19 @@ class Order(models.Model):
     def get_total_cost(self):
         """Функция получения стоимости заказа без скидок"""
         total_cost = 0
-        for key, value in self.order_goods.items():
-            product = ShopProduct.objects.get(product_id=key)
-            total_cost += product.price * value
+        for shop in self.order_goods:
+            for key, value in self.order_goods[shop].items():
+                shop_id = Shop.objects.get(name=shop).id
+                product = ShopProduct.objects.get(product_id=key, shop=shop_id)
+                total_cost += product.price * value
         return float(total_cost)
 
     def get_total_cost_with_discount(self):
-        """Фукнция получения стоимости заказа с учетом скидок"""
+        """Функция получения стоимости заказа с учетом скидок"""
         total_cost = 0
-        for key, value in self.order_goods.items():
-            product = ShopProduct.objects.get(product_id=key)
-            total_cost += product.get_discounted_price() * value
+        for shop in self.order_goods:
+            for key, value in self.order_goods[shop].items():
+                shop_id = Shop.objects.get(name=shop).id
+                product = ShopProduct.objects.get(product_id=key, shop=shop_id)
+                total_cost += product.get_discounted_price() * value
         return float(total_cost)
