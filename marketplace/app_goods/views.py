@@ -80,12 +80,45 @@ class AddReview(View):
 class CompareGoodsView(View):
     """Вьюшка сравнения товаров"""
 
-    def parse_technical_specs(self, lst_of_tech_specs):
-        common_specs = []
+    def check_same_elements(self, lst):
+        if len(lst) == 2:
+            return lst[0] == lst[1]
+        elif len(lst) == 3:
+            return lst[0] == lst[1] == lst[2]
+        elif len(lst) == 4:
+            return lst[0] == lst[1] == lst[2] == lst[3]
+        else:
+            return BaseException
 
-        return [], []
+    def parse_technical_specs(self, lst_of_tech_specs):
+        """
+        Возвращает три словаря:
+            первый - все характеристики товаров,
+            второй - только различающиеся характеристики товаров,
+            третий - только одинаковые характеристики товаров
+        """
+        all_specs = {}
+        diff_specs = {}
+        same_specs = {}
+
+        for i in range(len(lst_of_tech_specs)):
+            for k, v in lst_of_tech_specs[i].items():
+                if k not in all_specs:
+                    all_specs[k] = [''] * 4
+                all_specs[k][i] = v
+
+        for k, v in all_specs.items():
+            if not self.check_same_elements(all_specs[k]):
+                diff_specs[k] = v
+
+        for k, v in all_specs.items():
+            if k not in diff_specs:
+                same_specs[k] = v
+
+        return all_specs, diff_specs, same_specs
 
     def get(self, request):
+
         if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
             role = Role.objects.get_or_create(name='Администратор')[0]
             profile = Profile.objects.create(user=request.user, role=role)
@@ -95,21 +128,24 @@ class CompareGoodsView(View):
 
         products = []
         tech_specs = []
+        not_enough_data = False
 
         for obj in ComparedProducts.objects.filter(profile=profile):
             product = Product.objects.get(pk=obj.product.id)
             products.append(product)
             tech_specs.append(product.technical_specs)
 
-        print(tech_specs)
-
-        different_specs, similar_specs = self.parse_technical_specs(tech_specs)
-        print(different_specs)
-        print(similar_specs)
-
-
+        if len(tech_specs) < 2:
+            not_enough_data = True
+            all_specs, diff_specs, same_specs = {}, {}, {}
+        else:
+            all_specs, diff_specs, same_specs = self.parse_technical_specs(tech_specs)
 
         data = {
+            'same_specs': same_specs,
+            'all_specs': all_specs,
+            'diff_specs': diff_specs,
+            'not_enough_data': not_enough_data,
             'compared_products': products
         }
 
