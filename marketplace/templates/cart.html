@@ -17,7 +17,8 @@
                 </div>
             </div>
         </div>
-        {% for item in cart_items %}
+        {% if cart_items %}
+            {% for item in cart_items %}
             {% with product=item.product %}
                     <div class="Section">
                     <div class="wrap">
@@ -40,7 +41,9 @@
                             </div>
                             <div class="Cart-block Cart-block_row">
                                 <div class="Cart-block Cart-block_price">
+                                    {% if item.old_price > item.price %}
                                     <div class="Cart-price_old">{{ item.old_price }}</div>
+                                    {% endif %}
                                     <div class="Cart-price">{{ item.price }} {% trans 'rub' %}.
                                     </div>
                                 </div>
@@ -75,6 +78,8 @@
 {#                     </form>#}
             {% endwith %}
         {% endfor %}
+    {% else %}
+    {% include 'empty_category.html' %} {% endif %}
 
         <div class="Cart-total">
             <div class="Cart-block Cart-block_total">

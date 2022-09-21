@@ -51,45 +51,32 @@
 <div class="Middle">
     <div class="Section">
       <div class="wrap">
-        <div class="BannersHome"><a class="BannersHomeBlock" href="#">
-            <div class="BannersHomeBlock-row">
-              <div class="BannersHomeBlock-block">
-                <strong class="BannersHomeBlock-title">{% trans 'Video Cards' %}
-                </strong>
-                <div class="BannersHomeBlock-content">{% trans 'from' %}&#32;<span class="BannersHomeBlock-price">$199.00</span>
-                </div>
-              </div>
-              <div class="BannersHomeBlock-block">
-                <div class="BannersHomeBlock-img"><img src="{% static 'assets/img/content/home/videoca.png' %}" alt="videoca.png"/>
-                </div>
-              </div>
-            </div></a><a class="BannersHomeBlock" href="#">
-            <div class="BannersHomeBlock-row">
-              <div class="BannersHomeBlock-block">
-                <strong class="BannersHomeBlock-title">{% trans 'Head Phones' %}
-                </strong>
-                <div class="BannersHomeBlock-content">{% trans 'from' %}&#32;<span class="BannersHomeBlock-price">$210.00</span>
-                </div>
-              </div>
-              <div class="BannersHomeBlock-block">
-                <div class="BannersHomeBlock-img"><img src="{% static 'assets/img/content/home/videoca.png' %}" alt="videoca.png"/>
-                </div>
-              </div>
-            </div></a><a class="BannersHomeBlock" href="#">
-            <div class="BannersHomeBlock-row">
-              <div class="BannersHomeBlock-block">
-                <strong class="BannersHomeBlock-title">{% trans 'Bass Speakers' %}
-                </strong>
-                <div class="BannersHomeBlock-content">{% trans 'from' %}&#32;<span class="BannersHomeBlock-price">$159.00</span>
-                </div>
-              </div>
-              <div class="BannersHomeBlock-block">
-                <div class="BannersHomeBlock-img">
-                  <img src="{% static 'assets/img/content/home/videoca.png' %}" alt="videoca.png"/>
-                </div>
-              </div>
-            </div></a>
+
+        <div class="BannersHome">
+            {% if categories %}
+                {% for category in categories|slice:":3" %}
+                <a class="BannersHomeBlock" href="{% url 'catalog' category.id %}">
+                <div class="BannersHomeBlock-row">
+                  <div class="BannersHomeBlock-block">
+                    <strong class="BannersHomeBlock-title">{{category.name}}
+                    </strong>
+                    <div class="BannersHomeBlock-content">{% trans 'from' %}&#32;
+                        <span class="BannersHomeBlock-price">{{ category.get_min_price }} {% trans 'rub' %}.</span>
+                    </div>
+                  </div>
+                  <div class="BannersHomeBlock-block">
+                    <div class="BannersHomeBlock-img">
+                        {% if category.category_image.url %}
+                        <img src="{{ category.category_image.url }}" alt="category image"/>
+                        {% endif %}
+                    </div>
+                  </div>
+                </div></a>
+                {% endfor %}
+            {% else %} {% include 'empty_category.html' %}
+            {% endif %}
         </div>
+
       </div>
     </div>
     <div class="Section Section_column Section_columnLeft Section_columnDesktop">
@@ -102,16 +89,17 @@
             </header>
 
 {#          Lim Product #}
-              {% if lim_product %}
-            <div class="Card">
+              {% if lim_products %}
+              {% with lim_product=lim_products|random %}
+                <div class="Card">
                 <a class="Card-picture" href="{% url 'product_detail' lim_product.slug %}">
                 {% if lim_product.product_images.main_image %}
                 <img src="{{ lim_product.product_images.main_image.url }}" alt="card.jpg"/></a>
                 {% else %}
-              <a class="Cart-pict" href="{% url 'product_detail' lim_product.slug %}">
+                <a class="Cart-pict" href="{% url 'product_detail' lim_product.slug %}">
                 <img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card"/></a>
-              {% endif %}
-              <div class="Card-content">
+                {% endif %}
+                <div class="Card-content">
                 <strong class="Card-title">
                     <a href="{% url 'product_detail' lim_product.slug %}">{{ lim_product.name }}</a>
                 </strong>
@@ -127,7 +115,7 @@
                   </div>
                     {% endfor %}
                 </div>
-                <div class="CountDown" data-date="22.09.2022 03:59">
+                <div class="CountDown" data-date="22.09.2023 03:59">
                   <div class="CountDown-block">
                     <div class="CountDown-wrap">
                       <div class="CountDown-days">
@@ -155,9 +143,12 @@
                 </div>
               </div>
             </div>
-                  {% else %}
+              {% endwith %}
+              {% else %}
                   {% include 'empty_category.html' %}
               {% endif %}
+
+
           </div>
         </div>
 

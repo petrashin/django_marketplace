@@ -41,21 +41,22 @@ class AddToCartFormMixin:
         return [shop, product_id]
 
     def add_to_cart_form(self, products):
-        if len(products) > 1:
-            for product in products:
-                shop = self.get_form_params(product)[0]
-                product_id = self.get_form_params(product)[1]
-                product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                           'shop': shop,
-                                                                           'product': product_id
-                                                                           })
-        else:
-            shop = self.get_form_params(products[0])[0]
-            product_id = self.get_form_params(products[0])[1]
-            products[0].add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                           'shop': shop,
-                                                                           'product': product_id
-                                                                           })
+        if products:
+            if len(products) > 1:
+                for product in products:
+                    shop = self.get_form_params(product)[0]
+                    product_id = self.get_form_params(product)[1]
+                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                               'shop': shop,
+                                                                               'product': product_id
+                                                                               })
+            else:
+                shop = self.get_form_params(products[0])[0]
+                product_id = self.get_form_params(products[0])[1]
+                products[0].add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+                                                                               'shop': shop,
+                                                                               'product': product_id
+                                                                               })
 
 
 class CatalogueView(AddToCartFormMixin, ListView):
@@ -99,10 +100,9 @@ class BaseTemplateView(AddToCartFormMixin, TemplateView):
         if limited_products:
             if len(limited_products) > 1:
                 context['lim_products'] = limited_products[:16]
-                context['lim_product'] = random.choice(list(limited_products))
             else:
                 context['lim_products'] = limited_products[0]
-                context['lim_product'] = limited_products[0]
+
         context['popular_products'] = popular_products
         context['hot_offers'] = hot_offers
         return context
@@ -113,7 +113,7 @@ class ShopListView(AddToCartFormMixin, ListView):
     template_name = 'app_shops/shop_list.html'
     queryset = ShopProduct.objects.select_related('shop', 'product'). \
         filter(product__published=True). \
-        prefetch_related('product__category', 'product__product_images')
+        prefetch_related('product__category', 'product__product_images').order_by('shop__name')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

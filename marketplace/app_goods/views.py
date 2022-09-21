@@ -32,11 +32,12 @@ class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        product = Product.objects.get(id=self.object.id)
 
         # добавление товара в историю просмотра
-        profile = Profile.objects.get(user_id=self.request.user.id)
-        product = Product.objects.get(id=self.object.id)
-        ViewsHistory.objects.create(profile=profile, product=product)
+        if self.request.user.is_authenticated:
+            profile = Profile.objects.get(user_id=self.request.user.id)
+            ViewsHistory.objects.create(profile=profile, product=product)
 
         # считаем среднюю цену товара по магазинам без скидки и со скидкой и добавляем в контекст
         shops = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')

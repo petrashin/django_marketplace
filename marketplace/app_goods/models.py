@@ -4,7 +4,7 @@ from statistics import mean
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Min
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -47,12 +47,30 @@ class Category(models.Model):
     category_icon = models.FileField(upload_to="icons/categories/", verbose_name=_('category icon'),
                                      default=os.path.abspath(
                                          f'{settings.BASE_DIR}/media/icons/categories/test_category_icon.jpg'))
+    category_image = models.ImageField(upload_to='cat_image/',
+                                       blank=True,
+                                       null=True,
+                                       verbose_name=_('category_image'),
+                                       help_text=_('category image'))
     slug = models.SlugField(max_length=255,
                             db_index=True,
                             verbose_name='url',
                             help_text=_('unique url fragment based on the category name')
                             )
     published = models.BooleanField(default=True, verbose_name=_('published'))
+
+    def get_min_price(self):
+        """ Получаем минимальную цену co скидкой на товар категории для index.html """
+        products = self.products.all()
+        min_price = 0.0
+        if products:
+            if len(products) > 1:
+                min_price = sorted([product.get_discounted_price()
+                                    for product in products for product in product.shop_products.all()])[0]
+            else:
+                min_price = sorted([product.get_discounted_price() for product in products[0].shop_products.all()])[0]
+
+        return min_price
 
     def __str__(self):
         return self.name
@@ -93,12 +111,19 @@ class Product(models.Model):
         return self.name
 
     def get_avg_price(self):
+        """ Получаем среднюю цену товара """
         avg_price = self.shop_products.aggregate(avg_price=Avg('price')).get('avg_price')
         return avg_price
 
     def get_avg_discounted_price(self):
+        """ Получаем среднюю цену товара с учетом скидки """
         shop_products = self.shop_products.all()
-        avg_price = round(mean([product.get_discounted_price() for product in shop_products]), 2)
+        avg_price = 0.0
+        if shop_products:
+            if len(shop_products) > 1:
+                avg_price = round(mean([product.get_discounted_price() for product in shop_products]), 2)
+            else:
+                avg_price = round(shop_products[0].get_discounted_price(), 2)
         return avg_price
 
     def get_absolute_url(self):
@@ -156,6 +181,3 @@ class Reviews(models.Model):
     class Meta:
         verbose_name = _('review')
         verbose_name_plural = _('reviews')
-
-
-
