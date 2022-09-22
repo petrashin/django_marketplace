@@ -54,11 +54,13 @@
                           </strong>
                           <div class="Card-description">
                             {% if product.product.discount.discount_value > 0 %}
-                              <div class="Card-cost"><span class="Card-price">${{ product.product.get_avg_discounted_price }}</span>
-                                  <span class="Card-priceOld">${{ product.product.get_avg_price }}</span>
+                              <div class="Card-cost">
+                                  <span class="Card-price">{{ product.product.get_avg_discounted_price|floatformat:2 }} {% trans 'rub' %}.</span>
+                                  <span class="Card-priceOld">${{ product.product.get_avg_price|floatformat:2 }} {% trans 'rub' %}.</span>
                               </div>
                             {% else %}
-                              <div class="Card-cost"><span class="Card-price">${{ product.product.get_avg_price }}</span>
+                              <div class="Card-cost">
+                                  <span class="Card-price">{{ product.product.get_avg_price|floatformat:2 }} {% trans 'rub' %}.</span>
                               </div>
                             {% endif %}
                             {% if product.product.category.first.parent_category is null %}

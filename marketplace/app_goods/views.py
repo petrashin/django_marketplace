@@ -36,15 +36,13 @@ class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
 
         # добавление товара в историю просмотра
         if self.request.user.is_authenticated:
-            profile = Profile.objects.get(user_id=self.request.user.id)
-            ViewsHistory.objects.create(profile=profile, product=product)
+            if Profile.objects.filter(user_id=self.request.user.id).exists():
+                profile = Profile.objects.get(user_id=self.request.user.id)
+                ViewsHistory.objects.create(profile=profile, product=product)
 
-        # считаем среднюю цену товара по магазинам без скидки и со скидкой и добавляем в контекст
+        # добавляем в контекст магазины, которые продают этот товар и активируем кнопку добавления в корзину
         shops = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')
-        context['price'] = product.get_avg_price()
-        context['discounted_aver_price'] = product.get_avg_discounted_price()
         context['shops'] = shops
-
         self.add_to_cart_form(shops)
 
         return context

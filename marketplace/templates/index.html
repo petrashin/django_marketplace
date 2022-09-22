@@ -106,9 +106,9 @@
                 <div class="Card-description">
                   <div class="Card-cost">
                   {% if lim_product.discount.discount_value > 0 %}
-                      <span class="Card-priceOld">{{ lim_product.get_avg_price }} {% trans 'rub' %}.</span>
+                      <span class="Card-priceOld">{{ lim_product.get_avg_price|floatformat:2 }} {% trans 'rub' %}.</span>
                   {% endif %}
-                    <span class="Card-price">{{ lim_product.get_avg_discounted_price }} {% trans 'rub' %}.</span>
+                    <span class="Card-price">{{ lim_product.get_avg_discounted_price|floatformat:2 }} {% trans 'rub' %}.</span>
                   </div>
                     {% for cat in lim_product.category.all %}
                   <div class="Card-category">{{ cat.name }}
@@ -176,9 +176,9 @@
                 <div class="Card-description">
                   <div class="Card-cost">
                     {% if item.discount.discount_value > 0 %}
-                    <span class="Card-priceOld">{{ item.get_avg_price }} {% trans 'rub' %}.</span>
+                    <span class="Card-priceOld">{{ item.get_avg_price|floatformat:2 }} {% trans 'rub' %}.</span>
                     {% endif %}
-                    <span class="Card-price">{{ item.get_avg_discounted_price }} {% trans 'rub' %}.</span>
+                    <span class="Card-price">{{ item.get_avg_discounted_price|floatformat:2 }} {% trans 'rub' %}.</span>
                   </div>
                   {% for cat in item.category.all %}
                   <div class="Card-category">{{ cat.name }}
@@ -245,9 +245,9 @@
 
                         <div class="Card-cost">
                         {% if item.discount.discount_value > 0 %}
-                        <span class="Card-priceOld">{{ item.get_avg_price }} {% trans 'rub' %}.</span>
+                        <span class="Card-priceOld">{{ item.get_avg_price|floatformat:2 }} {% trans 'rub' %}.</span>
                         {% endif %}
-                        <span class="Card-price">{{ item.get_avg_discounted_price }} {% trans 'rub' %}.</span>
+                        <span class="Card-price">{{ item.get_avg_discounted_price|floatformat:2 }} {% trans 'rub' %}.</span>
                         </div>
                         {% for cat in item.category.all %}
                         <div class="Card-category">{{ cat.name }}
@@ -365,8 +365,8 @@
                       <strong class="Card-title"><a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
                       </strong>
                       <div class="Card-description">
-                        <div class="Card-cost"><span class="Card-priceOld">{{ product.get_avg_price }} руб.</span>
-                            <span class="Card-price">{{ product.get_avg_discounted_price }} руб.</span>
+                        <div class="Card-cost"><span class="Card-priceOld">{{ product.get_avg_price|floatformat:2 }} руб.</span>
+                            <span class="Card-price">{{ product.get_avg_discounted_price|floatformat:2 }} руб.</span>
                         </div>
                         {% for cat in product.category.all %}
                         <div class="Card-category">{{ cat.name }}
@@ -409,8 +409,8 @@
                           <a href="{% url 'product_detail' lim_products.slug %}">{{ lim_products.name }}</a>
                       </strong>
                       <div class="Card-description">
-                        <div class="Card-cost"><span class="Card-priceOld">{{ lim_products.get_avg_price }} руб.</span>
-                            <span class="Card-price">{{ lim_products.get_avg_discounted_price }} руб.</span>
+                        <div class="Card-cost"><span class="Card-priceOld">{{ lim_products.get_avg_price|floatformat:2 }} руб.</span>
+                            <span class="Card-price">{{ lim_products.get_avg_discounted_price|floatformat:2 }} руб.</span>
                         </div>
                         {% for cat in lim_products.category.all %}
                         <div class="Card-category">{{ cat.name }}

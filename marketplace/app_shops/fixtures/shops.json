@@ -1,26 +1,897 @@
 [
 {
-  "model": "app_shops.shop",
-  "pk": 1,
-  "fields": {
-    "name": "MVideo",
-    "slug": "mvideo"
-  }
+    "model": "app_shops.shop",
+    "pk": 1,
+    "fields": {
+        "name": "Эльдорадо",
+        "name_ru": "Эльдорадо",
+        "name_en": "Eldorado",
+        "slug": "eldorado",
+        "about": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_ru": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_en": "The text for the title of the online store should leave a good impression and confirm a reliable reputation. On the main page, you should briefly tell what the resource is, and what exactly you are selling here. Think about it and list on the title the benefits that await your customers in cooperation. Write down how you stand out from your competitors. This list may include:\r\n\r\nunique product;\r\nspecific audience;\r\nunusual service;\r\nhuge assortment;\r\nprofitable bonus and discount systems;\r\nspecial attitude to customers;\r\nreliable guarantees;\r\nan impressive warehouse.",
+        "phone_1": "+71111111111",
+        "phone_2": "+72222222222",
+        "e_mail_1": "eld1@mail.ru",
+        "e_mail_2": "eld2@mail.ru",
+        "post_index": "153000",
+        "country": "Россия",
+        "country_ru": "Россия",
+        "country_en": "Russia",
+        "city": "Москва",
+        "city_ru": "Москва",
+        "city_en": "Moscow",
+        "street": "Московская",
+        "street_ru": "Московская",
+        "street_en": "Moskovskaya",
+        "house_number": "10"
+    }
 },
 {
-  "model": "app_shops.shop",
-  "pk": 2,
-  "fields": {
-    "name": "DNS",
-    "slug": "dns"
-  }
+    "model": "app_shops.shop",
+    "pk": 2,
+    "fields": {
+        "name": "МВидео",
+        "name_ru": "МВидео",
+        "name_en": "MVideo",
+        "slug": "mvideo",
+        "about": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_ru": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_en": "The text for the title of the online store should leave a good impression and confirm a reliable reputation. On the main page, you should briefly tell what the resource is, and what exactly you are selling here. Think about it and list on the title the benefits that await your customers in cooperation. Write down how you stand out from your competitors. This list may include:\r\n\r\nunique product;\r\nspecific audience;\r\nunusual service;\r\nhuge assortment;\r\nprofitable bonus and discount systems;\r\nspecial attitude to customers;\r\nreliable guarantees;\r\nan impressive warehouse.",
+        "phone_1": "+71111111111",
+        "phone_2": "+72222222222",
+        "e_mail_1": "mv@mail.ru",
+        "e_mail_2": "mv1@mail.ru",
+        "post_index": "153000",
+        "country": "Россия",
+        "country_ru": "Россия",
+        "country_en": "Russia",
+        "city": "Самара",
+        "city_ru": "Самара",
+        "city_en": "Samara",
+        "street": "Ленина",
+        "street_ru": "Ленина",
+        "street_en": "Lenina",
+        "house_number": "21"
+    }
 },
 {
-  "model": "app_shops.shop",
-  "pk": 3,
-  "fields": {
-    "name": "Eldorado",
-    "slug": "eldorado"
-  }
+    "model": "app_shops.shop",
+    "pk": 3,
+    "fields": {
+        "name": "ДНС",
+        "name_ru": "ДНС",
+        "name_en": "DNS",
+        "slug": "dns",
+        "about": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_ru": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_en": "The text for the title of the online store should leave a good impression and confirm a reliable reputation. On the main page, you should briefly tell what the resource is, and what exactly you are selling here. Think about it and list on the title the benefits that await your customers in cooperation. Write down how you stand out from your competitors. This list may include:\r\n\r\nunique product;\r\nspecific audience;\r\nunusual service;\r\nhuge assortment;\r\nprofitable bonus and discount systems;\r\nspecial attitude to customers;\r\nreliable guarantees;\r\nan impressive warehouse.",
+        "phone_1": "+71111111111",
+        "phone_2": "+72222222222",
+        "e_mail_1": "dns@mail.ru",
+        "e_mail_2": "dns1@mail.ru",
+        "post_index": "153111",
+        "country": "Россия",
+        "country_ru": "Россия",
+        "country_en": "Russia",
+        "city": "Иваново",
+        "city_ru": "Иваново",
+        "city_en": "Ivanovo",
+        "street": "Советская",
+        "street_ru": "Советская",
+        "street_en": "Sovetskaya",
+        "house_number": "5"
+    }
+},
+{
+    "model": "app_shops.shop",
+    "pk": 4,
+    "fields": {
+        "name": "Мир одежды",
+        "name_ru": "Мир одежды",
+        "name_en": "Mir odezhdy",
+        "slug": "mir-odezhdy",
+        "about": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_ru": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_en": "The text for the title of the online store should leave a good impression and confirm a reliable reputation. On the main page, you should briefly tell what the resource is, and what exactly you are selling here. Think about it and list on the title the benefits that await your customers in cooperation. Write down how you stand out from your competitors. This list may include:\r\n\r\nunique product;\r\nspecific audience;\r\nunusual service;\r\nhuge assortment;\r\nprofitable bonus and discount systems;\r\nspecial attitude to customers;\r\nreliable guarantees;\r\nan impressive warehouse.",
+        "phone_1": "+71111111111",
+        "phone_2": "+72222222222",
+        "e_mail_1": "mir@mail.ru",
+        "e_mail_2": "mir2@mail.ru",
+        "post_index": "153222",
+        "country": "Россия",
+        "country_ru": "Россия",
+        "country_en": "Russia",
+        "city": "Москва",
+        "city_ru": "Москва",
+        "city_en": "Moscow",
+        "street": "Мира",
+        "street_ru": "Мира",
+        "street_en": "Mira",
+        "house_number": "10"
+    }
+},
+{
+    "model": "app_shops.shop",
+    "pk": 5,
+    "fields": {
+        "name": "Планета одежды",
+        "name_ru": "Планета одежды",
+        "name_en": "Planeta odezhdy",
+        "slug": "planeta-odezhdy",
+        "about": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_ru": "Текст для титула интернет-магазина должен оставлять после себя хорошее впечатление и подтверждать надежную репутацию. На главной странице стоит вкратце рассказать, что представляет собой ресурс, и что именно вы здесь продаете. Подумайте и перечислите на титуле выгоды, которые ждут ваших покупателей при сотрудничестве. Напишите, чем вы выделяетесь на фоне своих конкурентов. В этот список могут попасть:\r\n\r\nуникальный товар;\r\nспецифическая аудитория;\r\nнеобычное обслуживание;\r\nогромный ассортимент;\r\nвыгодные системы бонусов и скидок;\r\nособое отношение к клиентам;\r\nнадежные гарантии;\r\nвнушительный склад.",
+        "about_en": "The text for the title of the online store should leave a good impression and confirm a reliable reputation. On the main page, you should briefly tell what the resource is, and what exactly you are selling here. Think about it and list on the title the benefits that await your customers in cooperation. Write down how you stand out from your competitors. This list may include:\r\n\r\nunique product;\r\nspecific audience;\r\nunusual service;\r\nhuge assortment;\r\nprofitable bonus and discount systems;\r\nspecial attitude to customers;\r\nreliable guarantees;\r\nan impressive warehouse.",
+        "phone_1": "+71111111111",
+        "phone_2": "+72222222222",
+        "e_mail_1": "planeta@mail.ru",
+        "e_mail_2": "planeta2@mail.ru",
+        "post_index": "153333",
+        "country": "Россия",
+        "country_ru": "Россия",
+        "country_en": "Russia",
+        "city": "Сочи",
+        "city_ru": "Сочи",
+        "city_en": "Sochi",
+        "street": "Ленина",
+        "street_ru": "Ленина",
+        "street_en": "Lenina",
+        "house_number": "5"
+    }
+},
+{
+    "model": "app_shops.shopimage",
+    "pk": 1,
+    "fields": {
+        "shop": 1,
+        "image": "shop_image/pngwing.com_2.png"
+    }
+},
+{
+    "model": "app_shops.shopimage",
+    "pk": 2,
+    "fields": {
+        "shop": 2,
+        "image": "shop_image/98342945.jpg"
+    }
+},
+{
+    "model": "app_shops.shopimage",
+    "pk": 3,
+    "fields": {
+        "shop": 3,
+        "image": "shop_image/pngwing.com_20.png"
+    }
+},
+{
+    "model": "app_shops.shopimage",
+    "pk": 4,
+    "fields": {
+        "shop": 4,
+        "image": "shop_image/pngwing.com_1.png"
+    }
+},
+{
+    "model": "app_shops.shopimage",
+    "pk": 5,
+    "fields": {
+        "shop": 5,
+        "image": "shop_image/pngwing.com_13.png"
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 1,
+    "fields": {
+        "shop": 1,
+        "product": 4,
+        "price": "10000.00",
+        "quantity": 100,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 2,
+    "fields": {
+        "shop": 1,
+        "product": 5,
+        "price": "12000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 3,
+    "fields": {
+        "shop": 1,
+        "product": 6,
+        "price": "12500.00",
+        "quantity": 60,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 4,
+    "fields": {
+        "shop": 1,
+        "product": 1,
+        "price": "100000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 5,
+    "fields": {
+        "shop": 1,
+        "product": 3,
+        "price": "55000.00",
+        "quantity": 50,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 6,
+    "fields": {
+        "shop": 1,
+        "product": 13,
+        "price": "50000.00",
+        "quantity": 20,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 7,
+    "fields": {
+        "shop": 1,
+        "product": 14,
+        "price": "55000.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 8,
+    "fields": {
+        "shop": 1,
+        "product": 15,
+        "price": "60000.00",
+        "quantity": 30,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 9,
+    "fields": {
+        "shop": 1,
+        "product": 16,
+        "price": "100000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 10,
+    "fields": {
+        "shop": 1,
+        "product": 17,
+        "price": "150000.00",
+        "quantity": 15,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 11,
+    "fields": {
+        "shop": 1,
+        "product": 18,
+        "price": "120000.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 12,
+    "fields": {
+        "shop": 1,
+        "product": 10,
+        "price": "65000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 13,
+    "fields": {
+        "shop": 1,
+        "product": 11,
+        "price": "70000.00",
+        "quantity": 12,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 14,
+    "fields": {
+        "shop": 1,
+        "product": 12,
+        "price": "36000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 15,
+    "fields": {
+        "shop": 2,
+        "product": 4,
+        "price": "25000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 16,
+    "fields": {
+        "shop": 2,
+        "product": 5,
+        "price": "12000.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 17,
+    "fields": {
+        "shop": 2,
+        "product": 6,
+        "price": "15000.00",
+        "quantity": 30,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 18,
+    "fields": {
+        "shop": 2,
+        "product": 1,
+        "price": "55000.00",
+        "quantity": 15,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 19,
+    "fields": {
+        "shop": 2,
+        "product": 2,
+        "price": "60000.00",
+        "quantity": 20,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 20,
+    "fields": {
+        "shop": 2,
+        "product": 3,
+        "price": "65000.00",
+        "quantity": 15,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 21,
+    "fields": {
+        "shop": 2,
+        "product": 7,
+        "price": "15000.00",
+        "quantity": 60,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 22,
+    "fields": {
+        "shop": 2,
+        "product": 8,
+        "price": "30000.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 23,
+    "fields": {
+        "shop": 2,
+        "product": 9,
+        "price": "25000.00",
+        "quantity": 15,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 24,
+    "fields": {
+        "shop": 2,
+        "product": 13,
+        "price": "55000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 25,
+    "fields": {
+        "shop": 2,
+        "product": 14,
+        "price": "60000.00",
+        "quantity": 15,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 26,
+    "fields": {
+        "shop": 2,
+        "product": 15,
+        "price": "100000.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 27,
+    "fields": {
+        "shop": 2,
+        "product": 16,
+        "price": "100000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 28,
+    "fields": {
+        "shop": 2,
+        "product": 17,
+        "price": "120000.00",
+        "quantity": 12,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 29,
+    "fields": {
+        "shop": 2,
+        "product": 18,
+        "price": "90000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 30,
+    "fields": {
+        "shop": 2,
+        "product": 10,
+        "price": "60000.00",
+        "quantity": 5,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 31,
+    "fields": {
+        "shop": 2,
+        "product": 11,
+        "price": "100000.00",
+        "quantity": 6,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 32,
+    "fields": {
+        "shop": 2,
+        "product": 12,
+        "price": "150000.00",
+        "quantity": 10,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 33,
+    "fields": {
+        "shop": 3,
+        "product": 4,
+        "price": "12000.00",
+        "quantity": 100,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 34,
+    "fields": {
+        "shop": 3,
+        "product": 6,
+        "price": "15000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 35,
+    "fields": {
+        "shop": 3,
+        "product": 1,
+        "price": "55000.00",
+        "quantity": 65,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 36,
+    "fields": {
+        "shop": 3,
+        "product": 3,
+        "price": "56000.00",
+        "quantity": 65,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 37,
+    "fields": {
+        "shop": 3,
+        "product": 7,
+        "price": "30000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 38,
+    "fields": {
+        "shop": 3,
+        "product": 8,
+        "price": "35000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 39,
+    "fields": {
+        "shop": 3,
+        "product": 9,
+        "price": "34000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 40,
+    "fields": {
+        "shop": 3,
+        "product": 13,
+        "price": "55000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 41,
+    "fields": {
+        "shop": 3,
+        "product": 14,
+        "price": "56000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 42,
+    "fields": {
+        "shop": 3,
+        "product": 15,
+        "price": "56500.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 43,
+    "fields": {
+        "shop": 3,
+        "product": 16,
+        "price": "110000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 44,
+    "fields": {
+        "shop": 3,
+        "product": 17,
+        "price": "115000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 45,
+    "fields": {
+        "shop": 3,
+        "product": 10,
+        "price": "55500.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 46,
+    "fields": {
+        "shop": 3,
+        "product": 11,
+        "price": "65100.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 47,
+    "fields": {
+        "shop": 3,
+        "product": 12,
+        "price": "66000.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 48,
+    "fields": {
+        "shop": 4,
+        "product": 25,
+        "price": "500.00",
+        "quantity": 100,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 49,
+    "fields": {
+        "shop": 4,
+        "product": 26,
+        "price": "1000.00",
+        "quantity": 100,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 50,
+    "fields": {
+        "shop": 4,
+        "product": 27,
+        "price": "550.00",
+        "quantity": 100,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 51,
+    "fields": {
+        "shop": 4,
+        "product": 22,
+        "price": "100.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 52,
+    "fields": {
+        "shop": 4,
+        "product": 23,
+        "price": "500.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 53,
+    "fields": {
+        "shop": 4,
+        "product": 24,
+        "price": "550.00",
+        "quantity": 55,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 54,
+    "fields": {
+        "shop": 4,
+        "product": 19,
+        "price": "100.00",
+        "quantity": 20,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 55,
+    "fields": {
+        "shop": 4,
+        "product": 20,
+        "price": "150.00",
+        "quantity": 20,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 56,
+    "fields": {
+        "shop": 4,
+        "product": 21,
+        "price": "155.00",
+        "quantity": 20,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 57,
+    "fields": {
+        "shop": 5,
+        "product": 25,
+        "price": "1000.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 58,
+    "fields": {
+        "shop": 5,
+        "product": 27,
+        "price": "2000.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 59,
+    "fields": {
+        "shop": 5,
+        "product": 23,
+        "price": "2500.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 60,
+    "fields": {
+        "shop": 5,
+        "product": 24,
+        "price": "1500.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 61,
+    "fields": {
+        "shop": 5,
+        "product": 22,
+        "price": "1550.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 62,
+    "fields": {
+        "shop": 5,
+        "product": 19,
+        "price": "500.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 63,
+    "fields": {
+        "shop": 5,
+        "product": 20,
+        "price": "600.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 64,
+    "fields": {
+        "shop": 5,
+        "product": 21,
+        "price": "650.00",
+        "quantity": 25,
+        "is_available": true
+    }
+},
+{
+    "model": "app_shops.shopproduct",
+    "pk": 65,
+    "fields": {
+        "shop": 5,
+        "product": 26,
+        "price": "2520.00",
+        "quantity": 25,
+        "is_available": true
+    }
 }
 ]

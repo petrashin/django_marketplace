@@ -63,10 +63,10 @@
                             </h2>
                             <div class="ProductCard-info">
                                 <div class="ProductCard-cost">
-                                    <div class="ProductCard-price">{{ discounted_aver_price }} {% trans 'rub' %}.
+                                    <div class="ProductCard-price">{{ product.get_avg_discounted_price|floatformat:2 }} {% trans 'rub' %}.
                                     </div>
                                     {% if product.discount.discount_value > 0 %}
-                                    <div class="ProductCard-priceOld">{{ price }} {% trans 'rub' %}.
+                                    <div class="ProductCard-priceOld">{{ product.get_avg_price|floatformat:2 }} {% trans 'rub' %}.
                                     </div>
                                     {% endif %}
                                 </div>

@@ -128,7 +128,7 @@
                           <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
                           </strong>
                           <div class="Card-description">
-                              <div class="Card-cost"><span class="Card-price">${{ product.product.get_avg_price }}</span>
+                              <div class="Card-cost"><span class="Card-price">${{ product.product.get_avg_price|floatformat:2 }}</span>
                               </div>
                             {% if product.product.category.first.parent_category is null %}
                               <div class="Card-category"> {{ product.product.category.first.name }}
