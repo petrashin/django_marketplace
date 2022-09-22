@@ -76,26 +76,29 @@
                           {% if spec == "rating" %}
                             <div class="Rating">
                                 <div class="Rating-stars">
-                                    {% for i in "x"|rjust:"3" %}
-                                      <span class="Rating-star Rating-star_view">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
-                                          <g>
+                                   {% for i in '12345' %}
+                                      {% if i <= cur_spec|floatformat:0 %}
+                                        <span class="Rating-star Rating-star_view">
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
                                             <g>
-                                              <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                                              <g>
+                                                <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                                              </g>
                                             </g>
-                                          </g>
-                                        </svg></span>
-                                    {% endfor %}
-                                    {% for i in "x"|rjust:"2" %}
-                                      <span class="Rating-star">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
-                                      <g>
-                                        <g>
-                                          <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
-                                        </g>
-                                      </g>
-                                    </svg></span>
-                                    {% endfor %}
+                                          </svg>
+                                        </span>
+                                      {% else %}
+                                        <span class="Rating-star">
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+                                            <g>
+                                              <g>
+                                                <path fill="#ffc000" d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z"></path>
+                                              </g>
+                                            </g>
+                                          </svg>
+                                        </span>
+                                      {% endif %}
+                                   {% endfor %}
                                 </div>
                                 <div class="Rating-title">
                                 </div>
