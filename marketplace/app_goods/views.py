@@ -80,6 +80,10 @@ class AddReview(View):
 class CompareGoodsView(View):
     """Вьюшка сравнения товаров"""
 
+    def can_be_compared(self, lst):
+        lst_of_specs = [el.keys() for el in lst]
+        return len(set(lst_of_specs[0]).intersection(*lst_of_specs)) != 0
+
     def check_same_elements(self, lst):
         if len(lst) == 2:
             return lst[0] == lst[1]
@@ -104,7 +108,7 @@ class CompareGoodsView(View):
         for i in range(len(lst_of_tech_specs)):
             for k, v in lst_of_tech_specs[i].items():
                 if k not in all_specs:
-                    all_specs[k] = [''] * 4
+                    all_specs[k] = [''] * len(lst_of_tech_specs)
                 all_specs[k][i] = v
 
         for k, v in all_specs.items():
@@ -112,7 +116,7 @@ class CompareGoodsView(View):
                 diff_specs[k] = v
 
         for k, v in all_specs.items():
-            if k not in diff_specs:
+            if len(set(v)) == 1:
                 same_specs[k] = v
 
         return all_specs, diff_specs, same_specs
@@ -139,9 +143,11 @@ class CompareGoodsView(View):
             not_enough_data = True
             all_specs, diff_specs, same_specs = {}, {}, {}
         else:
+            can_compare = self.can_be_compared(tech_specs)
             all_specs, diff_specs, same_specs = self.parse_technical_specs(tech_specs)
 
         data = {
+            'can_compare': can_compare,
             'same_specs': same_specs,
             'all_specs': all_specs,
             'diff_specs': diff_specs,
@@ -150,3 +156,24 @@ class CompareGoodsView(View):
         }
 
         return render(request, 'app_goods/compare.html', context=data)
+
+
+def delete_from_comparison(request, pk):
+    """Функция для удаления товара из меню сравнения"""
+    profile = Profile.objects.get(user=request.user)
+    ComparedProducts.objects.get(profile=profile, product=pk).delete()
+    return redirect('compare')
+
+
+def add_to_comparison(request, pk):
+    """
+    Функция для добавления товара в меню сравнения
+    При добавлении пятого товара в сравнение удаляет первый добавленный товар
+    """
+    profile = Profile.objects.get(user=request.user)
+    if not ComparedProducts.objects.filter(profile=profile, product_id=pk).exists():
+        if ComparedProducts.objects.filter(profile=profile).count() > 3:
+            ComparedProducts.objects.filter(profile=profile).order_by('added_at').first().delete()
+        ComparedProducts.objects.create(profile=profile, product_id=pk)
+
+    return redirect('compare')

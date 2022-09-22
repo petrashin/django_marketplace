@@ -50,14 +50,23 @@
               <div class="Compare-products">
                   {% for product in compared_products %}
                     <div class="Compare-product">
-                      <div class="Compare-feature"><a class="Compare-btn" href="#"><img src="/static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Compare-btn" href="#"><img src="/static/assets/img/icons/card/delete.svg" alt="delete.svg"/></a>
+                      <div class="Compare-feature">
+                        <div style="margin-right: 10px;">
+                          <a class="Compare-btn" href="#"><img src="/static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a>
+                        </div>
+                        <form action="{% url 'delete_from_comparison' product.id %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="Compare-btn">
+                            <img src="/static/assets/img/icons/card/delete.svg" alt="delete.svg"/>
+                          </button>
+                        </form>
                       </div>
                     </div>
                   {% endfor %}
               </div>
             </div>
 
-            {% if same_specs|length == 0 %}
+            {% if not can_compare %}
 
               <center>
                 <div style='margin: 100px 100px;'><font size="+2">Вы пытаетесь сравнить товары, не имеющие ни одной общей характеристики!</font></div>
