@@ -56,17 +56,40 @@ class ShopProduct(models.Model):
                                                 )
     is_available = models.BooleanField(default=True, verbose_name='в наличии')
 
+    def get_discount(self):
+        category_discount = self.product.category.all()[0].discount
+        product_discount = self.product.discount
+
+        discount = 0
+        if product_discount and product_discount.discount_type.id == 1:
+            product_discount_value = product_discount.discount_value
+        else:
+            product_discount_value = 0
+
+        if category_discount and category_discount.discount_type.id == 1:
+            category_discount_value = category_discount.discount_value
+        else:
+            category_discount_value = 0
+        if product_discount_value > 0 or category_discount_value > 0:
+            if product_discount_value > category_discount_value:
+                discount = product_discount_value
+            else:
+                discount = category_discount_value
+
+        return discount
+
     def get_discounted_price(self):
-        """ Получаем цену со скидкой """
-        if not self.product.discount:
-            return self.price
-        if self.product.discount.discount_value > 0:
-            discount = self.product.discount.discount_value
+        """ Получаем цену со скидкой на товар/категорию"""
+
+        discount = self.get_discount()
+        if discount > 0:
             discounted_price = self.price - (self.price * discount / 100)
             if discounted_price >= 1:
                 return Decimal(discounted_price)
             else:
                 return Decimal(1)
+        else:
+            return self.price
         return self.price
 
     def __str__(self):

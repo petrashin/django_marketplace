@@ -147,10 +147,9 @@
                         </div>
                       </div>
                     </div>
-                  {% if product.product.discount.discount_value > 0 %}
-                  <div class="Card-sale">-{{ product.product.discount.discount_value }}
-                </div>
-              {% endif %}
+                  {% if product.get_discount > 0 %}
+                      <div class="Card-sale">-{{ product.get_discount }}</div>
+                  {% endif %}
               </div>
             {% endfor %}
           {% else %} {% include 'empty_category.html' %} {% endif %}

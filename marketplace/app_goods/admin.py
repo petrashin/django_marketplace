@@ -9,6 +9,11 @@ class ProductImageInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(DiscountType)
+class DiscountTypeAdmin(admin.ModelAdmin):
+    fields = ['title']
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'published']

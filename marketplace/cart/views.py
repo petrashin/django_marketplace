@@ -1,3 +1,5 @@
+import decimal
+
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
@@ -22,7 +24,12 @@ class CartItemsListView(ListView):
                 context['old_total_cost'] = 0
                 for item in self.object_list:
                     item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__name=item.shop).price
-                    context['total_cost'] += (item.quantity * item.price)
+
+                    if item.product.discount.discount_type.id == 3:
+                        discount = _check_cart_discount(item, item.old_price)
+                        item.price = round(item.price - discount, 2)
+
+                    context['total_cost'] += round(item.price * item.quantity, 2)
                     context['old_total_cost'] += (item.quantity * item.old_price)
                     item.shops_form = CartShopsForm(product=item.product, item_id=item.id)
                     item.update_quantity_form = CartUpdateQuantityProductForm(initial={'quantity': item.quantity,
@@ -30,6 +37,11 @@ class CartItemsListView(ListView):
             else:
                 item = self.object_list[0]
                 item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__name=item.shop).price
+
+                if item.product.discount.discount_type.id == 3:
+                    discount = _check_cart_discount(item, item.old_price)
+                    item.price = round(item.price - discount, 2)
+
                 context['total_cost'] = item.price * item.quantity
                 context['old_total_cost'] = item.quantity * item.old_price
                 shops = CartItems().get_shops_for_cart_item(product=item.product)
@@ -44,6 +56,13 @@ class CartItemsListView(ListView):
     def get_queryset(self):
         return CartItems().get_cart_items(request=self.request)
 
+
+def _check_cart_discount(cart_product, old_price):
+    discount = 0
+    if cart_product.price == old_price:
+        if cart_product.quantity >= cart_product.product.discount.discount_amount:
+            discount = cart_product.price * decimal.Decimal((cart_product.product.discount.discount_value / 100))
+    return discount
 
 @require_POST
 def cart_add(request, slug):
