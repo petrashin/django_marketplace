@@ -1,18 +1,24 @@
 from datetime import time
 
 from django.core.paginator import Paginator
-from django.db.models import Count, F
+from django.db.models import Count, F, Avg, Case, When, DecimalField
 from django.views.generic import TemplateView, DetailView, ListView
 
+from app_goods.models import Product
 from app_shops.filters import ProductFilter
 from app_shops.models import ShopProduct, Shop
 from cart.forms import CartAddProductShopForm
 
+
 SORT_OPTIONS = {
-    'price': F('price'),
-    'new': F('product__created_at'),
-    'reviews': Count('product__reviews'),
-    'popularity': F('product__views_count'),
+    'price': Avg('shop_products__price') * Case(
+        When(discount__discount_value__isnull=False, then=1 - (F('discount__discount_value') * 0.01)),
+        default=1,
+        output_field=DecimalField(),
+    ),
+    'new': F('created_at'),
+    'reviews': Count('reviews'),
+    'popularity': F('views_count'),
 }
 
 SORT_DIRECTIONS = {
@@ -28,7 +34,7 @@ class CatalogueView(ListView):
     template_name = 'catalog.html'
 
     def get_queryset(self):
-        return ShopProduct.objects.filter(product__category=self.kwargs["category_id"])
+        return Product.objects.filter(category=self.kwargs["category_id"])
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CatalogueView, self).get_context_data()
@@ -43,19 +49,19 @@ class CatalogueView(ListView):
         context['filter'] = f
         context['products'] = products
 
-        if products:
-            if len(products) > 1:
-                for product in products:
-                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                               'shop': product.shop.name,
-                                                                               'product': product.product.id
-                                                                               })
-            else:
-                product = products[0]
-                product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                           'shop': product.shop.name,
-                                                                           'product': product.product.id
-                                                                           })
+        # if products:
+        #     if len(products) > 1:
+        #         for product in products:
+        #             product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+        #                                                                        'shop': product.shop.name,
+        #                                                                        'product': product.product.id
+        #                                                                        })
+        #     else:
+        #         product = products[0]
+        #         product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
+        #                                                                    'shop': product.shop.name,
+        #                                                                    'product': product.product.id
+        #                                                                    })
 
         return context
 
@@ -120,4 +126,3 @@ class ShopDetailView(DetailView):
                                                                            })
 
         return context
-

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static url_tags %}
+{% load static url_tags discount %}
 {% block content %}
 <body class="Site">
   <div class="Middle Middle_top">
@@ -40,7 +40,7 @@
                 </div>
                 {# Фильтр по имени #}
                 <div class="form-group">
-                    {{ filter.form.product__name }}
+                    {{ filter.form.name }}
                 </div>
                 {# Фильтр по продавцам #}
                 <div class="form-group">
@@ -49,7 +49,7 @@
                 {# Чекбоксы #}
                 <div class="form-group">
                   <label class="toggle">
-                      {{ filter.form.is_available }}
+                      {{ filter.form.availability }}
                       <span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>
                   </label>
                 </div>
@@ -116,26 +116,30 @@
           <div class="Cards"> {# карточки продуктов #}
           {% if products %}
             {% for product in products %}
-              <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
-                  {% if product.product.product_images.main_image %}
-                      <img src="{{ product.product.product_images.main_image.url }}" alt="card.jpg"/></a>
+              <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.slug %}">
+                  {% if product.product_images.main_image %}
+                      <img src="{{ product.product_images.main_image.url }}" alt="card.jpg"/></a>
                   {%  else %}
                       <img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>
                   {% endif %}
                 <div class="Card-content">
-                  <strong class="Card-title"><a href="app_goods/product.html">{{ product.product.category.all.0 }} {{ product.product.name }}</a>
+                  <strong class="Card-title"><a href="app_goods/product.html">{{ product.category.all.0 }} {{ product.name }}</a>
                   </strong>
                   <div class="Card-description">
                     <div class="Card-cost">
-                      <span class="Card-priceOld">{{ product.price }}</span>
-                      <span class="Card-price">{{ product.get_discounted_price }}</span>
+                        {% if product.discount %}
+                          <span class="Card-priceOld">{{ product.get_avg_price }}</span>
+                          <span class="Card-price">{% apply_discount product.get_avg_price product.discount.discount_value %}</span>
+                        {% else %}
+                          <span class="Card-price">{{ product.get_avg_price }}</span>
+                        {% endif %}
                     </div>
-                    <div class="Card-category">{{ product.product.category.all.1 }} - {{ product.product.category.all.0 }}
+                    <div class="Card-category">{{ product.category.all.1 }} - {{ product.category.all.0 }}
                       </div>
                         <div class="Card-hover">
                           <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/bookmark.svg' %} alt="bookmark.svg"/></a>
 
-                            <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
+                            <form action="{% url 'cart_shop_add' product.slug %}" method="post">
                             {% csrf_token %}
                             {{ product.add_to_cart_form }}
                             <button type="submit" class="Card-btn">
@@ -147,8 +151,8 @@
                         </div>
                       </div>
                     </div>
-                  {% if product.product.discount.discount_value > 0 %}
-                  <div class="Card-sale">-{{ product.product.discount.discount_value }}
+                  {% if product.discount.discount_value > 0 %}
+                  <div class="Card-sale">-{{ product.discount.discount_value }}
                 </div>
               {% endif %}
               </div>
