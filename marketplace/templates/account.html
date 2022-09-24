@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% load i18n %}
 {% block content %}
 
   <div class="Middle Middle_top">
     <div class="Middle-top">
       <div class="wrap">
         <div class="Middle-header">
-          <h1 class="Middle-title">Личный кабинет
+          <h1 class="Middle-title">{% trans 'Personal account' %}
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="{% url 'home' %}">home</a>
+            <li class="breadcrumbs-item"><a href="{% url 'home' %}">{% trans 'home' %}</a>
             </li>
-            <li class="breadcrumbs-item breadcrumbs-item_current"><span>Личный кабинет</span>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{% trans 'Personal account' %}</span>
             </li>
           </ul>
         </div>
@@ -22,19 +23,19 @@
         <div class="Section-column">
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Навигация
+              <strong class="Section-title">{% trans 'Navigation' %}
               </strong>
             </header>
             <div class="Section-columnContent">
               <div class="NavigateProfile">
                 <ul class="menu menu_vt">
-                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'account' %}">Личный кабинет</a>
+                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'account' %}">{% trans 'Personal account' %}</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="{% url 'profile' %}">Профиль</a>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'profile' %}">{% trans 'Profile' %}</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="{% url 'orderhistory' %}">История заказов</a>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'orderhistory' %}">{% trans 'Order history' %}</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="{% url 'viewhistory' %}">История просмотра</a>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'viewhistory' %}">{% trans 'View history' %}</a>
                   </li>
                 </ul>
               </div>
@@ -45,12 +46,15 @@
           <div class="Account">
             <div class="Account-group">
               <div class="Account-column">
-                <div class="Account-avatar"><img src="../media/{{ avatar }}"/>
+                <div class="Account-avatar">
+                    {% if avatar.url %}
+                    <img src="{{ avatar.url }}" alt="avatar"/>
+                    {% endif %}
                 </div>
               </div>
               <div class="Account-column">
                 <div class="Account-name">{{ full_name }}
-                </div><a class="Account-editLink" href="{% url 'profile' %}">Редактировать профиль</a>
+                </div><a class="Account-editLink" href="{% url 'profile' %}">{% trans 'Edit profile' %}</a>
               </div>
             </div>
             <div class="Account-group">
@@ -59,42 +63,42 @@
                     <div class="Order Order_anons">
                       <div class="Order-personal">
                         <div class="row">
-                          <div class="row-block"><a class="Order-title" href="{% url 'order_detail' order.id %}">Заказ&#32;<span class="Order-numberOrder">№{{ order.id }}</span>&#32;от&#32;<span class="Order-dateOrder">{{ order.date_order }}</span></a>
-                            <div class="Account-editLink"><a href="{% url 'orderhistory' %}">История заказов</a></div>
+                          <div class="row-block"><a class="Order-title" href="{% url 'order_detail' order.id %}">{% trans 'Order' %}&#32;<span class="Order-numberOrder">№{{ order.id }}</span>&#32;от&#32;<span class="Order-dateOrder">{{ order.date_order }}</span></a>
+                            <div class="Account-editLink"><a href="{% url 'orderhistory' %}">{% trans 'Order history' %}</a></div>
                           </div>
                           <div class="row-block">
                             <div class="Order-info Order-info_delivery">
-                              <div class="Order-infoType">Тип доставки:
+                              <div class="Order-infoType">{% trans 'Delivery type' %}:
                               </div>
                               <div class="Order-infoContent">{{ order.delivery.get_title_display }}
                               </div>
                             </div>
                             <div class="Order-info Order-info_pay">
-                              <div class="Order-infoType">Оплата:
+                              <div class="Order-infoType">{% trans 'Payment' %}:
                               </div>
                               <div class="Order-infoContent">{{ order.pay_method.get_title_display }}
                               </div>
                             </div>
                             <div class="Order-info">
-                              <div class="Order-infoType">Общая стоимость:
+                              <div class="Order-infoType">{% trans 'Total cost' %}:
                               </div>
                               <div class="Order-infoContent"><span class="Order-price">{{ order.get_total_cost_with_discount }}$</span>
                               </div>
                             </div>
                             <div class="Order-info Order-info_status">
-                              <div class="Order-infoType">Статус:
+                              <div class="Order-infoType">{% trans 'Status' %}:
                               </div>
                               {% if order.status_pay %}
-                                <div class="Order-infoContent">Оплачен</div>
+                                <div class="Order-infoContent">{% trans 'Paid' %}</div>
                               {% else %}
-                                <div class="Order-infoContent">Не оплачен</div>
+                                <div class="Order-infoContent">{% trans 'Not paid' %}</div>
                               {% endif %}
                             </div>
                             {% if not order.status_pay and order.payment_error %}
                               <div class="Order-info Order-info_error">
-                                <div class="Order-infoType">Оплата не прошла:
+                                <div class="Order-infoType">{% trans 'Payment failed' %}:
                                 </div>
-                                <div class="Order-infoContent">Оплата не выполнена, т.к. {{ order.payment_error }}
+                                <div class="Order-infoContent">{% trans 'The payment was not completed because' %} {{ order.payment_error }}
                                 </div>
                               </div>
                             {% endif %}
@@ -103,28 +107,28 @@
                       </div>
                     </div>
                 {% else %}
-                  <p> У вас нет заказов </p>
+                  <p> {% trans "You don't have any orders" %} </p>
                 {% endif %}
               </div>
             </div>
             <div class="Account-group">
               <div class="Account-column Account-column_full">
                 <header class="Section-header">
-                  <h2 class="Section-title">История просмотров
+                  <h2 class="Section-title">{% trans 'View history' %}
                   </h2>
                 </header>
                 {% if recent_views %}
                   <div class="Cards">
                     {% for product in recent_views %}
                       <div class="Card">
-                        <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
+                         <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
                               <img src="{{ product.product.product_images.main_image.url }}"/>
                         </a>
                         <div class="Card-content">
                           <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
                           </strong>
                           <div class="Card-description">
-                              <div class="Card-cost"><span class="Card-price">${{ product.product.get_avg_price }}</span>
+                              <div class="Card-cost"><span class="Card-price">${{ product.product.get_avg_price|floatformat:2 }}</span>
                               </div>
                             {% if product.product.category.first.parent_category is null %}
                               <div class="Card-category"> {{ product.product.category.first.name }}
@@ -155,9 +159,9 @@
                     {% endfor %}
                   </div>
                 {% else %}
-                  <p> У вас нет просмотренных товаров </p>
+                  <p> {% trans "You don't have any viewed products" %} </p>
                 {% endif %}
-                <div class="Account-editLink Account-editLink_view"><a href="{% url 'viewhistory' %}">Перейти на полный список</a>
+                <div class="Account-editLink Account-editLink_view"><a href="{% url 'viewhistory' %}">{% trans 'Go to the full list' %}</a>
                 </div>
               </div>
             </div>

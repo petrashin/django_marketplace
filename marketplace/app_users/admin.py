@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Profile, Role, Image, ViewsHistory, ComparedProducts
+from modeltranslation.admin import TranslationAdmin
 
 
 @admin.register(Profile)
@@ -11,7 +12,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 @admin.register(Role)
-class RoleAdmin(admin.ModelAdmin):
+class RoleAdmin(TranslationAdmin):
 	list_display = ['id', 'name']
 
 
