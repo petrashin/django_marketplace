@@ -4,7 +4,7 @@ from .forms import ProfileForm, DeliveryForm, PayMethodForm, OrderCommentForm
 from .models import Order, Delivery, PayMethod
 from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest
-from app_users.models import Profile
+from app_users.models import Profile, Role
 from app_goods.models import Product
 from django.db import transaction
 from cart.models import CartItems
