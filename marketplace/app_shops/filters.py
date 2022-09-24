@@ -1,6 +1,8 @@
 import django_filters
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from app_shops.models import Shop
+
 
 
 class ProductFilter(django_filters.FilterSet):
@@ -10,7 +12,7 @@ class ProductFilter(django_filters.FilterSet):
         widget=forms.TextInput(
             attrs={
                 'class': "form-input form-input_full",
-                'placeholder': "Название"
+                'placeholder': _("Title")
             }
         )
     )
@@ -21,7 +23,7 @@ class ProductFilter(django_filters.FilterSet):
                 'class': 'form-select',
             }
         ),
-        empty_label="Продавец"
+        empty_label=_("Seller")
     )
     is_available = django_filters.BooleanFilter(
         widget=forms.CheckboxInput,

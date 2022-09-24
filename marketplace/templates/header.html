@@ -1,13 +1,14 @@
 {% load static %}
+{% load i18n %}
 <header class="Header">
     <div class="ControlPanel">
       <div class="wrap">
         <div class="row ControlPanel-row">
           <div class="row-block">
             <div class="row ControlPanel-rowSplit">
-              <div class="row-block"><a class="ControlPanel-title" href="#">Free Delivery</a>
+              <div class="row-block"><a class="ControlPanel-title" href="#">{% trans 'Free Delivery' %}</a>
               </div>
-              <div class="row-block hide_700"><span class="ControlPanel-title">Follow Us</span>
+              <div class="row-block hide_700"><span class="ControlPanel-title">{% trans 'Follow Us' %}</span>
                 <ul class="menu menu_img menu_smallImg ControlPanel-menu">
                   <li class="menu-item"><a class="menu-link" href="#"><img src="{% static 'assets/img/icons/socialHeader/fb.svg' %}" alt="fb.svg"/></a>
                   </li>
@@ -23,19 +24,39 @@
               </div>
             </div>
           </div>
+        <div class="input-group">
+            <form class="form-select" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                <input name="next" type="hidden" value="{{ redirect_to }}">
+                    <select class="form-select" name="language">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                {{ language.name_local }} ({{ language.code }})
+                            </option>
+                        {% endfor %}
+                    <span style="align: center">
+                        <input type="submit" value="{% trans 'Go' %}">
+                    </span>
+                    </select>
+            </form>
+        </div>
+
           <nav class="row-block">
             <div class="row ControlPanel-rowSplit">
+
                 <!--Доступ к профилю для авторизованного пользователя-->
                 {% if request.user.is_authenticated %}
                 <div class="row-block">
                     <a class="ControlPanel-title" href="{% url 'account' %}">{{ request.user.username }} /</a>
-                    <a class="ControlPanel-title" href="{% url 'profile' %}">Profile /</a>
-                    <a class="ControlPanel-title" href="{% url 'logout' %}">Logout</a>
+                    <a class="ControlPanel-title" href="{% url 'profile' %}">{% trans 'Profile' %} /</a>
+                    <a class="ControlPanel-title" href="{% url 'logout' %}">{% trans 'Logout' %}</a>
               </div>
                 <!-- Вход или регистрация для неавторизованного пользователя-->
                 {% else %}
-              <div class="row-block"><a class="ControlPanel-title" href="{% url 'login' %}">Login /</a>
-                  <a class="ControlPanel-title" href="{% url 'register' %}">Register</a>
+              <div class="row-block"><a class="ControlPanel-title" href="{% url 'login' %}">{% trans 'Login' %} /</a>
+                  <a class="ControlPanel-title" href="{% url 'register' %}">{% trans 'Register' %}</a>
               </div>
                 {% endif %}
             </div>
@@ -55,7 +76,8 @@
     </div>
     <div class="wrap">
       <div class="row Header-rowMain">
-        <div class="row-block Header-logo"><a class="logo" href="base.html"><img class="logo-image" src="{% static 'assets/img/logo.png' %}" alt="logo.png"/></a>
+        <div class="row-block Header-logo"><a class="logo" href="{% url 'home' %}">
+            <img class="logo-image" src="{% static 'assets/img/logo.png' %}" alt="logo.png"/></a>
         </div>
         <nav class="row-block row-block_right Header-menu">
           <div class="menuModal" id="navigate">
@@ -63,22 +85,22 @@
                 <!-- Доступ к админке для администратора -->
                 {% if request.user.is_staff %}
                 {% url 'admin:index' as url_admin %}
-                <li class="menu-item"><a class="menu-link" href="{{ url_admin }}">Admin</a>
+                <li class="menu-item"><a class="menu-link" href="{{ url_admin }}">{% trans 'Admin' %}</a>
               </li>
                 {% endif %}
-              <li class="menu-item"><a class="menu-link" href="{% url 'home' %}">Home</a>
+              <li class="menu-item"><a class="menu-link" href="{% url 'home' %}">{% trans 'Home' %}</a>
               </li>
-              <li class="menu-item"><span class="menu-label menu-label_danger">New</span>
-                  <a class="menu-link" href="{% url 'shops' %}">Shop</a>
+              <li class="menu-item"><span class="menu-label menu-label_danger">{% trans 'New' %}</span>
+                  <a class="menu-link" href="{% url 'shops' %}">{% trans 'Shops' %}</a>
               </li>
-              <li class="menu-item"><a class="menu-link" href="#">Blog</a>
+              <li class="menu-item"><a class="menu-link" href="#">{% trans 'Sales' %}</a>
               </li>
-              <li class="menu-item"><span class="menu-label menu-label_success">Hot</span>
-                  <a class="menu-link" href="{% url 'shops' %}">Gallery</a>
+              <li class="menu-item"><span class="menu-label menu-label_success">{% trans 'Hot' %}</span>
+                  <a class="menu-link" href="{% url 'shops' %}">{% trans 'Gallery' %}</a>
               </li>
-              <li class="menu-item"><a class="menu-link" href="#">Contacts</a>
+              <li class="menu-item"><a class="menu-link" href="#">{% trans 'Contacts' %}</a>
               </li>
-              <li class="menu-item"><a class="menu-link" href="#">Purchase</a>
+              <li class="menu-item"><a class="menu-link" href="#">{% trans 'Purchase' %}</a>
               </li>
             </ul>
           </div>
@@ -91,13 +113,13 @@
               <a class="CartBlock-block" href="{% url 'cart_detail' %}">
                   <img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg' %}" alt="cart.svg"/>
                   <span class="CartBlock-amount">{{ cart_total_quantity }}</span></a>
-            <div class="CartBlock-block"><span class="CartBlock-price">{{ cart_total_cost }} руб.</span>
+            <div class="CartBlock-block"><span class="CartBlock-price">{{ cart_total_cost }} {% trans 'rub' %}.</span>
             </div>
 
           </div>
         </div>
         <div class="row-block Header-trigger"><a class="menuTrigger" href="#navigate">
-            <div class="menuTrigger-content">Показать навигацию
+            <div class="menuTrigger-content">{% trans 'Show navigation' %}
             </div><span></span><span></span><span></span></a>
         </div>
       </div>
@@ -108,7 +130,7 @@
           <div class="CategoriesButton">
             <div class="CategoriesButton-title">
               <div class="CategoriesButton-icon"><img src="{% static 'assets/img/icons/allDep.svg' %}" alt="allDep.svg"/>
-              </div><span class="CategoriesButton-text">All Departments</span>
+              </div><span class="CategoriesButton-text">{% trans 'All Departments' %}</span>
               <div class="CategoriesButton-arrow">
               </div>
             </div>
@@ -139,8 +161,9 @@
         <div class="Header-search">
           <div class="search">
             <form class="form form_search" action="#" method="post">
-              <input class="search-input" id="query" name="query" type="text" placeholder="What are you looking for ..."/>
-              <button class="search-button" type="submit" name="search" id="search"><img src="{% static 'assets/img/icons/search.svg' %}" alt="search.svg"/>Search
+              <input class="search-input" id="query" name="query" type="text" placeholder="{% trans 'What are you looking for' %}..."/>
+              <button class="search-button" type="submit" name="search" id="search">
+                  <img src="{% static 'assets/img/icons/search.svg' %}" alt="search.svg"/>{% trans 'Search' %}
               </button>
             </form>
           </div>

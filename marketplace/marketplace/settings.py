@@ -32,15 +32,15 @@ INSTALLED_APPS = [
     'django_filters',
 
     'app_users.apps.AppMainConfig',
-    'app_auth',
+    'app_auth.apps.AppAuthConfig',
     'crispy_forms',
     'app_goods.apps.AppGoodsConfig',
     'app_shops.apps.AppShopsConfig',
-    'cart',
-    'app_account',
+    'cart.apps.CartConfig',
+    'app_account.apps.AppAccountConfig',
 	'app_order.apps.AppOrderConfig',
-	'custom_admin',
-    'app_payment',
+	'custom_admin.apps.CustomAdminConfig',
+    'app_payment.apps.AppPaymentConfig',
 
     'rest_framework',
 ]
@@ -123,6 +123,11 @@ LANGUAGES = [
     ('ru', _('Russian')),
     ('en', _('English')),
 ]
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
+MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale'), ]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
