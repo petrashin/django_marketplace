@@ -24,7 +24,7 @@ class ProductFilter(django_filters.FilterSet):
                 'class': 'range-line',
                 'data-type': 'double',
                 'data-min': '0',
-                'data-max': '2000',
+                'data-max': '20000',
             }
         )
     )

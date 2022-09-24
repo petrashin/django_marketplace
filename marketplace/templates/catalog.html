@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static url_tags discount %}
+{% load static url_tags discount widget_tweaks %}
 {% load i18n %}
 {% block content %}
 <body class="Site">
@@ -32,7 +32,7 @@
                 {# Слайдер с диапазоном цены #}
                 <div class="form-group">
                   <div class="range Section-columnRange">
-                    {{ filter.form.price }}
+                    {{ filter.form.price|attr:"data-min: 0"|attr:"data-max: 50000" }}
                     <div class="range-price">{% trans 'Price' %}:&#32;
                       <div class="rangePrice">
                       </div>
