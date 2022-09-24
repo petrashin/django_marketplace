@@ -115,6 +115,8 @@ class Product(models.Model):
                                  related_name='category',
                                  help_text='связь с моделью Discount'
                                  )
+    discount_doublet = models.BooleanField(default=False, verbose_name='Сделать скидку при совпадении?',
+                                           help_text='Скидка на набор')
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
     sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
     published = models.BooleanField(default=True, verbose_name='опубликовать')
