@@ -39,30 +39,33 @@
           </div>
         </div>
         <div class="Section-content">
+          {% if request.user.is_authenticated %}
           <form class="form" action="#" method="post">
+          {% else %}
+          <form class="form" action="order_register" method="post">
+          {% endif %}
             {% csrf_token %}
             <div class="Order-block Order-block_OPEN" id="step1">
               <header class="Section-header Section-header_sm">
                 <h2 class="Section-title">Шаг 1. Параметры пользователя
                 </h2>
               </header>
-              {% if request.user.is_authenticated %}
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
-                    <label class="form-label" for="name">ФИО
+                    <label class="form-label" for="name">ФИО {{ anchor }}
                     </label>
                     <input class="form-input" id="name" name="name" type="text" value="{{ profile.fullname }}" onkeyup="CopyFullname()" data-validate="require"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="phone">Телефон
                     </label>
-                    <input class="form-input" id="phone" name="phone" type="tel" value="{{ profile.phone_number }}" onkeyup="CopyPhoneNumber()" data-validate="require"/>
+                    <input class="form-input" id="phone" name="phone" type="text" value="{{ profile.phone_number }}" onkeyup="CopyPhoneNumber()" data-validate="require"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="mail">E-mail
                     </label>
-                    <input class="form-input" id="mail" name="mail" type="email" value="{{ user.email }}" onkeyup="CopyEmail()" data-validate="require"/>
+                    <input class="form-input" id="mail" name="mail" type="text" value="{{ user.email }}" onkeyup="CopyEmail()" data-validate="require"/>
                   </div>
                 </div>
                 <div class="row-block">
@@ -77,52 +80,18 @@
                     <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
                   </div>
                   {% if not request.user.is_authenticated %}
-                  <div class="form-group"><a class="btn btn_muted Order-btnReg" href="/auth/login/">Я уже зарегистрирован</a>
+                  <div class="form-group"><a class="btn btn_muted Order-btnReg" href="#">Я уже зарегистрирован</a>
                   </div>
                   {% endif %}
                 </div>
               </div>
+              {% if request.user.is_authenticated %}
               <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">Дальше</a>
               </div>
               {% else %}
-              <div class="row">
-                <div class="row-block">
-                  <div class="form-group">
-                    <label class="form-label" for="name">ФИО
-                    </label>
-                    <input class="" id="name" name="name" type="text" value="{{ profile.fullname }}" onkeyup="CopyFullname()" data-validate="require"/>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="phone">Телефон
-                    </label>
-                    <input class="" id="phone" name="phone" type="text" value="{{ profile.phone_number }}" onkeyup="CopyPhoneNumber()" data-validate="require"/>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="mail">E-mail
-                    </label>
-                    <input class="" id="mail" name="mail" type="text" value="{{ user.email }}" onkeyup="CopyEmail()" data-validate="require"/>
-                  </div>
-                </div>
-                <div class="row-block">
-                  <div class="form-group">
-                    <label class="form-label" for="password">Пароль
-                    </label>
-                    <input class="" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="passwordReply">Подтверждение пароля
-                    </label>
-                    <input class="" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
-                  </div>
-                  {% if not request.user.is_authenticated %}
-                  <div class="form-group"><a class="btn btn_muted Order-btnReg" href="/auth/login/">Я уже зарегистрирован</a>
-                  </div>
-                  {% endif %}
-                </div>
-              </div>
-              <div class=""><button class="" type="submit">Дальше</button>
-              </div>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2"><button class="btn btn_success" type="submit">Дальше</button></a>
               {% endif %}
+              </div>
             </div>
             <div class="Order-block" id="step2">
               <header class="Section-header Section-header_sm">
@@ -325,6 +294,14 @@
 {% endblock %}
 
 {% block order_scripts %}
+{#{% if anchor %}#}
+{#<script type='text/javascript'>#}
+{#const step1 = document.getElementById("step1");#}
+{#const step2 = document.getElementById("step2")#}
+{#step1.classList.remove("Order-block_OPEN");#}
+{#step2.classList.add("Order-block_OPEN");#}
+{#</script>#}
+{#{% endif %}#}
 <script>
   const delivery_ordinary = document.getElementById("delivery_ordinary");
   const delivery_express = document.getElementById("delivery_express");
@@ -348,7 +325,7 @@
   }
   delivery_ordinary.addEventListener('click', function () {
     document.getElementById("delivery_info").innerHTML = "Обычная доставка"
-    var delivery_coast = DeliveryCoast()
+    let delivery_coast = DeliveryCoast()
     TotalSum(delivery_coast)
   });
   delivery_express.addEventListener('click', function () {

@@ -27,7 +27,13 @@ class Logout(LogoutView):
 def register_view(request):
     """Вьюшка регистрации пользователя"""
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        print(request.POST)
+        if 'username' not in request.POST.keys():
+            data = request.POST.copy()
+            data['username'] = 'username' + str(User.objects.all().order_by('-id')[0].id)
+            form = SignUpForm(data=data)
+        else:
+            form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
