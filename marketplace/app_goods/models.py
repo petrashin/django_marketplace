@@ -86,7 +86,7 @@ class Product(models.Model):
     views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
     sales_count = models.PositiveIntegerField(default=0, verbose_name='количество продаж')
     published = models.BooleanField(default=True, verbose_name='опубликовать')
-    technical_specs = models.JSONField(verbose_name='список технических характеристик товара', blank=False, default=dict)
+    technical_specs = models.JSONField(verbose_name='список технических характеристик товара', default=dict)
 
     def __str__(self):
         return self.name
