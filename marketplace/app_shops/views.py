@@ -1,20 +1,24 @@
 import random
 
 from django.core.paginator import Paginator
-from django.db.models import Count, F
+from django.db.models import Count, F, Avg, Case, When, DecimalField
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, DetailView, ListView
 
 from app_shops.filters import ProductFilter
-from app_goods.models import Product
-from app_shops.models import ShopProduct, Shop
+from app_shops.models import ShopProduct, Shop, Product
 from cart.forms import CartAddProductShopForm
 
+
 SORT_OPTIONS = {
-    'price': F('price'),
-    'new': F('product__created_at'),
-    'reviews': Count('product__reviews'),
-    'popularity': F('product__views_count'),
+    'price': Avg('shop_products__price') * Case(
+        When(discount__discount_value__isnull=False, then=1 - (F('discount__discount_value') * 0.01)),
+        default=1,
+        output_field=DecimalField(),
+    ),
+    'new': F('created_at'),
+    'reviews': Count('reviews'),
+    'popularity': F('views_count'),
 }
 
 SORT_DIRECTIONS = {
@@ -63,7 +67,7 @@ class CatalogueView(AddToCartFormMixin, ListView):
     template_name = 'catalog.html'
 
     def get_queryset(self):
-        return ShopProduct.objects.filter(product__category=self.kwargs["category_id"])
+        return Product.objects.filter(category=self.kwargs["category_id"])
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CatalogueView, self).get_context_data()
@@ -139,3 +143,4 @@ class ShopDetailView(AddToCartFormMixin, DetailView):
         context['products'] = products
         self.add_to_cart_form(products)
         return context
+

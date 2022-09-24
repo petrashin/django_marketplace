@@ -38,11 +38,12 @@ INSTALLED_APPS = [
     'app_shops.apps.AppShopsConfig',
     'cart.apps.CartConfig',
     'app_account.apps.AppAccountConfig',
-	'app_order.apps.AppOrderConfig',
-	'custom_admin.apps.CustomAdminConfig',
+    'app_order.apps.AppOrderConfig',
+    'custom_admin.apps.CustomAdminConfig',
     'app_payment.apps.AppPaymentConfig',
 
     'rest_framework',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +129,6 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_PREPOPULATE_LANGUAGE = 'en'
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale'), ]
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -177,7 +177,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-#LOGGING
+# LOGGING
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -188,8 +188,8 @@ LOGGING = {
         },
     },
     'root': {
-		'handlers': ['file'],
-		'level': 'DEBUG',
-		'propagate': True,
+        'handlers': ['file'],
+        'level': 'DEBUG',
+        'propagate': True,
     },
 }
