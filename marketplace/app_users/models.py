@@ -21,7 +21,8 @@ class Profile(models.Model):
     fullname = models.CharField(max_length=256, verbose_name=_('fullname'), blank=True)
     published = models.BooleanField(default=True, verbose_name=_('published'))
     card = models.IntegerField(verbose_name=_('card number'), blank=True, null=True)
-    recent_views = models.ManyToManyField(Product, blank=True)
+    recent_views = models.ManyToManyField(Product, blank=True, related_name='recent_views')
+    compared_products = models.ManyToManyField(Product, blank=True, related_name='compared_products')
 
     def __str__(self):
         return self.user.get_full_name()
@@ -40,3 +41,9 @@ class ViewsHistory(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=False, default=None)
     viewed_at = models.DateTimeField(auto_now_add=True)
+
+
+class ComparedProducts(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=False, default=None)
+    added_at = models.DateTimeField(auto_now_add=True)

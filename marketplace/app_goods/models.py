@@ -106,6 +106,7 @@ class Product(models.Model):
     sales_count = models.PositiveIntegerField(default=0, verbose_name=_('sales_count'))
     published = models.BooleanField(default=True, verbose_name=_('published'))
     limited_edition = models.BooleanField(default=False, verbose_name=_('limited_edition'))
+    technical_specs = models.JSONField(verbose_name='список технических характеристик товара', default=dict)
 
     def __str__(self):
         return self.name

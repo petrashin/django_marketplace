@@ -1,3 +1,6 @@
+from statistics import mean
+
+from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
@@ -5,7 +8,7 @@ from django.views import View
 from django.views.generic.edit import FormMixin
 from django.views.generic import DetailView
 
-from app_users.models import ViewsHistory
+from app_users.models import ViewsHistory, ComparedProducts, Role, Image
 from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
@@ -66,3 +69,103 @@ class AddReview(View):
         return redirect(product.get_absolute_url())
 
 
+class CompareGoodsView(View):
+    """Вьюшка сравнения товаров"""
+
+    def can_be_compared(self, lst):
+        lst_of_specs = [el.keys() for el in lst]
+        return len(set(lst_of_specs[0]).intersection(*lst_of_specs)) != 0
+
+    def check_same_elements(self, lst):
+        if len(lst) == 2:
+            return lst[0] == lst[1]
+        elif len(lst) == 3:
+            return lst[0] == lst[1] == lst[2]
+        elif len(lst) == 4:
+            return lst[0] == lst[1] == lst[2] == lst[3]
+        else:
+            return BaseException
+
+    def parse_technical_specs(self, lst_of_tech_specs):
+        """
+        Возвращает три словаря:
+            первый - все характеристики товаров,
+            второй - только различающиеся характеристики товаров,
+            третий - только одинаковые характеристики товаров
+        """
+        all_specs = {}
+        diff_specs = {}
+        same_specs = {}
+
+        for i in range(len(lst_of_tech_specs)):
+            for k, v in lst_of_tech_specs[i].items():
+                if k not in all_specs:
+                    all_specs[k] = [''] * len(lst_of_tech_specs)
+                all_specs[k][i] = v
+
+        for k, v in all_specs.items():
+            if not self.check_same_elements(all_specs[k]):
+                diff_specs[k] = v
+
+        for k, v in all_specs.items():
+            if len(set(v)) == 1:
+                same_specs[k] = v
+
+        return all_specs, diff_specs, same_specs
+
+    def get(self, request):
+
+        if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
+            role = Role.objects.get_or_create(name='Администратор')[0]
+            profile = Profile.objects.create(user=request.user, role=role)
+            Image.objects.create(profile=profile)
+        else:
+            profile = Profile.objects.get(user=request.user)
+
+        products = []
+        tech_specs = []
+        not_enough_data = False
+
+        for obj in ComparedProducts.objects.filter(profile=profile):
+            product = Product.objects.get(pk=obj.product.id)
+            products.append(product)
+            tech_specs.append(product.technical_specs)
+
+        if len(tech_specs) < 2:
+            not_enough_data = True
+            all_specs, diff_specs, same_specs = {}, {}, {}
+        else:
+            can_compare = self.can_be_compared(tech_specs)
+            all_specs, diff_specs, same_specs = self.parse_technical_specs(tech_specs)
+
+        data = {
+            'can_compare': can_compare,
+            'same_specs': same_specs,
+            'all_specs': all_specs,
+            'diff_specs': diff_specs,
+            'not_enough_data': not_enough_data,
+            'compared_products': products
+        }
+
+        return render(request, 'app_goods/compare.html', context=data)
+
+
+def delete_from_comparison(request, pk):
+    """Функция для удаления товара из меню сравнения"""
+    profile = Profile.objects.get(user=request.user)
+    ComparedProducts.objects.get(profile=profile, product=pk).delete()
+    return redirect('compare')
+
+
+def add_to_comparison(request, pk):
+    """
+    Функция для добавления товара в меню сравнения
+    При добавлении пятого товара в сравнение удаляет первый добавленный товар
+    """
+    profile = Profile.objects.get(user=request.user)
+    if not ComparedProducts.objects.filter(profile=profile, product_id=pk).exists():
+        if ComparedProducts.objects.filter(profile=profile).count() > 3:
+            ComparedProducts.objects.filter(profile=profile).order_by('added_at').first().delete()
+        ComparedProducts.objects.create(profile=profile, product_id=pk)
+
+    return redirect('compare')
