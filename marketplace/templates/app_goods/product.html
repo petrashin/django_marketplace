@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 {% block js %}
 <script>
 </script>
@@ -10,12 +11,12 @@
     <div class="Middle-top">
         <div class="wrap">
             <div class="Middle-header">
-                <h1 class="Middle-title">Megano Product
+                <h1 class="Middle-title">Megano {% trans 'Product' %}
                 </h1>
                 <ul class="breadcrumbs Middle-breadcrumbs">
-                    <li class="breadcrumbs-item"><a href="{% url 'home' %}">home</a>
+                    <li class="breadcrumbs-item"><a href="{% url 'home' %}">{% trans 'home' %}</a>
                     </li>
-                    <li class="breadcrumbs-item breadcrumbs-item_current"><span>Product</span>
+                    <li class="breadcrumbs-item breadcrumbs-item_current"><span>{% trans 'Product' %}</span>
                     </li>
                     <li class="breadcrumbs-item breadcrumbs-item_current"><span>{{ product.name }}</span>
                     </li>
@@ -62,10 +63,10 @@
                             </h2>
                             <div class="ProductCard-info">
                                 <div class="ProductCard-cost">
-                                    <div class="ProductCard-price">{{ discounted_aver_price }} руб.
+                                    <div class="ProductCard-price">{{ product.get_avg_discounted_price|floatformat:2 }} {% trans 'rub' %}.
                                     </div>
                                     {% if product.discount.discount_value > 0 %}
-                                    <div class="ProductCard-priceOld">{{ price }} руб.
+                                    <div class="ProductCard-priceOld">{{ product.get_avg_price|floatformat:2 }} {% trans 'rub' %}.
                                     </div>
                                     {% endif %}
                                 </div>
@@ -86,7 +87,7 @@
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn_primary" value="Добавить в корзину"><img
                                             class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
-                                            alt="cart_white.svg"/><span class="btn-content">Добавить в корзину</span>
+                                            alt="cart_white.svg"/><span class="btn-content">{% trans 'Add to cart' %}</span>
                                         </button>
                                     </form>
                                 </div>
@@ -94,7 +95,7 @@
                         </div>
                         <div class="ProductCard-footer">
                             <div class="ProductCard-tags">
-                                <strong class="ProductCard-tagsTitle">Tags:
+                                <strong class="ProductCard-tagsTitle">{% trans 'Tags' %}:
                                 </strong>
                             {% if product.category %}
                                 {% for category in product.category.all %}
@@ -110,10 +111,10 @@
                 </div>
                 <div class="Tabs Tabs_default">
                     <div class="Tabs-links">
-                        <a class="Tabs-link_ACTIVE Tabs-link" href="#description"><span>Описание</span></a>
-                        <a class="Tabs-link" href="#sellers"><span>Продавцы</span></a>
-                        <a class="Tabs-link" href="#addit"><span>AdditionaL Info</span></a>
-                        <a class="Tabs-link" href="#reviews"><span>Reviews ({{ product.get_review.count }})</span></a>
+                        <a class="Tabs-link_ACTIVE Tabs-link" href="#description"><span>{% trans 'Description' %}</span></a>
+                        <a class="Tabs-link" href="#sellers"><span>{% trans 'Sellers' %}</span></a>
+                        <a class="Tabs-link" href="#addit"><span>{% trans 'AdditionaL Info' %}</span></a>
+                        <a class="Tabs-link" href="#reviews"><span>{% trans 'Reviews' %} ({{ product.get_review.count }})</span></a>
                     </div>
                     <div class="Tabs-wrap">
                         <div class="Tabs-block" id="description">
@@ -145,9 +146,9 @@
                             <div class="table">
                                 <table>
                                     <tr>
-                                        <th>Характеристика
+                                        <th>{% trans 'Characteristic' %}
                                         </th>
-                                        <th>Значение
+                                        <th>{% trans 'Notation' %}
                                         </th>
                                     </tr>
                                     <tr>
@@ -182,12 +183,14 @@
                                             {{ shop.add_to_cart_form }}
                                             <button type="submit" class="btn btn_primary" value="Купить">
                                             <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
-                                            alt="cart_white.svg"/><span class="btn-content">Купить</span>
+                                            alt="cart_white.svg"/><span class="btn-content">{% trans 'Buy' %}</span>
                                             </button>
                                         </form>
                                     </div>
                                 </div>
                                 {% endfor %}
+                                {% else %}
+                                {% include 'empty_category.html' %}
                             {% endif %}
 
                             </div>
@@ -216,7 +219,7 @@
                         </div>
                         <div class="Tabs-block" id="reviews">
                             <header class="Section-header">
-                                <h3 class="Section-title">{{ product.get_review.count }} Reviews
+                                <h3 class="Section-title">{{ product.get_review.count }} {% trans 'Reviews' %}
                                 </h3>
                             </header>
 
@@ -248,7 +251,7 @@
                             {% endfor %}
 
                             <header class="Section-header Section-header_product">
-                                <h3 class="Section-title">Add Review
+                                <h3 class="Section-title">{% trans 'Add Review' %}
                                 </h3>
                             </header>
                             <div class="Tabs-addComment">
@@ -272,7 +275,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <button class="btn btn_muted" type="submit">Submit Review
+                                            <button class="btn btn_muted" type="submit">{% trans 'Submit Review' %}
                                             </button>
                                         </div>
                                     </form>

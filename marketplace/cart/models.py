@@ -1,6 +1,7 @@
 import random
 
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.shortcuts import get_object_or_404
 from decimal import Decimal
@@ -10,31 +11,31 @@ from app_shops.models import Shop, ShopProduct
 
 
 class CartItems(models.Model):
-    user = models.IntegerField(verbose_name='id покупателя',
+    user = models.IntegerField(verbose_name=_('user'),
                                null=True,
-                               help_text='не null если покупатель авторизован')
+                               help_text=_('not null if the customer is authorized'))
     session_id = models.CharField(max_length=55,
                                   null=True,
-                                  verbose_name='id сессии',
-                                  help_text='связь корзины с анонимным покупателем'
+                                  verbose_name=_('session_id'),
+                                  help_text=_('cart relationship with an anonymous customer')
                                   )
     product = models.ForeignKey(Product,
                                 null=True,
                                 on_delete=models.CASCADE,
-                                verbose_name='id товара')
+                                verbose_name=_('product'))
     shop = models.CharField(max_length=255,
                             null=True,
                             blank=True,
-                            verbose_name='магазин',
-                            help_text='название выбранного магазина'
+                            verbose_name=_('shop'),
+                            help_text=_('name of the selected store')
                             )
     price = models.DecimalField(max_digits=10,
                                 decimal_places=2,
                                 null=True,
-                                verbose_name='цена товара')
+                                verbose_name=_('price'))
     quantity = models.PositiveSmallIntegerField(default=1,
-                                                verbose_name='количество')
-    added_at = models.DateTimeField(auto_now_add=True, verbose_name='дата добавления товара')
+                                                verbose_name=_('quantity'))
+    added_at = models.DateTimeField(auto_now_add=True, verbose_name=_('added_at'))
 
     def get_session_id(self, request):
         """ Получение id корзины из cookies для пользователя """
@@ -85,9 +86,7 @@ class CartItems(models.Model):
 
     def get_shops_for_cart_item(self, product):
         """ Получаем магазины для товара из корзины """
-        return list(ShopProduct.objects.filter(product=product).
-                    select_related('product', 'shop').
-                    prefetch_related('shop'))
+        return list(ShopProduct().get_shops_for_product(product=product))
 
     def get_random_shop_price_for_cart_item(self, product):
         """ Получаем случайный магазин если он не выбран покупателем и
@@ -95,11 +94,11 @@ class CartItems(models.Model):
         shops = self.get_shops_for_cart_item(product=product)
         shop = random.choice(shops)
         price = shop.get_discounted_price()
-        return [price, shop.shop.name]
+        return [price, shop.shop.slug]
 
-    def create_new_cart_item(self, request, product, shop, quantity=1):
+    def create_new_cart_item(self, request, product, shop=None, quantity=1):
         if shop is not None:
-            price = get_object_or_404(ShopProduct, product=product, shop__name=shop).get_discounted_price()
+            price = get_object_or_404(ShopProduct, product=product, shop__slug=shop).get_discounted_price()
         else:
             shop = self.get_random_shop_price_for_cart_item(product)[1]
             price = self.get_random_shop_price_for_cart_item(product)[0]
@@ -113,7 +112,7 @@ class CartItems(models.Model):
 
         CartItems.objects.create(**data)
 
-    def add(self, request, product, shop, quantity=1):
+    def add(self, request, product, shop=None, quantity=1):
         """
         Добавить продукт в корзину если его там нет или увеличить его количество.
         """
@@ -147,10 +146,11 @@ class CartItems(models.Model):
         """ Обновляет цену товара при смене продавца"""
         postdata = request.POST.copy()
         shop = int(postdata.get('shop'))
-        product = postdata.get('product')
-        shop_object = ShopProduct.objects.get(shop=shop, product__name=product)
+        product_name = postdata.get('product')
+        product = Product.objects.get(name=product_name).slug
+        shop_object = ShopProduct.objects.get(shop=shop, product__slug=product)
         price = shop_object.get_discounted_price()
-        shop = shop_object.shop.name
+        shop = shop_object.shop.slug
         cart_item = self.get_single_cart_item(item_id)
         if cart_item:
             cart_item.price = price
@@ -195,5 +195,6 @@ class CartItems(models.Model):
     class Meta:
         db_table = 'cart_model'
         ordering = ('added_at',)
-        verbose_name = 'товар в корзине'
-        verbose_name_plural = 'товары в корзине'
+        verbose_name = _('cart item')
+        verbose_name_plural = _('cart items')
+
