@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
-from app_users.models import Profile
+from app_users.models import Profile, Role
 from app_goods.models import Product
 from django.db import transaction
 from cart.models import CartItems
