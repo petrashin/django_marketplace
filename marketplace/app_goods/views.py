@@ -135,8 +135,9 @@ class CompareGoodsView(View):
             not_enough_data = True
             all_specs, diff_specs, same_specs = {}, {}, {}
         else:
-            can_compare = self.can_be_compared(tech_specs)
             all_specs, diff_specs, same_specs = self.parse_technical_specs(tech_specs)
+
+        can_compare = self.can_be_compared(tech_specs)
 
         data = {
             'can_compare': can_compare,

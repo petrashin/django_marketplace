@@ -88,10 +88,12 @@
                                   </form>
                                 </div>
                             </div>
+                          </div>
                         {% if product.product.discount.discount_value > 0 %}
                           <div class="Card-sale">-{{ product.product.discount.discount_value }}%
                           </div>
                         {% endif %}
+                      </div>
                       </div>
                     {% endfor %}
                   </div>
@@ -101,6 +103,6 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
-
 {% endblock %}
