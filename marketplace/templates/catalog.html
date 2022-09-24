@@ -50,7 +50,7 @@
                 {# Чекбоксы #}
                 <div class="form-group">
                   <label class="toggle">
-                      {{ filter.form.availability }}
+                      {{ filter.form.published }}
                       <span class="toggle-box"></span><span class="toggle-text">{% trans 'Only products in stock' %}</span>
                   </label>
                 </div>
@@ -129,10 +129,10 @@
                   <div class="Card-description">
                     <div class="Card-cost">
                         {% if product.discount %}
-                          <span class="Card-priceOld">{{ product.get_avg_price }}</span>
+                          <span class="Card-priceOld">{{ product.get_avg_price|floatformat:2 }}</span>
                           <span class="Card-price">{% apply_discount product.get_avg_price product.discount.discount_value %}</span>
                         {% else %}
-                          <span class="Card-price">{{ product.get_avg_price }}</span>
+                          <span class="Card-price">{{ product.get_avg_price|floatformat:2 }}</span>
                         {% endif %}
                     </div>
                     <div class="Card-category">{{ product.category.all.1 }} - {{ product.category.all.0 }}

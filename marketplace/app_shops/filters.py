@@ -38,7 +38,7 @@ class ProductFilter(django_filters.FilterSet):
         ),
         empty_label=_("Seller")
     )
-    availability = django_filters.BooleanFilter(
+    published = django_filters.BooleanFilter(
         widget=forms.CheckboxInput,
         method='indeterminate_checkbox',
     )
@@ -47,7 +47,7 @@ class ProductFilter(django_filters.FilterSet):
     def indeterminate_checkbox(queryset, _, value):
         if not value:
             return queryset.all()
-        return queryset.filter(availability=True)
+        return queryset.filter(published=True)
 
     @staticmethod
     def price_range(queryset, _, value):
