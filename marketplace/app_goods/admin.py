@@ -10,6 +10,16 @@ class ProductImageInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(DiscountType)
+class DiscountTypeAdmin(admin.ModelAdmin):
+    fields = ['title']
+
+
+@admin.register(Discount)
+class DiscountAdmin(TranslationAdmin):
+    pass
+
+
 @admin.register(Category)
 class CategoryAdmin(TranslationAdmin):
     list_display = ['name', 'slug', 'published']
@@ -27,11 +37,6 @@ class ProductAdmin(TranslationAdmin):
 
     def has_delete_permission(self, *args, **kwargs):
         return False
-
-
-@admin.register(Discount)
-class DiscountAdmin(TranslationAdmin):
-    pass
 
 
 @admin.register(Reviews)

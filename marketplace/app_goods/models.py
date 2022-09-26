@@ -9,16 +9,41 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
+class DiscountType(models.Model):
+    DISCOUNT_TYPES = (
+        ('1', 'На товар/категорию'),
+        ('2', 'На набор'),
+        ('3', 'На корзину')
+    )
+
+    title = models.CharField(max_length=50, verbose_name='Статусы оплаты', choices=DISCOUNT_TYPES, blank=False,
+                             default='Не оплачено')
+
+    def __str__(self):
+        return self.get_title_display()
+
+    class Meta:
+        verbose_name = 'тип скидки'
+        verbose_name_plural = 'типы скидок'
+
+
 class Discount(models.Model):
     """ Модель Скидка """
-    discount_type = models.CharField(max_length=50,
-                                     verbose_name=_('discount_type'),
-                                     help_text='вид скидки')
+
+    discount_type = models.ForeignKey(DiscountType, on_delete=models.DO_NOTHING, verbose_name=_('discount_type'))
+    discount_name = models.CharField(max_length=50,
+                                     verbose_name=_('discount_name'),
+                                     help_text='название скидки')
     discount_value = models.PositiveSmallIntegerField(null=True,
                                                       default=0,
                                                       blank=True,
                                                       verbose_name=_('discount_value'),
                                                       help_text='скидка в %')
+    discount_amount = models.PositiveSmallIntegerField(null=True,
+                                                       default=0,
+                                                       blank=True,
+                                                       verbose_name='Количество необходимое в корзине',
+                                                       help_text='Скидка на корзину')
     description = models.TextField(verbose_name=_('description'), blank=True)
     start_date = models.DateTimeField(verbose_name=_('start_date'),
                                       null=True,
@@ -31,7 +56,7 @@ class Discount(models.Model):
     active = models.BooleanField(default=True, verbose_name=_('active'))
 
     def __str__(self):
-        return self.discount_type
+        return f'Скидка: {self.discount_name} - тип скидки: {self.discount_type.get_title_display()}'
 
     class Meta:
         db_table = 'discounts'
@@ -57,6 +82,14 @@ class Category(models.Model):
                             verbose_name='url',
                             help_text=_('unique url fragment based on the category name')
                             )
+    discount = models.ForeignKey(Discount,
+                                 null=True,
+                                 blank=True,
+                                 verbose_name=_('discount'),
+                                 on_delete=models.DO_NOTHING,
+                                 related_name='category',
+                                 help_text=_('relationship with the Discount model')
+                                 )
     published = models.BooleanField(default=True, verbose_name=_('published'))
 
     def get_min_price(self):
@@ -98,10 +131,12 @@ class Product(models.Model):
                                  null=True,
                                  blank=True,
                                  verbose_name=_('discount'),
-                                 on_delete=models.CASCADE,
+                                 on_delete=models.DO_NOTHING,
                                  related_name='products',
                                  help_text=_('relationship with the Discount model')
                                  )
+    discount_doublet = models.BooleanField(default=False, verbose_name='Сделать скидку при совпадении?',
+                                           help_text='Скидка на набор')
     views_count = models.IntegerField(default=0, verbose_name=_('views_count'))
     sales_count = models.PositiveIntegerField(default=0, verbose_name=_('sales_count'))
     published = models.BooleanField(default=True, verbose_name=_('published'))

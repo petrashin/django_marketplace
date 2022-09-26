@@ -4,7 +4,7 @@ from .models import Discount, Category, Product, Reviews
 
 @register(Discount)
 class DiscountTranslationOptions(TranslationOptions):
-    fields = ('discount_type', 'description')
+    fields = ('discount_name', 'description')
 
 
 @register(Category)
