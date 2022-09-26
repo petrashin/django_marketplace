@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block content %}
 
 <!--Order Total-->
 <div class="container p-4" style="padding-left: 50px;">
     <br>
-    <h2 class="font-weight-bold mt-3" style="text-align: center;">Итоговая информация по заказу:</h2>
+    <h2 class="font-weight-bold mt-3" style="text-align: center;">{% trans 'Final information on the order' %}:</h2>
 
-    <p>Заказ № - {{ order.id }}</p>
+    <p>{% trans 'Order' %} № - {{ order.id }}</p>
     {% for product in products %}
     <div class="Section">
         <div class="wrap">
@@ -40,7 +40,7 @@
             <div class="Cart-product">
                 <div class="Cart-block Cart-block_row">
                     <div class="Cart-block Cart-block_pict" style="width: 20%;"></div>
-                    <div class="Cart-block Cart-block_info">Доставка</div>
+                    <div class="Cart-block Cart-block_info">{% trans 'Delivery' %}</div>
                 </div>
 
                 <div class="Cart-block Cart-block_price">
@@ -55,22 +55,22 @@
         <div class="wrap">
             <div class="Cart-total">
                 <div class="Cart-block Cart-block_total" style="margin: 0 0 0 auto;">
-                    <strong class="Cart-title">Итого:</strong>
+                    <strong class="Cart-title">{% trans 'Total' %}:</strong>
                     <span class="Cart-price">{{ cart.get_total_price|add:order_delivery_pay }}</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <p>Способ доставки - {{ order.delivery }}</p>
-    <p>город - {{ order.city }}</p>
-    <p>адрес - {{ order.address }}</p>
-    <p>Способ оплаты - {{ order.pay_method }}</p>
+    <p>{% trans 'Delivery option' %} - {{ order.delivery }}</p>
+    <p>{% trans 'city' %} - {{ order.city }}</p>
+    <p>{% trans 'address' %} - {{ order.address }}</p>
+    <p>{% trans 'Payment option' %} - {{ order.pay_method }}</p>
 
     <form method="post" action="/cart/order/total">
         {% csrf_token %}
-        <p>Комментарий к заказу - {{ order_comment.order_comment }}</p>
-        <button class="btn btn-primary" style="border: solid 1px grey;">Оплатить</button>
+        <p>{% trans 'Comment on the order' %} - {{ order_comment.order_comment }}</p>
+        <button class="btn btn-primary" style="border: solid 1px grey;">{% trans 'Pay' %}</button>
     </form>
 
 </div>

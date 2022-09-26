@@ -1,4 +1,5 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 
 from .models import *
 
@@ -14,8 +15,13 @@ class DiscountTypeAdmin(admin.ModelAdmin):
     fields = ['title']
 
 
+@admin.register(Discount)
+class DiscountAdmin(TranslationAdmin):
+    pass
+
+
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(TranslationAdmin):
     list_display = ['name', 'slug', 'published']
     prepopulated_fields = {'slug': ('name',)}
 
@@ -24,7 +30,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(TranslationAdmin):
     list_display = ['name', 'slug', 'published']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline]
@@ -33,11 +39,6 @@ class ProductAdmin(admin.ModelAdmin):
         return False
 
 
-@admin.register(Discount)
-class DiscountAdmin(admin.ModelAdmin):
-    pass
-
-
 @admin.register(Reviews)
-class ReviewsAdmin(admin.ModelAdmin):
+class ReviewsAdmin(TranslationAdmin):
     list_display = ['product', 'text', 'user', 'published']

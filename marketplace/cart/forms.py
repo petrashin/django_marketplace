@@ -1,11 +1,11 @@
 from django import forms
-# from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from .models import CartItems
 
 
 class CartAddProductForm(forms.Form):
     """Форма для добавления товара в корзину"""
-    quantity = forms.IntegerField(label='количество', min_value=1,
+    quantity = forms.IntegerField(label=_('quantity'), min_value=1,
     widget=forms.NumberInput(attrs={'style':'max-width: 5em'}))
 
 
@@ -18,7 +18,7 @@ class CartAddProductShopForm(forms.Form):
 
 class CartUpdateQuantityProductForm(forms.Form):
     """Форма для обновления количества товара на странице корзины"""
-    quantity = forms.IntegerField(label='количество', min_value=0,
+    quantity = forms.IntegerField(label=_('quantity'), min_value=0,
     widget=forms.NumberInput(attrs={'style':'max-width: 5em'}) )
     item_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
 

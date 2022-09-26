@@ -1,6 +1,7 @@
 from django.db import models
 from app_shops.models import ShopProduct
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 class Delivery(models.Model):
@@ -8,7 +9,7 @@ class Delivery(models.Model):
         ('1', 'Доставка'),
         ('2', 'Экспресс-Доставка'),
     )
-    title = models.CharField(max_length=30, verbose_name='вариант доставки', choices=DELIVERY_TYPES, blank=False,
+    title = models.CharField(max_length=30, verbose_name=_('delivery option'), choices=DELIVERY_TYPES, blank=False,
                              default='Доставка')
 
     def __str__(self):
@@ -21,7 +22,7 @@ class PayMethod(models.Model):
         ('2', 'Онлайн со случайного чужого счёта'),
     )
 
-    title = models.CharField(max_length=50, verbose_name='вариант оплаты', choices=PAY_TYPES, blank=False,
+    title = models.CharField(max_length=50, verbose_name=_('payment option'), choices=PAY_TYPES, blank=False,
                              default='Онлайн картой')
 
     def __str__(self):
@@ -31,20 +32,23 @@ class PayMethod(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     date_order = models.DateField(auto_now_add=True)
-    order_goods = models.JSONField(verbose_name="список товаров заказа", blank=False, default=dict)
+    order_goods = models.JSONField(verbose_name=_("list of order items"), blank=False, default=dict)
     status_pay = models.BooleanField(default=False)
-    delivery = models.ForeignKey(Delivery, on_delete=models.DO_NOTHING, verbose_name='вариант доставки')
-    city = models.CharField(max_length=30, verbose_name='город')
-    address = models.CharField(max_length=100, verbose_name='адрес')
-    pay_method = models.ForeignKey(PayMethod, on_delete=models.DO_NOTHING, verbose_name='вариант оплаты', blank=True, null=True)
-    order_comment = models.CharField(max_length=150, null=True, blank=True, verbose_name='комментарий к заказу')
-    published = models.BooleanField(default=True, verbose_name='опубликовать')
-    payment_status = models.CharField(max_length=256, default=None, verbose_name='текст ошибки, возникшей при оплате', blank=True, null=True)
+    delivery = models.ForeignKey(Delivery, on_delete=models.DO_NOTHING, verbose_name=_('delivery option'))
+    city = models.CharField(max_length=30, verbose_name=_('city'))
+    address = models.CharField(max_length=100, verbose_name=_('address'))
+    pay_method = models.ForeignKey(PayMethod, on_delete=models.DO_NOTHING, verbose_name=_('payment option'), blank=True, null=True)
+    order_comment = models.CharField(max_length=150, null=True, blank=True, verbose_name=_('order_comment'))
+    published = models.BooleanField(default=True, verbose_name=_('published'))
+    payment_status = models.CharField(max_length=256,
+                                      default=None,
+                                      verbose_name=_('the text of the error that occurred during the payment'),
+                                      blank=True, null=True)
 
     class Meta:
         db_table = 'app_order_order'
-        verbose_name = 'заказы'
-        verbose_name_plural = 'заказы'
+        verbose_name = _('order')
+        verbose_name_plural = _('orders')
 
     def get_total_cost(self):
         """Функция получения стоимости заказа без скидок"""

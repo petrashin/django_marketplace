@@ -2,6 +2,7 @@ import decimal
 
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
@@ -23,21 +24,21 @@ class CartItemsListView(ListView):
                 context['total_cost'] = 0
                 context['old_total_cost'] = 0
                 for item in self.object_list:
-                    item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__name=item.shop).price
+                    item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__slug=item.shop).price
                     if item.product.discount:
                         if item.product.discount.discount_type.id == 2:
                             item.price = _check_doublet_discount(self.object_list, item)
                         if item.product.discount.discount_type.id == 3:
                             item.price = _check_cart_discount(item)
 
-                    context['total_cost'] += round(item.price * item.quantity, 2)
+                    context['total_cost'] += (item.quantity * item.price)
                     context['old_total_cost'] += (item.quantity * item.old_price)
                     item.shops_form = CartShopsForm(product=item.product, item_id=item.id)
                     item.update_quantity_form = CartUpdateQuantityProductForm(initial={'quantity': item.quantity,
                                                                                        'item_id': item.id})
             else:
                 item = self.object_list[0]
-                item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__name=item.shop).price
+                item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__slug=item.shop).price
 
                 if item.product.discount:
                     if item.product.discount.discount_type.id == 2:
@@ -57,7 +58,7 @@ class CartItemsListView(ListView):
         return context
 
     def get_queryset(self):
-        return CartItems().get_cart_items(request=self.request)
+        return CartItems().get_cart_items(request=self.request).order_by('-added_at')
 
 
 def _check_cart_discount(discount_cart_product):
@@ -114,7 +115,7 @@ def cart_add(request, slug):
                  shop=shop,
                  quantity=cd['quantity']
                  )
-        messages.success(request, f'{product.name} успешно добавлен в корзину!')
+        messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
     return redirect('product_detail', slug=slug)
 
 
@@ -126,12 +127,16 @@ def cart_shop_add(request, slug):
     form = CartAddProductShopForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
+        if cd['shop'] == '':
+            shop = None
+        else:
+            shop = cd['shop']
         cart.add(request=request,
                  product=product,
-                 shop=cd['shop'],
+                 shop=shop,
                  quantity=cd['quantity']
                  )
-        messages.success(request, f'{product.name} успешно добавлен в корзину!')
+        messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
     return redirect('shops')
 
 

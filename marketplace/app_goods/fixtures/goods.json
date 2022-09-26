@@ -1,0 +1,1163 @@
+[
+  {
+    "model": "app_goods.discount",
+    "pk": 1,
+    "fields": {
+      "discount_type": 1,
+      "discount_name": "компьютеры60",
+      "discount_name_ru": "компьютеры60",
+      "discount_name_en": "computers60",
+      "discount_value": 60,
+      "description": "скидка на компьютеры 60%",
+      "description_ru": "скидка на компьютеры 60%",
+      "description_en": "discount on computers 60%",
+      "start_date": "2022-09-22T10:25:23Z",
+      "end_date": "2022-09-30T10:25:31Z",
+      "active": true
+    }
+  },
+  {
+    "model": "app_goods.discount",
+    "pk": 2,
+    "fields": {
+      "discount_type": 1,
+      "discount_name": "смартфоны25",
+      "discount_name_ru": "смартфоны25",
+      "discount_name_en": "smartphones 25",
+      "discount_value": 25,
+      "description": "скидка на смартфоны 25%",
+      "description_ru": "скидка на смартфоны 25%",
+      "description_en": "discount on smartphones 25%",
+      "start_date": "2022-09-22T10:27:07Z",
+      "end_date": "2022-09-22T10:27:11Z",
+      "active": true
+    }
+  },
+  {
+    "model": "app_goods.discount",
+    "pk": 3,
+    "fields": {
+      "discount_type": 1,
+      "discount_name": "холодильники15",
+      "discount_name_ru": "холодильники15",
+      "discount_name_en": "refrigerators 15",
+      "discount_value": 15,
+      "description": "скидка на холодильники 15%",
+      "description_ru": "скидка на холодильники 15%",
+      "description_en": "discount on refrigerators 15%",
+      "start_date": "2022-09-22T10:28:42Z",
+      "end_date": "2022-09-22T10:28:45Z",
+      "active": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 1,
+    "fields": {
+      "name": "электроника",
+      "name_ru": "электроника",
+      "name_en": "electronics",
+      "parent_category": null,
+      "parent_category_ru": null,
+      "parent_category_en": null,
+      "category_icon": "icons/categories/1.svg",
+      "category_image": "cat_image/pngwing.com_3.png",
+      "slug": "electronics",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 2,
+    "fields": {
+      "name": "бытовая техника",
+      "name_ru": "бытовая техника",
+      "name_en": "household appliances",
+      "parent_category": null,
+      "parent_category_ru": null,
+      "parent_category_en": null,
+      "category_icon": "icons/categories/3.svg",
+      "category_image": "cat_image/pngwing.com_7.png",
+      "slug": "household-appliances",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 3,
+    "fields": {
+      "name": "одежда",
+      "name_ru": "одежда",
+      "name_en": "clothing",
+      "parent_category": null,
+      "parent_category_ru": null,
+      "parent_category_en": null,
+      "category_icon": "F:\\python_django_group_diploma\\marketplace\\media\\icons\\categories\\test_category_icon.jpg",
+      "category_image": "cat_image/pngwing.com_16.png",
+      "slug": "clothing",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 4,
+    "fields": {
+      "name": "футболки",
+      "name_ru": "футболки",
+      "name_en": "t-shirts",
+      "parent_category": 3,
+      "parent_category_ru": 3,
+      "parent_category_en": 3,
+      "category_icon": "F:\\python_django_group_diploma\\marketplace\\media\\icons\\categories\\test_category_icon.jpg",
+      "category_image": "cat_image/pngwing.com_18.png",
+      "slug": "t-shirts",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 5,
+    "fields": {
+      "name": "рубашки",
+      "name_ru": "рубашки",
+      "name_en": "shirts",
+      "parent_category": 3,
+      "parent_category_ru": 3,
+      "parent_category_en": 3,
+      "category_icon": "F:\\python_django_group_diploma\\marketplace\\media\\icons\\categories\\test_category_icon.jpg",
+      "category_image": "cat_image/pngwing.com_5.png",
+      "slug": "shirts",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 6,
+    "fields": {
+      "name": "джинсы",
+      "name_ru": "джинсы",
+      "name_en": "jeans",
+      "parent_category": 3,
+      "parent_category_ru": 3,
+      "parent_category_en": 3,
+      "category_icon": "F:\\python_django_group_diploma\\marketplace\\media\\icons\\categories\\test_category_icon.jpg",
+      "category_image": "cat_image/pngwing.com_8.png",
+      "slug": "jeans",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 7,
+    "fields": {
+      "name": "смартфоны",
+      "name_ru": "смартфоны",
+      "name_en": "smartphones",
+      "parent_category": 1,
+      "parent_category_ru": 1,
+      "parent_category_en": 1,
+      "category_icon": "icons/categories/8.svg",
+      "category_image": "cat_image/pngwing.com.png",
+      "slug": "smartphones",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 8,
+    "fields": {
+      "name": "компьютеры",
+      "name_ru": "компьютеры",
+      "name_en": "computers",
+      "parent_category": 1,
+      "parent_category_ru": 1,
+      "parent_category_en": 1,
+      "category_icon": "icons/categories/1_thhI65I.svg",
+      "category_image": "cat_image/comp.png",
+      "slug": "computers",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 9,
+    "fields": {
+      "name": "видеокарты",
+      "name_ru": "видеокарты",
+      "name_en": "video cards",
+      "parent_category": 1,
+      "parent_category_ru": 1,
+      "parent_category_en": 1,
+      "category_icon": "F:\\python_django_group_diploma\\marketplace\\media\\icons\\categories\\test_category_icon.jpg",
+      "category_image": "cat_image/pngwing.com_25.png",
+      "slug": "video-cards",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 10,
+    "fields": {
+      "name": "холодильники",
+      "name_ru": "холодильники",
+      "name_en": "refrigerators",
+      "parent_category": 2,
+      "parent_category_ru": 2,
+      "parent_category_en": 2,
+      "category_icon": "F:\\python_django_group_diploma\\marketplace\\media\\icons\\categories\\test_category_icon.jpg",
+      "category_image": "cat_image/pngwing.com_19.png",
+      "slug": "refrigerators",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 11,
+    "fields": {
+      "name": "стиральные машины",
+      "name_ru": "стиральные машины",
+      "name_en": "washing machines",
+      "parent_category": 2,
+      "parent_category_ru": 2,
+      "parent_category_en": 2,
+      "category_icon": "icons/categories/3_sGUaf4u.svg",
+      "category_image": "cat_image/pngwing.com_12.png",
+      "slug": "washing-machines",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.category",
+    "pk": 12,
+    "fields": {
+      "name": "телевизоры",
+      "name_ru": "телевизоры",
+      "name_en": "tv sets",
+      "parent_category": 2,
+      "parent_category_ru": 2,
+      "parent_category_en": 2,
+      "category_icon": "icons/categories/9.svg",
+      "category_image": "cat_image/pngwing.com_13.png",
+      "slug": "tv-sets",
+      "published": true
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 1,
+    "fields": {
+      "name": "ноутбук1",
+      "name_ru": "ноутбук1",
+      "name_en": "laptop1",
+      "slug": "laptop1",
+      "description": "Ноутбук (англ. notebook — блокнот) — переносной компьютер, в корпусе которого объединены типичные компоненты ПК, включая дисплей, клавиатуру и устройство указания (обычно сенсорная панель или тачпад), а также аккумуляторные батареи. Ноутбуки отличаются небольшими размерами и весом, время автономной работы ноутбуков варьируется в пределах от 2 до 15 часов.",
+      "description_ru": "Ноутбук (англ. notebook — блокнот) — переносной компьютер, в корпусе которого объединены типичные компоненты ПК, включая дисплей, клавиатуру и устройство указания (обычно сенсорная панель или тачпад), а также аккумуляторные батареи. Ноутбуки отличаются небольшими размерами и весом, время автономной работы ноутбуков варьируется в пределах от 2 до 15 часов.",
+      "description_en": "A notebook is a portable computer in which typical PC components are combined, including a display, keyboard and pointing device (usually a touchpad or touchpad), as well as batteries. Laptops are small in size and weight, the battery life of laptops varies from 2 to 15 hours.",
+      "created_at": "2022-09-22T10:37:47.316Z",
+      "updated_at": "2022-09-22T14:06:55.655Z",
+      "discount": 1,
+      "views_count": 7,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        8,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 2,
+    "fields": {
+      "name": "ноутбук2",
+      "name_ru": "ноутбук2",
+      "name_en": "laptop2",
+      "slug": "laptop2",
+      "description": "Ноутбук (англ. notebook — блокнот) — переносной компьютер, в корпусе которого объединены типичные компоненты ПК, включая дисплей, клавиатуру и устройство указания (обычно сенсорная панель или тачпад), а также аккумуляторные батареи. Ноутбуки отличаются небольшими размерами и весом, время автономной работы ноутбуков варьируется в пределах от 2 до 15 часов.",
+      "description_ru": "Ноутбук (англ. notebook — блокнот) — переносной компьютер, в корпусе которого объединены типичные компоненты ПК, включая дисплей, клавиатуру и устройство указания (обычно сенсорная панель или тачпад), а также аккумуляторные батареи. Ноутбуки отличаются небольшими размерами и весом, время автономной работы ноутбуков варьируется в пределах от 2 до 15 часов.",
+      "description_en": "A notebook is a portable computer in which typical PC components are combined, including a display, keyboard and pointing device (usually a touchpad or touchpad), as well as batteries. Laptops are small in size and weight, the battery life of laptops varies from 2 to 15 hours.",
+      "created_at": "2022-09-22T10:39:17.623Z",
+      "updated_at": "2022-09-22T14:29:06.857Z",
+      "discount": 1,
+      "views_count": 5,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        8,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 3,
+    "fields": {
+      "name": "ноутбук3",
+      "name_ru": "ноутбук3",
+      "name_en": "laptop3",
+      "slug": "laptop3",
+      "description": "Ноутбук (англ. notebook — блокнот) — переносной компьютер, в корпусе которого объединены типичные компоненты ПК, включая дисплей, клавиатуру и устройство указания (обычно сенсорная панель или тачпад), а также аккумуляторные батареи. Ноутбуки отличаются небольшими размерами и весом, время автономной работы ноутбуков варьируется в пределах от 2 до 15 часов.",
+      "description_ru": "Ноутбук (англ. notebook — блокнот) — переносной компьютер, в корпусе которого объединены типичные компоненты ПК, включая дисплей, клавиатуру и устройство указания (обычно сенсорная панель или тачпад), а также аккумуляторные батареи. Ноутбуки отличаются небольшими размерами и весом, время автономной работы ноутбуков варьируется в пределах от 2 до 15 часов.",
+      "description_en": "A notebook is a portable computer in which typical PC components are combined, including a display, keyboard and pointing device (usually a touchpad or touchpad), as well as batteries. Laptops are small in size and weight, the battery life of laptops varies from 2 to 15 hours.",
+      "created_at": "2022-09-22T10:40:46.968Z",
+      "updated_at": "2022-09-22T10:40:46.968Z",
+      "discount": 1,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        8,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 4,
+    "fields": {
+      "name": "видеокарта1",
+      "name_ru": "видеокарта1",
+      "name_en": "videocard1",
+      "slug": "videocard1",
+      "description": "Видеокарта – компонент архитектуры современного ПК, отвечает за преобразование графической информации в видеосигнал для монитора. Видеокарта представляет собой плату расширения, которая устанавливается в специальный слот (PCI-Express) материнской платы. Также видеокарта может быть встроенной, то есть, входить в состав северного моста чипсета материнской платы или быть интегрированной в центральный процессор.",
+      "description_ru": "Видеокарта – компонент архитектуры современного ПК, отвечает за преобразование графической информации в видеосигнал для монитора. Видеокарта представляет собой плату расширения, которая устанавливается в специальный слот (PCI-Express) материнской платы. Также видеокарта может быть встроенной, то есть, входить в состав северного моста чипсета материнской платы или быть интегрированной в центральный процессор.",
+      "description_en": "The video card is a component of the architecture of a modern PC, responsible for converting graphic information into a video signal for the monitor. The video card is an expansion card that is installed in a special slot (PCI-Express) of the motherboard. Also, the video card can be built-in, that is, it can be part of the north bridge of the motherboard chipset or integrated into the central processor.",
+      "created_at": "2022-09-22T10:43:22.150Z",
+      "updated_at": "2022-09-22T13:43:22.273Z",
+      "discount": null,
+      "views_count": 5,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        9,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 5,
+    "fields": {
+      "name": "видеокарта2",
+      "name_ru": "видеокарта2",
+      "name_en": "videocard2",
+      "slug": "videocard2",
+      "description": "Видеокарта – компонент архитектуры современного ПК, отвечает за преобразование графической информации в видеосигнал для монитора. Видеокарта представляет собой плату расширения, которая устанавливается в специальный слот (PCI-Express) материнской платы. Также видеокарта может быть встроенной, то есть, входить в состав северного моста чипсета материнской платы или быть интегрированной в центральный процессор.",
+      "description_ru": "Видеокарта – компонент архитектуры современного ПК, отвечает за преобразование графической информации в видеосигнал для монитора. Видеокарта представляет собой плату расширения, которая устанавливается в специальный слот (PCI-Express) материнской платы. Также видеокарта может быть встроенной, то есть, входить в состав северного моста чипсета материнской платы или быть интегрированной в центральный процессор.",
+      "description_en": "The video card is a component of the architecture of a modern PC, responsible for converting graphic information into a video signal for the monitor. The video card is an expansion card that is installed in a special slot (PCI-Express) of the motherboard. Also, the video card can be built-in, that is, it can be part of the north bridge of the motherboard chipset or integrated into the central processor.",
+      "created_at": "2022-09-22T10:45:45.397Z",
+      "updated_at": "2022-09-22T14:16:02.923Z",
+      "discount": null,
+      "views_count": 6,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        9,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 6,
+    "fields": {
+      "name": "видеокарта3",
+      "name_ru": "видеокарта3",
+      "name_en": "videocard3",
+      "slug": "videocard3",
+      "description": "Видеокарта – компонент архитектуры современного ПК, отвечает за преобразование графической информации в видеосигнал для монитора. Видеокарта представляет собой плату расширения, которая устанавливается в специальный слот (PCI-Express) материнской платы. Также видеокарта может быть встроенной, то есть, входить в состав северного моста чипсета материнской платы или быть интегрированной в центральный процессор.",
+      "description_ru": "Видеокарта – компонент архитектуры современного ПК, отвечает за преобразование графической информации в видеосигнал для монитора. Видеокарта представляет собой плату расширения, которая устанавливается в специальный слот (PCI-Express) материнской платы. Также видеокарта может быть встроенной, то есть, входить в состав северного моста чипсета материнской платы или быть интегрированной в центральный процессор.",
+      "description_en": "The video card is a component of the architecture of a modern PC, responsible for converting graphic information into a video signal for the monitor. The video card is an expansion card that is installed in a special slot (PCI-Express) of the motherboard. Also, the video card can be built-in, that is, it can be part of the north bridge of the motherboard chipset or integrated into the central processor.",
+      "created_at": "2022-09-22T10:46:37.616Z",
+      "updated_at": "2022-09-22T14:41:51.876Z",
+      "discount": null,
+      "views_count": 3,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        9,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 7,
+    "fields": {
+      "name": "смартфон1",
+      "name_ru": "смартфон1",
+      "name_en": "smartphone1",
+      "slug": "smartphone1",
+      "description": "Смартфоны отличаются от обычных мобильных телефонов наличием операционной системы, открытой для разработки программного обеспечения сторонними разработчиками (операционная система обычных мобильных телефонов закрыта для сторонних разработчиков). Установка дополнительных приложений позволяет значительно улучшить функциональность смартфонов по сравнению с обычными мобильными телефонами.",
+      "description_ru": "Смартфоны отличаются от обычных мобильных телефонов наличием операционной системы, открытой для разработки программного обеспечения сторонними разработчиками (операционная система обычных мобильных телефонов закрыта для сторонних разработчиков). Установка дополнительных приложений позволяет значительно улучшить функциональность смартфонов по сравнению с обычными мобильными телефонами.",
+      "description_en": "Smartphones differ from conventional mobile phones by having an operating system open to software development by third-party developers (the operating system of conventional mobile phones is closed to third-party developers). Installing additional applications allows you to significantly improve the functionality of smartphones compared to conventional mobile phones.",
+      "created_at": "2022-09-22T10:49:34.983Z",
+      "updated_at": "2022-09-22T10:49:34.983Z",
+      "discount": 2,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        7,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 8,
+    "fields": {
+      "name": "смартфон2",
+      "name_ru": "смартфон2",
+      "name_en": "smartphone2",
+      "slug": "smartphone2",
+      "description": "Смартфоны отличаются от обычных мобильных телефонов наличием операционной системы, открытой для разработки программного обеспечения сторонними разработчиками (операционная система обычных мобильных телефонов закрыта для сторонних разработчиков). Установка дополнительных приложений позволяет значительно улучшить функциональность смартфонов по сравнению с обычными мобильными телефонами.",
+      "description_ru": "Смартфоны отличаются от обычных мобильных телефонов наличием операционной системы, открытой для разработки программного обеспечения сторонними разработчиками (операционная система обычных мобильных телефонов закрыта для сторонних разработчиков). Установка дополнительных приложений позволяет значительно улучшить функциональность смартфонов по сравнению с обычными мобильными телефонами.",
+      "description_en": "Smartphones differ from conventional mobile phones by having an operating system open to software development by third-party developers (the operating system of conventional mobile phones is closed to third-party developers). Installing additional applications allows you to significantly improve the functionality of smartphones compared to conventional mobile phones.",
+      "created_at": "2022-09-22T10:50:42.294Z",
+      "updated_at": "2022-09-22T10:50:42.294Z",
+      "discount": 2,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        7,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 9,
+    "fields": {
+      "name": "смартфон3",
+      "name_ru": "смартфон3",
+      "name_en": "smartphone3",
+      "slug": "smartphone3",
+      "description": "Смартфоны отличаются от обычных мобильных телефонов наличием операционной системы, открытой для разработки программного обеспечения сторонними разработчиками (операционная система обычных мобильных телефонов закрыта для сторонних разработчиков). Установка дополнительных приложений позволяет значительно улучшить функциональность смартфонов по сравнению с обычными мобильными телефонами.",
+      "description_ru": "Смартфоны отличаются от обычных мобильных телефонов наличием операционной системы, открытой для разработки программного обеспечения сторонними разработчиками (операционная система обычных мобильных телефонов закрыта для сторонних разработчиков). Установка дополнительных приложений позволяет значительно улучшить функциональность смартфонов по сравнению с обычными мобильными телефонами.",
+      "description_en": "Smartphones differ from conventional mobile phones by having an operating system open to software development by third-party developers (the operating system of conventional mobile phones is closed to third-party developers). Installing additional applications allows you to significantly improve the functionality of smartphones compared to conventional mobile phones.",
+      "created_at": "2022-09-22T10:51:50.028Z",
+      "updated_at": "2022-09-22T13:43:42.914Z",
+      "discount": 2,
+      "views_count": 1,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        7,
+        1
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 10,
+    "fields": {
+      "name": "холодильник1",
+      "name_ru": "холодильник1",
+      "name_en": "refrigerator1",
+      "slug": "refrigerator1",
+      "description": "устройство, поддерживающее низкую температуру в теплоизолированной камере. Применяется обычно для хранения пищи или предметов, требующих хранения в прохладном месте. В развитых странах бытовой холодильник имеется почти в каждой семье. Работа холодильника основана на использовании холодильной машины, переносящей тепло из рабочей камеры холодильника наружу, где оно рассеивается во внешнюю среду. Существуют также коммерческие холодильники с большей холодопроизводительностью, которые используются на предприятиях общественного питания и в магазинах и промышленные холодильники, объём рабочей камеры которых может достигать десятков и сотен кубометров, они используются, например, на мясокомбинатах, промышленных производствах.",
+      "description_ru": "устройство, поддерживающее низкую температуру в теплоизолированной камере. Применяется обычно для хранения пищи или предметов, требующих хранения в прохладном месте. В развитых странах бытовой холодильник имеется почти в каждой семье. Работа холодильника основана на использовании холодильной машины, переносящей тепло из рабочей камеры холодильника наружу, где оно рассеивается во внешнюю среду. Существуют также коммерческие холодильники с большей холодопроизводительностью, которые используются на предприятиях общественного питания и в магазинах и промышленные холодильники, объём рабочей камеры которых может достигать десятков и сотен кубометров, они используются, например, на мясокомбинатах, промышленных производствах.",
+      "description_en": "a device that maintains a low temperature in a thermally insulated chamber. It is usually used for storing food or items that require storage in a cool place. In developed countries, almost every family has a household refrigerator. The operation of the refrigerator is based on the use of a refrigerating machine that transfers heat from the working chamber of the refrigerator to the outside, where it is dissipated into the external environment. There are also commercial refrigerators with higher cooling capacity, which are used in catering establishments and shops, and industrial refrigerators, the volume of the working chamber of which can reach tens and hundreds of cubic meters, they are used, for example, in meat processing plants, industrial plants.",
+      "created_at": "2022-09-22T10:54:23.111Z",
+      "updated_at": "2022-09-22T10:54:23.111Z",
+      "discount": 3,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        2,
+        10
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 11,
+    "fields": {
+      "name": "холодильник2",
+      "name_ru": "холодильник2",
+      "name_en": "refrigerator 2",
+      "slug": "refrigerator-2",
+      "description": "устройство, поддерживающее низкую температуру в теплоизолированной камере. Применяется обычно для хранения пищи или предметов, требующих хранения в прохладном месте. В развитых странах бытовой холодильник имеется почти в каждой семье. Работа холодильника основана на использовании холодильной машины, переносящей тепло из рабочей камеры холодильника наружу, где оно рассеивается во внешнюю среду. Существуют также коммерческие холодильники с большей холодопроизводительностью, которые используются на предприятиях общественного питания и в магазинах и промышленные холодильники, объём рабочей камеры которых может достигать десятков и сотен кубометров, они используются, например, на мясокомбинатах, промышленных производствах.",
+      "description_ru": "устройство, поддерживающее низкую температуру в теплоизолированной камере. Применяется обычно для хранения пищи или предметов, требующих хранения в прохладном месте. В развитых странах бытовой холодильник имеется почти в каждой семье. Работа холодильника основана на использовании холодильной машины, переносящей тепло из рабочей камеры холодильника наружу, где оно рассеивается во внешнюю среду. Существуют также коммерческие холодильники с большей холодопроизводительностью, которые используются на предприятиях общественного питания и в магазинах и промышленные холодильники, объём рабочей камеры которых может достигать десятков и сотен кубометров, они используются, например, на мясокомбинатах, промышленных производствах.",
+      "description_en": "a device that maintains a low temperature in a thermally insulated chamber. It is usually used for storing food or items that require storage in a cool place. In developed countries, almost every family has a household refrigerator. The operation of the refrigerator is based on the use of a refrigerating machine that transfers heat from the working chamber of the refrigerator to the outside, where it is dissipated into the external environment. There are also commercial refrigerators with higher cooling capacity, which are used in catering establishments and shops, and industrial refrigerators, the volume of the working chamber of which can reach tens and hundreds of cubic meters, they are used, for example, in meat processing plants, industrial plants.",
+      "created_at": "2022-09-22T10:57:02.903Z",
+      "updated_at": "2022-09-22T10:57:02.903Z",
+      "discount": 3,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        2,
+        10
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 12,
+    "fields": {
+      "name": "холодильник3",
+      "name_ru": "холодильник3",
+      "name_en": "refrigerator3",
+      "slug": "refrigerator3",
+      "description": "устройство, поддерживающее низкую температуру в теплоизолированной камере. Применяется обычно для хранения пищи или предметов, требующих хранения в прохладном месте. В развитых странах бытовой холодильник имеется почти в каждой семье. Работа холодильника основана на использовании холодильной машины, переносящей тепло из рабочей камеры холодильника наружу, где оно рассеивается во внешнюю среду. Существуют также коммерческие холодильники с большей холодопроизводительностью, которые используются на предприятиях общественного питания и в магазинах и промышленные холодильники, объём рабочей камеры которых может достигать десятков и сотен кубометров, они используются, например, на мясокомбинатах, промышленных производствах.",
+      "description_ru": "устройство, поддерживающее низкую температуру в теплоизолированной камере. Применяется обычно для хранения пищи или предметов, требующих хранения в прохладном месте. В развитых странах бытовой холодильник имеется почти в каждой семье. Работа холодильника основана на использовании холодильной машины, переносящей тепло из рабочей камеры холодильника наружу, где оно рассеивается во внешнюю среду. Существуют также коммерческие холодильники с большей холодопроизводительностью, которые используются на предприятиях общественного питания и в магазинах и промышленные холодильники, объём рабочей камеры которых может достигать десятков и сотен кубометров, они используются, например, на мясокомбинатах, промышленных производствах.",
+      "description_en": "a device that maintains a low temperature in a thermally insulated chamber. It is usually used for storing food or items that require storage in a cool place. In developed countries, almost every family has a household refrigerator. The operation of the refrigerator is based on the use of a refrigerating machine that transfers heat from the working chamber of the refrigerator to the outside, where it is dissipated into the external environment. There are also commercial refrigerators with higher cooling capacity, which are used in catering establishments and shops, and industrial refrigerators, the volume of the working chamber of which can reach tens and hundreds of cubic meters, they are used, for example, in meat processing plants, industrial plants.",
+      "created_at": "2022-09-22T10:59:30.570Z",
+      "updated_at": "2022-09-22T10:59:30.570Z",
+      "discount": 3,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        2,
+        10
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 13,
+    "fields": {
+      "name": "стиральная машина1",
+      "name_ru": "стиральная машина1",
+      "name_en": "washing machine1",
+      "slug": "washing-machine1",
+      "description": "Стиральная машина — установка для стирки текстильных изделий (одежды, нижнего и постельного белья, сумок и других вещей), а также иногда обуви.",
+      "description_ru": "Стиральная машина — установка для стирки текстильных изделий (одежды, нижнего и постельного белья, сумок и других вещей), а также иногда обуви.",
+      "description_en": "A washing machine is an installation for washing textiles (clothing, underwear and bed linen, bags and other things), as well as sometimes shoes.",
+      "created_at": "2022-09-22T11:04:07.610Z",
+      "updated_at": "2022-09-22T11:04:07.610Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        2,
+        11
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 14,
+    "fields": {
+      "name": "стиральная машина2",
+      "name_ru": "стиральная машина2",
+      "name_en": "washing machine2",
+      "slug": "washing-machine2",
+      "description": "Стиральная машина — установка для стирки текстильных изделий (одежды, нижнего и постельного белья, сумок и других вещей), а также иногда обуви.",
+      "description_ru": "Стиральная машина — установка для стирки текстильных изделий (одежды, нижнего и постельного белья, сумок и других вещей), а также иногда обуви.",
+      "description_en": "A washing machine is an installation for washing textiles (clothing, underwear and bed linen, bags and other things), as well as sometimes shoes.",
+      "created_at": "2022-09-22T11:05:35.782Z",
+      "updated_at": "2022-09-22T11:05:35.782Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        2,
+        11
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 15,
+    "fields": {
+      "name": "стиральная машина3",
+      "name_ru": "стиральная машина3",
+      "name_en": "washing machine3",
+      "slug": "washing-machine3",
+      "description": "Стиральная машина — установка для стирки текстильных изделий (одежды, нижнего и постельного белья, сумок и других вещей), а также иногда обуви.",
+      "description_ru": "Стиральная машина — установка для стирки текстильных изделий (одежды, нижнего и постельного белья, сумок и других вещей), а также иногда обуви.",
+      "description_en": "A washing machine is an installation for washing textiles (clothing, underwear and bed linen, bags and other things), as well as sometimes shoes.",
+      "created_at": "2022-09-22T11:11:36.540Z",
+      "updated_at": "2022-09-22T11:11:36.540Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        2,
+        11
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 16,
+    "fields": {
+      "name": "телевизор1",
+      "name_ru": "телевизор1",
+      "name_en": "tv set1",
+      "slug": "tv-set1",
+      "description": "Телевизор, телевизионный приёмник (новолат. televisorium «дальновидец»; от др.-греч. τῆλε «далеко» + лат. vīsio «зрение; видение») — приёмник телевизионных сигналов изображения и звука, отображающий их на экране и с помощью динамиков. Современный телевизор способен принимать телевизионные программы как с антенны, так и непосредственно от устройств их воспроизведения — например, видеомагнитофона, DVD-проигрывателя или медиаплеера. Так называемые смарт-телевизоры могут отображать потоковое видео, получаемое из локальной вычислительной сети или Интернета.",
+      "description_ru": "Телевизор, телевизионный приёмник (новолат. televisorium «дальновидец»; от др.-греч. τῆλε «далеко» + лат. vīsio «зрение; видение») — приёмник телевизионных сигналов изображения и звука, отображающий их на экране и с помощью динамиков. Современный телевизор способен принимать телевизионные программы как с антенны, так и непосредственно от устройств их воспроизведения — например, видеомагнитофона, DVD-проигрывателя или медиаплеера. Так называемые смарт-телевизоры могут отображать потоковое видео, получаемое из локальной вычислительной сети или Интернета.",
+      "description_en": "TV, TV receiver (novolat. televisorium \"visionary\"; from others-Greek. τῆλε \"far away\" + Lat. vīsio \"vision; vision\") is a receiver of television image and sound signals, displaying them on the screen and using speakers. A modern TV is capable of receiving television programs both from the antenna and directly from their playback devices — for example, a video recorder, DVD player or media player. So-called smart TVs can display streaming video received from a local computer network or the Internet.",
+      "created_at": "2022-09-22T11:13:31.622Z",
+      "updated_at": "2022-09-22T11:13:31.622Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        2,
+        12
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 17,
+    "fields": {
+      "name": "телевизор2",
+      "name_ru": "телевизор2",
+      "name_en": "tv set2",
+      "slug": "tv-set2",
+      "description": "Телевизор, телевизионный приёмник (новолат. televisorium «дальновидец»; от др.-греч. τῆλε «далеко» + лат. vīsio «зрение; видение») — приёмник телевизионных сигналов изображения и звука, отображающий их на экране и с помощью динамиков. Современный телевизор способен принимать телевизионные программы как с антенны, так и непосредственно от устройств их воспроизведения — например, видеомагнитофона, DVD-проигрывателя или медиаплеера. Так называемые смарт-телевизоры могут отображать потоковое видео, получаемое из локальной вычислительной сети или Интернета.",
+      "description_ru": "Телевизор, телевизионный приёмник (новолат. televisorium «дальновидец»; от др.-греч. τῆλε «далеко» + лат. vīsio «зрение; видение») — приёмник телевизионных сигналов изображения и звука, отображающий их на экране и с помощью динамиков. Современный телевизор способен принимать телевизионные программы как с антенны, так и непосредственно от устройств их воспроизведения — например, видеомагнитофона, DVD-проигрывателя или медиаплеера. Так называемые смарт-телевизоры могут отображать потоковое видео, получаемое из локальной вычислительной сети или Интернета.",
+      "description_en": "TV, TV receiver (novolat. televisorium \"visionary\"; from others-Greek. τῆλε \"far away\" + Lat. vīsio \"vision; vision\") is a receiver of television image and sound signals, displaying them on the screen and using speakers. A modern TV is capable of receiving television programs both from the antenna and directly from their playback devices — for example, a video recorder, DVD player or media player. So-called smart TVs can display streaming video received from a local computer network or the Internet.",
+      "created_at": "2022-09-22T11:14:32.178Z",
+      "updated_at": "2022-09-22T11:14:32.178Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        2,
+        12
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 18,
+    "fields": {
+      "name": "телевизор3",
+      "name_ru": "телевизор3",
+      "name_en": "tv set3",
+      "slug": "tv-set3",
+      "description": "Телевизор, телевизионный приёмник (новолат. televisorium «дальновидец»; от др.-греч. τῆλε «далеко» + лат. vīsio «зрение; видение») — приёмник телевизионных сигналов изображения и звука, отображающий их на экране и с помощью динамиков. Современный телевизор способен принимать телевизионные программы как с антенны, так и непосредственно от устройств их воспроизведения — например, видеомагнитофона, DVD-проигрывателя или медиаплеера. Так называемые смарт-телевизоры могут отображать потоковое видео, получаемое из локальной вычислительной сети или Интернета.",
+      "description_ru": "Телевизор, телевизионный приёмник (новолат. televisorium «дальновидец»; от др.-греч. τῆλε «далеко» + лат. vīsio «зрение; видение») — приёмник телевизионных сигналов изображения и звука, отображающий их на экране и с помощью динамиков. Современный телевизор способен принимать телевизионные программы как с антенны, так и непосредственно от устройств их воспроизведения — например, видеомагнитофона, DVD-проигрывателя или медиаплеера. Так называемые смарт-телевизоры могут отображать потоковое видео, получаемое из локальной вычислительной сети или Интернета.",
+      "description_en": "TV, TV receiver (novolat. televisorium \"visionary\"; from others-Greek. τῆλε \"far away\" + Lat. vīsio \"vision; vision\") is a receiver of television image and sound signals, displaying them on the screen and using speakers. A modern TV is capable of receiving television programs both from the antenna and directly from their playback devices — for example, a video recorder, DVD player or media player. So-called smart TVs can display streaming video received from a local computer network or the Internet.",
+      "created_at": "2022-09-22T11:15:30.554Z",
+      "updated_at": "2022-09-22T14:22:38.537Z",
+      "discount": null,
+      "views_count": 1,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        2,
+        12
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 19,
+    "fields": {
+      "name": "футболка1",
+      "name_ru": "футболка1",
+      "name_en": "T-shirt1",
+      "slug": "t-shirt1",
+      "description": "Футболка, - это стиль тканевой рубашки, названный в честь Т-образной формы ее тела и рукавов. Традиционно она имеет короткие рукава и круглый вырез, известный как круглый вырез, на котором отсутствует воротник. Футболки, как правило, изготавливаются из эластичной, легкой и недорогой ткани, которую легко чистить. Футболка возникла из нижнего белья, использовавшегося в 19 веке, а в середине 20 века перешла от нижнего белья к повседневной одежде общего пользования.",
+      "description_ru": "Футболка, - это стиль тканевой рубашки, названный в честь Т-образной формы ее тела и рукавов. Традиционно она имеет короткие рукава и круглый вырез, известный как круглый вырез, на котором отсутствует воротник. Футболки, как правило, изготавливаются из эластичной, легкой и недорогой ткани, которую легко чистить. Футболка возникла из нижнего белья, использовавшегося в 19 веке, а в середине 20 века перешла от нижнего белья к повседневной одежде общего пользования.",
+      "description_en": "A T-shirt is a style of fabric shirt named after the T-shape of its body and sleeves. Traditionally, it has short sleeves and a round neck, known as a round neck, which lacks a collar. T-shirts are usually made of elastic, lightweight and inexpensive fabric that is easy to clean. The T-shirt originated from underwear used in the 19th century, and in the middle of the 20th century moved from underwear to casual clothing for general use.",
+      "created_at": "2022-09-22T11:19:17.247Z",
+      "updated_at": "2022-09-22T11:19:17.247Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        3,
+        4
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 20,
+    "fields": {
+      "name": "футболка2",
+      "name_ru": "футболка2",
+      "name_en": "T-shirt2",
+      "slug": "t-shirt2",
+      "description": "Футболка, - это стиль тканевой рубашки, названный в честь Т-образной формы ее тела и рукавов. Традиционно она имеет короткие рукава и круглый вырез, известный как круглый вырез, на котором отсутствует воротник. Футболки, как правило, изготавливаются из эластичной, легкой и недорогой ткани, которую легко чистить. Футболка возникла из нижнего белья, использовавшегося в 19 веке, а в середине 20 века перешла от нижнего белья к повседневной одежде общего пользования.",
+      "description_ru": "Футболка, - это стиль тканевой рубашки, названный в честь Т-образной формы ее тела и рукавов. Традиционно она имеет короткие рукава и круглый вырез, известный как круглый вырез, на котором отсутствует воротник. Футболки, как правило, изготавливаются из эластичной, легкой и недорогой ткани, которую легко чистить. Футболка возникла из нижнего белья, использовавшегося в 19 веке, а в середине 20 века перешла от нижнего белья к повседневной одежде общего пользования.",
+      "description_en": "A T-shirt is a style of fabric shirt named after the T-shape of its body and sleeves. Traditionally, it has short sleeves and a round neck, known as a round neck, which lacks a collar. T-shirts are usually made of elastic, lightweight and inexpensive fabric that is easy to clean. The T-shirt originated from underwear used in the 19th century, and in the middle of the 20th century moved from underwear to casual clothing for general use.",
+      "created_at": "2022-09-22T11:20:23.367Z",
+      "updated_at": "2022-09-22T11:20:23.367Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        3,
+        4
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 21,
+    "fields": {
+      "name": "футболка3",
+      "name_ru": "футболка3",
+      "name_en": "T-shirt3",
+      "slug": "t-shirt3",
+      "description": "Футболка, - это стиль тканевой рубашки, названный в честь Т-образной формы ее тела и рукавов. Традиционно она имеет короткие рукава и круглый вырез, известный как круглый вырез, на котором отсутствует воротник. Футболки, как правило, изготавливаются из эластичной, легкой и недорогой ткани, которую легко чистить. Футболка возникла из нижнего белья, использовавшегося в 19 веке, а в середине 20 века перешла от нижнего белья к повседневной одежде общего пользования.",
+      "description_ru": "Футболка, - это стиль тканевой рубашки, названный в честь Т-образной формы ее тела и рукавов. Традиционно она имеет короткие рукава и круглый вырез, известный как круглый вырез, на котором отсутствует воротник. Футболки, как правило, изготавливаются из эластичной, легкой и недорогой ткани, которую легко чистить. Футболка возникла из нижнего белья, использовавшегося в 19 веке, а в середине 20 века перешла от нижнего белья к повседневной одежде общего пользования.",
+      "description_en": "A T-shirt is a style of fabric shirt named after the T-shape of its body and sleeves. Traditionally, it has short sleeves and a round neck, known as a round neck, which lacks a collar. T-shirts are usually made of elastic, lightweight and inexpensive fabric that is easy to clean. The T-shirt originated from underwear used in the 19th century, and in the middle of the 20th century moved from underwear to casual clothing for general use.",
+      "created_at": "2022-09-22T11:21:22.941Z",
+      "updated_at": "2022-09-22T11:21:22.941Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        3,
+        4
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 22,
+    "fields": {
+      "name": "рубашка1",
+      "name_ru": "рубашка1",
+      "name_en": "shirt1",
+      "slug": "shirt1",
+      "description": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
+      "description_ru": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
+      "description_en": "A shirt is a fabric garment for the upper body (from the neck to the waist). Initially, underwear was worn exclusively by men, but in American English it has become a universal term for a wide range of outerwear and underwear. In British English, a shirt is more specifically a garment with a collar, sleeves with cuffs and a full vertical opening with buttons or snaps (North Americans would call this a \"shirt\", a specific type of shirt with a collar).",
+      "created_at": "2022-09-22T11:55:19.580Z",
+      "updated_at": "2022-09-22T11:55:19.580Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        3,
+        5
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 23,
+    "fields": {
+      "name": "рубашка2",
+      "name_ru": "рубашка2",
+      "name_en": "T-shirt2",
+      "slug": "t-shirt2",
+      "description": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
+      "description_ru": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
+      "description_en": "A shirt is a fabric garment for the upper body (from the neck to the waist). Initially, underwear was worn exclusively by men, but in American English it has become a universal term for a wide range of outerwear and underwear. In British English, a shirt is more specifically a garment with a collar, sleeves with cuffs and a full vertical opening with buttons or snaps (North Americans would call this a \"shirt\", a specific type of shirt with a collar).",
+      "created_at": "2022-09-22T12:01:48.782Z",
+      "updated_at": "2022-09-22T12:01:48.782Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        3,
+        5
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 24,
+    "fields": {
+      "name": "рубашка3",
+      "name_ru": "рубашка3",
+      "name_en": "T-shirt3",
+      "slug": "t-shirt3",
+      "description": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
+      "description_ru": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
+      "description_en": "A shirt is a fabric garment for the upper body (from the neck to the waist). Initially, underwear was worn exclusively by men, but in American English it has become a universal term for a wide range of outerwear and underwear. In British English, a shirt is more specifically a garment with a collar, sleeves with cuffs and a full vertical opening with buttons or snaps (North Americans would call this a \"shirt\", a specific type of shirt with a collar).",
+      "created_at": "2022-09-22T12:04:06.947Z",
+      "updated_at": "2022-09-22T12:04:06.947Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        3,
+        5
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 25,
+    "fields": {
+      "name": "джинсы1",
+      "name_ru": "джинсы1",
+      "name_en": "jeans1",
+      "slug": "jeans1",
+      "description": "Джи́нсы — брюки из плотной хлопчатобумажной ткани с проклёпанными стыками швов на карманах. Впервые массово изготовлены в XVII веке моряками из отходов прорвавшихся парусов почти одновременно во всех странах, ходивших под парусами.",
+      "description_ru": "Джи́нсы — брюки из плотной хлопчатобумажной ткани с проклёпанными стыками швов на карманах. Впервые массово изготовлены в XVII веке моряками из отходов прорвавшихся парусов почти одновременно во всех странах, ходивших под парусами.",
+      "description_en": "Jeans — trousers made of thick cotton fabric with riveted seams on the pockets. For the first time, they were mass-produced in the XVII century by sailors from the waste of broken sails almost simultaneously in all countries that sailed.",
+      "created_at": "2022-09-22T12:07:49.011Z",
+      "updated_at": "2022-09-22T12:07:49.011Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": true,
+      "category": [
+        6,
+        3
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 26,
+    "fields": {
+      "name": "джинсы2",
+      "name_ru": "джинсы2",
+      "name_en": "jeans2",
+      "slug": "jeans2",
+      "description": "Джи́нсы — брюки из плотной хлопчатобумажной ткани с проклёпанными стыками швов на карманах. Впервые массово изготовлены в XVII веке моряками из отходов прорвавшихся парусов почти одновременно во всех странах, ходивших под парусами.",
+      "description_ru": "Джи́нсы — брюки из плотной хлопчатобумажной ткани с проклёпанными стыками швов на карманах. Впервые массово изготовлены в XVII веке моряками из отходов прорвавшихся парусов почти одновременно во всех странах, ходивших под парусами.",
+      "description_en": "Jeans — trousers made of thick cotton fabric with riveted seams on the pockets. For the first time, they were mass-produced in the XVII century by sailors from the waste of broken sails almost simultaneously in all countries that sailed.",
+      "created_at": "2022-09-22T12:09:11.702Z",
+      "updated_at": "2022-09-22T12:09:11.702Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        6,
+        3
+      ]
+    }
+  },
+  {
+    "model": "app_goods.product",
+    "pk": 27,
+    "fields": {
+      "name": "джинсы3",
+      "name_ru": "джинсы3",
+      "name_en": "jeans3",
+      "slug": "jeans3",
+      "description": "Джи́нсы — брюки из плотной хлопчатобумажной ткани с проклёпанными стыками швов на карманах. Впервые массово изготовлены в XVII веке моряками из отходов прорвавшихся парусов почти одновременно во всех странах, ходивших под парусами.",
+      "description_ru": "Джи́нсы — брюки из плотной хлопчатобумажной ткани с проклёпанными стыками швов на карманах. Впервые массово изготовлены в XVII веке моряками из отходов прорвавшихся парусов почти одновременно во всех странах, ходивших под парусами.",
+      "description_en": "Jeans — trousers made of thick cotton fabric with riveted seams on the pockets. For the first time, they were mass-produced in the XVII century by sailors from the waste of broken sails almost simultaneously in all countries that sailed.",
+      "created_at": "2022-09-22T12:10:37.324Z",
+      "updated_at": "2022-09-22T12:10:37.324Z",
+      "discount": null,
+      "views_count": 0,
+      "sales_count": 0,
+      "published": true,
+      "limited_edition": false,
+      "category": [
+        6,
+        3
+      ]
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 1,
+    "fields": {
+      "product": 1,
+      "main_image": "product_image/bigGoods.png",
+      "side_image": "product_image/pngwing.com.png",
+      "back_image": "product_image/pngwing.com_1.png"
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 2,
+    "fields": {
+      "product": 2,
+      "main_image": "product_image/card.jpg",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 3,
+    "fields": {
+      "product": 3,
+      "main_image": "product_image/pngwing.com_22.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 4,
+    "fields": {
+      "product": 4,
+      "main_image": "product_image/videoca.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 5,
+    "fields": {
+      "product": 5,
+      "main_image": "product_image/pngwing.com_2.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 6,
+    "fields": {
+      "product": 6,
+      "main_image": "product_image/pngwing.com_3.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 7,
+    "fields": {
+      "product": 7,
+      "main_image": "product_image/pngwing.com_1_vm04yVF.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 8,
+    "fields": {
+      "product": 8,
+      "main_image": "product_image/pngwing.com_2_8nu7x8f.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 9,
+    "fields": {
+      "product": 9,
+      "main_image": "product_image/pngwing.com_6gTLH4S.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 10,
+    "fields": {
+      "product": 10,
+      "main_image": "product_image/pngwing.com_1_R3Sivn7.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 11,
+    "fields": {
+      "product": 11,
+      "main_image": "product_image/pngwing.com_14.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 12,
+    "fields": {
+      "product": 12,
+      "main_image": "product_image/pngwing.com_6.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 13,
+    "fields": {
+      "product": 13,
+      "main_image": "product_image/pngwing.com_5.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 14,
+    "fields": {
+      "product": 14,
+      "main_image": "product_image/pngwing.com_8.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 15,
+    "fields": {
+      "product": 15,
+      "main_image": "product_image/pngwing.com_7.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 16,
+    "fields": {
+      "product": 16,
+      "main_image": "product_image/pngwing.com_1_IvttT5z.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 17,
+    "fields": {
+      "product": 17,
+      "main_image": "product_image/pngwing.com_2_iXKSDq4.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 18,
+    "fields": {
+      "product": 18,
+      "main_image": "product_image/pngwing.com_FVvnIEW.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 19,
+    "fields": {
+      "product": 19,
+      "main_image": "product_image/00576906__1__tif__1000x1000.jpg",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 20,
+    "fields": {
+      "product": 20,
+      "main_image": "product_image/people_1_womanshortfull_front_white_500.jpg",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 21,
+    "fields": {
+      "product": 21,
+      "main_image": "product_image/png-clipart-t-shirt-sleeve-t-shirts-purple-tshirt.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 22,
+    "fields": {
+      "product": 22,
+      "main_image": "product_image/pngwing.com_2_I0yNYbN.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 23,
+    "fields": {
+      "product": 23,
+      "main_image": "product_image/pngwing.com_1_X5zKyLO.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 24,
+    "fields": {
+      "product": 24,
+      "main_image": "product_image/pngwing.com_9.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 25,
+    "fields": {
+      "product": 25,
+      "main_image": "product_image/pngwing.com_10.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 26,
+    "fields": {
+      "product": 26,
+      "main_image": "product_image/pngwing.com_11.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  },
+  {
+    "model": "app_goods.productimage",
+    "pk": 27,
+    "fields": {
+      "product": 27,
+      "main_image": "product_image/pngwing.com_12.png",
+      "side_image": "",
+      "back_image": ""
+    }
+  }
+]

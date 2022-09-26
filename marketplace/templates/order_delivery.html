@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block content %}
 
 <!--Order Delivery-->
 <div class="container p-4" style="padding-left: 50px;">
     <br>
-    <h2 class="font-weight-bold mt-3" style="text-align: center;">Выберите вариант доставки:</h2>
+    <h2 class="font-weight-bold mt-3" style="text-align: center;">{% trans 'Сhoose a delivery option' %}:</h2>
     <form method="post" action="/cart/order/delivery">
         {% csrf_token %}
-        <p>Вариант доставки - {{ delivery_form.title }}</p>
-        <p>Город - {{ delivery_form.city }}</p>
-        <p>Адрес - {{ delivery_form.address }}</p>
-      <button class="btn btn-primary" style="border: solid 1px grey;">Следующий шаг</button>
+        <p>{% trans 'Delivery option' %} - {{ delivery_form.title }}</p>
+        <p>{% trans 'City' %} - {{ delivery_form.city }}</p>
+        <p>{% trans 'Address' %} - {{ delivery_form.address }}</p>
+      <button class="btn btn-primary" style="border: solid 1px grey;">{% trans 'Next step' %}</button>
     </form>
 </div>
 

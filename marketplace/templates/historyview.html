@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% load i18n %}
 {% block content %}
   <div class="Middle Middle_top">
     <div class="Middle-top">
       <div class="wrap">
         <div class="Middle-header">
-          <h1 class="Middle-title">История просмотра
+          <h1 class="Middle-title">{% trans 'View history' %}
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="{% url 'home' %}">home</a>
+            <li class="breadcrumbs-item"><a href="{% url 'home' %}">{% trans 'home' %}</a>
             </li>
-            <li class="breadcrumbs-item breadcrumbs-item_current"><span>История просмотра</span>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{% trans 'View history' %}</span>
             </li>
           </ul>
         </div>
@@ -21,19 +22,19 @@
         <div class="Section-column">
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Навигация
+              <strong class="Section-title">{% trans 'Navigation' %}
               </strong>
             </header>
             <div class="Section-columnContent">
               <div class="NavigateProfile">
                 <ul class="menu menu_vt">
-                  <li class="menu-item"><a class="menu-link" href="{% url 'account' %}">Личный кабинет</a>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'account' %}">{% trans 'Personal account' %}</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="{% url 'profile' %}">Профиль</a>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'profile' %}">{% trans 'Profile' %}</a>
                   </li>
-                  <li class="menu-item"><a class="menu-link" href="{% url 'orderhistory' %}">История заказов</a>
+                  <li class="menu-item"><a class="menu-link" href="{% url 'orderhistory' %}">{% trans 'Order history' %}</a>
                   </li>
-                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'viewhistory' %}">История просмотра</a>
+                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="{% url 'viewhistory' %}">{% trans 'View history' %}</a>
                   </li>
                 </ul>
               </div>
@@ -46,14 +47,22 @@
                     {% for product in recent_views %}
                       <div class="Card">
                         <a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
-                          <img src="{{ product.product.product_images.main_image.url }}"/>
+                            <img src="{{ product.product.product_images.main_image.url }}"/>
                         </a>
                         <div class="Card-content">
                           <strong class="Card-title"><a href="{% url 'product_detail' product.product.slug %}">{{ product.product.name }}</a>
                           </strong>
                           <div class="Card-description">
-                              <div class="Card-cost"><span class="Card-price">${{ product.product.get_avg_price }}</span>
+                            {% if product.product.discount.discount_value > 0 %}
+                              <div class="Card-cost">
+                                  <span class="Card-price">{{ product.product.get_avg_discounted_price|floatformat:2 }} {% trans 'rub' %}.</span>
+                                  <span class="Card-priceOld">${{ product.product.get_avg_price|floatformat:2 }} {% trans 'rub' %}.</span>
                               </div>
+                            {% else %}
+                              <div class="Card-cost">
+                                  <span class="Card-price">{{ product.product.get_avg_price|floatformat:2 }} {% trans 'rub' %}.</span>
+                              </div>
+                            {% endif %}
                             {% if product.product.category.first.parent_category is null %}
                               <div class="Card-category"> {{ product.product.category.first.name }}
                               </div>
@@ -61,10 +70,24 @@
                               <div class="Card-category"> {{ product.product.category.first.parent_category.name }} / {{ product.product.category.first.name }}
                               </div>
                             {% endif %}
-                            <div class="Card-hover"><a class="Card-btn" href="{% url 'product_detail' product.product.slug %}"><img src="/static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a><a class="Card-btn" href="#"><img src="/static/assets/img/icons/card/cart.svg" alt="cart.svg"/></a><a class="Card-btn" href="#"><img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/></a>
+                            <div class="Card-hover">
+                                <a class="Card-btn" href="#"><img src="/static/assets/img/icons/card/bookmark.svg" alt="bookmark.svg"/></a>
+                                <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
+                                    {% csrf_token %}
+                                {{ product.add_to_cart_form }}
+                                <button type="submit" class="Card-btn buy">
+                                 <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
+                                </button>
+                                </form>
+                                <div style="margin-left: 10px;">
+                                  <form action="{% url 'add_to_comparison' product.product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="Card-btn">
+                                      <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/>
+                                    </button>
+                                  </form>
+                                </div>
                             </div>
-                          </div>
-                        </div>
                         {% if product.product.discount.discount_value > 0 %}
                           <div class="Card-sale">-{{ product.product.discount.discount_value }}%
                           </div>
@@ -73,7 +96,7 @@
                     {% endfor %}
                   </div>
                 {% else %}
-                  <p> У вас нет просмотренных товаров </p>
+                  <p> {% trans "You don't have any viewed products" %} </p>
                 {% endif %}
         </div>
       </div>

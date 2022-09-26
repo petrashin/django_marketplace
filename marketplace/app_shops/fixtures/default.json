@@ -1,0 +1,85 @@
+[{
+    "model": "app_goods.discounttype",
+    "pk": 1,
+    "fields": {
+        "title": "1"
+    }
+},
+{
+    "model": "app_goods.discounttype",
+    "pk": 2,
+    "fields": {
+        "title": "2"
+    }
+},
+{
+    "model": "app_goods.discounttype",
+    "pk": 3,
+    "fields": {
+        "title": "3"
+    }
+},
+{
+    "model": "app_order.delivery",
+    "pk": 1,
+    "fields": {
+        "title": "1"
+    }
+},
+{
+    "model": "app_order.delivery",
+    "pk": 2,
+    "fields": {
+        "title": "2"
+    }
+},
+{
+    "model": "app_order.paymethod",
+    "pk": 1,
+    "fields": {
+        "title": "1"
+    }
+},
+{
+    "model": "app_order.paymethod",
+    "pk": 2,
+    "fields": {
+        "title": "2"
+    }
+},
+{
+    "model": "app_payment.paystatus",
+    "pk": 1,
+    "fields": {
+        "title": "1"
+    }
+},
+{
+    "model": "app_payment.paystatus",
+    "pk": 2,
+    "fields": {
+        "title": "2"
+    }
+},
+{
+    "model": "app_payment.paystatus",
+    "pk": 3,
+    "fields": {
+        "title": "3"
+    }
+},
+{
+    "model": "app_payment.paystatus",
+    "pk": 4,
+    "fields": {
+        "title": "4"
+    }
+},
+{
+    "model": "app_payment.paystatus",
+    "pk": 5,
+    "fields": {
+        "title": "5"
+    }
+}
+]

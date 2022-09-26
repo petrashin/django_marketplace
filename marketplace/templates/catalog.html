@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
-{% load static url_tags %}
+{% load static url_tags discount widget_tweaks %}
+{% load i18n %}
 {% block content %}
 <body class="Site">
   <div class="Middle Middle_top">
     <div class="Middle-top">
       <div class="wrap">
         <div class="Middle-header">
-          <h1 class="Middle-title">Catalog Megano
+          <h1 class="Middle-title">{% trans 'Catalog' %} Megano
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="index.html">home</a>
+            <li class="breadcrumbs-item"><a href="index.html">{% trans 'home' %}</a>
             </li>
-            <li class="breadcrumbs-item breadcrumbs-item_current"><span>Catalog</span>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{% trans 'Catalog' %}</span>
             </li>
           </ul>
         </div>
@@ -22,7 +23,7 @@
         <div class="Section-column">
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Filter
+              <strong class="Section-title">{% trans 'Filter' %}
               </strong>
             </header>
             {# Фильтры #}
@@ -31,8 +32,8 @@
                 {# Слайдер с диапазоном цены #}
                 <div class="form-group">
                   <div class="range Section-columnRange">
-                    {{ filter.form.price }}
-                    <div class="range-price">Price:&#32;
+                    {{ filter.form.price|attr:"data-min: 0"|attr:"data-max: 50000" }}
+                    <div class="range-price">{% trans 'Price' %}:&#32;
                       <div class="rangePrice">
                       </div>
                     </div>
@@ -40,7 +41,7 @@
                 </div>
                 {# Фильтр по имени #}
                 <div class="form-group">
-                    {{ filter.form.product__name }}
+                    {{ filter.form.name }}
                 </div>
                 {# Фильтр по продавцам #}
                 <div class="form-group">
@@ -49,19 +50,19 @@
                 {# Чекбоксы #}
                 <div class="form-group">
                   <label class="toggle">
-                      {{ filter.form.is_available }}
-                      <span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>
+                      {{ filter.form.published }}
+                      <span class="toggle-box"></span><span class="toggle-text">{% trans 'Only products in stock' %}</span>
                   </label>
                 </div>
                 {# Не реализовано ввиду отсутствия поля #}
                 <div class="form-group">
                   <label class="toggle">
-                    <input type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">С бесплатной доставкой</span>
+                    <input type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">{% trans 'With free shipping' %}</span>
                   </label>
                 </div>
                 <div class="form-group">
                   <div class="buttons">
-                      <button type="submit" class="btn btn_square btn_dark btn_narrow">Filter</button>
+                      <button type="submit" class="btn btn_square btn_dark btn_narrow">{% trans 'Filter' %}</button>
                   </div>
                 </div>
               </form>
@@ -69,17 +70,17 @@
           </div>
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Popular tags
+              <strong class="Section-title">{% trans 'Popular tags' %}
               </strong>
             </header>
             <div class="Section-columnContent">
               <div class="buttons">
-                  <a class="btn btn_default btn_sm" href="#">Video</a>
-                  <a class="btn btn_default btn_sm" href="#">Development</a>
-                  <a class="btn btn_default btn_sm" href="#">Gaming</a>
-                  <a class="btn btn_default btn_sm" href="#">Asus</a>
-                  <a class="btn btn_default btn_sm" href="#">Development</a>
-                  <a class="btn btn_default btn_sm" href="#">Video</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Video' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Development' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Gaming' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Asus' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Development' %}</a>
+                  <a class="btn btn_default btn_sm" href="#">{% trans 'Video' %}</a>
               </div>
             </div>
           </div>
@@ -87,58 +88,62 @@
         <div class="Section-content">
 
           <div class="Sort"> {# сортировка #}
-            <div class="Sort-title">Сортировать по:
+            <div class="Sort-title">{% trans 'Sort by' %}:
             </div>
             <div class="Sort-variants">
                 <a
                   {% if request.GET.sort == 'popularity' and request.GET.type == 'ascending' %} class="Sort-sortBy Sort-sortBy_inc" href="{% ordering 'popularity' 'sort' 'descending' request.GET.urlencode %}"
                   {% elif request.GET.sort == 'popularity' and request.GET.type == 'descending' %} class="Sort-sortBy Sort-sortBy_dec" href="{% ordering 'popularity' 'sort' 'ascending' request.GET.urlencode %}"
                   {% else %} class="Sort-sortBy" href="{% ordering 'popularity' 'sort' 'ascending' request.GET.urlencode %}"{% endif %}
-                >Популярности</a>
+                >{% trans 'Popularity' %}</a>
                 <a
                   {% if request.GET.sort == 'price' and request.GET.type == 'ascending' %} class="Sort-sortBy Sort-sortBy_inc" href="{% ordering 'price' 'sort' 'descending' request.GET.urlencode %}"
                   {% elif request.GET.sort == 'price' and request.GET.type == 'descending' %} class="Sort-sortBy Sort-sortBy_dec" href="{% ordering 'price' 'sort' 'ascending' request.GET.urlencode %}"
                   {% else %} class="Sort-sortBy" href="{% ordering 'price' 'sort' 'ascending' request.GET.urlencode %}"{% endif %}
-                >Цене</a>
+                >{% trans 'Price' %}</a>
                 <a
                   {% if request.GET.sort == 'reviews' and request.GET.type == 'ascending' %} class="Sort-sortBy Sort-sortBy_inc" href="{% ordering 'reviews' 'sort' 'descending' request.GET.urlencode %}"
                   {% elif request.GET.sort == 'reviews' and request.GET.type == 'descending' %} class="Sort-sortBy Sort-sortBy_dec" href="{% ordering 'reviews' 'sort' 'ascending' request.GET.urlencode %}"
                   {% else %} class="Sort-sortBy" href="{% ordering 'reviews' 'sort' 'ascending' request.GET.urlencode %}"{% endif %}
-                >Отзывам</a>
+                >{% trans 'Reviews' %}</a>
                 <a
                   {% if request.GET.sort == 'new' and request.GET.type == 'ascending' %} class="Sort-sortBy Sort-sortBy_inc" href="{% ordering 'new' 'sort' 'descending' request.GET.urlencode %}"
                   {% elif request.GET.sort == 'new' and request.GET.type == 'descending' %} class="Sort-sortBy Sort-sortBy_dec" href="{% ordering 'new' 'sort' 'ascending' request.GET.urlencode %}"
                   {% else %} class="Sort-sortBy" href="{% ordering 'new' 'sort' 'ascending' request.GET.urlencode %}"{% endif %}
-                >Новизне</a>
+                >{% trans 'Newness' %}</a>
             </div>
           </div>
 
           <div class="Cards"> {# карточки продуктов #}
           {% if products %}
             {% for product in products %}
-              <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.product.slug %}">
-                  {% if product.product.product_images.main_image %}
-                      <img src="{{ product.product.product_images.main_image.url }}" alt="card.jpg"/></a>
+              <div class="Card"><a class="Card-picture" href="{% url 'product_detail' product.slug %}">
+                  {% if product.product_images.main_image %}
+                      <img src="{{ product.product_images.main_image.url }}" alt="card.jpg"/></a>
                   {%  else %}
                       <img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>
                   {% endif %}
                 <div class="Card-content">
-                  <strong class="Card-title"><a href="app_goods/product.html">{{ product.product.category.all.0 }} {{ product.product.name }}</a>
+                  <strong class="Card-title"><a href="app_goods/product.html">{{ product.category.all.0 }} {{ product.name }}</a>
                   </strong>
                   <div class="Card-description">
                     <div class="Card-cost">
-                      <span class="Card-priceOld">{{ product.price }}</span>
-                      <span class="Card-price">{{ product.get_discounted_price }}</span>
+                        {% if product.discount %}
+                          <span class="Card-priceOld">{{ product.get_avg_price|floatformat:2 }}</span>
+                          <span class="Card-price">{% apply_discount product.get_avg_price product.discount.discount_value %}</span>
+                        {% else %}
+                          <span class="Card-price">{{ product.get_avg_price|floatformat:2 }}</span>
+                        {% endif %}
                     </div>
-                    <div class="Card-category">{{ product.product.category.all.1 }} - {{ product.product.category.all.0 }}
+                    <div class="Card-category">{{ product.category.all.1 }} - {{ product.category.all.0 }}
                       </div>
                         <div class="Card-hover">
                           <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/bookmark.svg' %} alt="bookmark.svg"/></a>
 
-                            <form action="{% url 'cart_shop_add' product.product.slug %}" method="post">
+                            <form action="{% url 'cart_shop_add' product.slug %}" method="post">
                             {% csrf_token %}
                             {{ product.add_to_cart_form }}
-                            <button type="submit" class="Card-btn">
+                            <button type="submit" class="Card-btn buy">
                             <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
                             </button>
                             </form>
@@ -153,6 +158,7 @@
               </div>
             {% endfor %}
           {% else %} {% include 'empty_category.html' %} {% endif %}
+
           </div>
 
           {% if products.has_other_pages %} {# пагинация #}
