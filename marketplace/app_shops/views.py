@@ -116,7 +116,7 @@ class BaseTemplateView(AddToCartFormMixin, TemplateView):
 class ShopListView(AddToCartFormMixin, ListView):
     context_object_name = 'products'
     template_name = 'app_shops/shop_list.html'
-    queryset = ShopProduct.objects.select_related('shop', 'product'). \
+    queryset = ShopProduct.objects.select_related('shop', 'product', 'product__discount'). \
         filter(product__published=True). \
         prefetch_related('product__category', 'product__product_images').order_by('shop__name')
 
@@ -138,7 +138,7 @@ class ShopDetailView(AddToCartFormMixin, DetailView):
         # товары магазина
         products = ShopProduct.objects. \
                        filter(shop__slug=self.object.slug, product__published=True). \
-                       select_related('product'). \
+                       select_related('product', 'product__discount'). \
                        prefetch_related('product__category', 'product__product_images'). \
                        order_by('-product__sales_count')[:10]
         context['products'] = products
