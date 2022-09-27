@@ -582,7 +582,7 @@ msgstr "Продавцы"
 
 #: .\templates\app_goods\product.html:116
 msgid "AdditionaL Info"
-msgstr "Дорполнительная Информация"
+msgstr "Дополнительная Информация"
 
 #: .\templates\app_goods\product.html:117
 #: .\templates\app_goods\product.html:222 .\templates\catalog.html:108

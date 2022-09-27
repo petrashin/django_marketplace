@@ -94,7 +94,8 @@ class BaseTemplateView(AddToCartFormMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(BaseTemplateView, self).get_context_data()
-        products = Product.objects.filter(published=True)
+        products = Product.objects.filter(published=True).\
+            select_related('discount').prefetch_related('category', 'product_images')
         popular_products = products.order_by('-sales_count')[:8]
         limited_products = products.filter(limited_edition=True)
         hot_offers = products.filter(discount__discount_value__gt=0)[:9]
