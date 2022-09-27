@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+{% load cache %}
 {% block content %}
 <div class="Header-slider">
       <div class="Slider Slider_main">
@@ -91,6 +92,7 @@
 {#          Lim Product #}
               {% if lim_products %}
               {% with lim_product=lim_products|random %}
+              {% cache 86400 lim_product %}
                 <div class="Card">
                 <a class="Card-picture" href="{% url 'product_detail' lim_product.slug %}">
                 {% if lim_product.product_images.main_image %}
@@ -143,6 +145,7 @@
                 </div>
               </div>
             </div>
+              {% endcache %}
               {% endwith %}
               {% else %}
                   {% include 'empty_category.html' %}

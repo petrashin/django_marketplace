@@ -74,7 +74,6 @@
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         {% if messages %}
-            console.log('True')
         {% for msg in messages %}
             Swal.fire({
                         title: '{{ msg }}',
