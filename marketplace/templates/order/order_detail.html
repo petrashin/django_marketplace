@@ -61,7 +61,8 @@
                     <div class="Order-info Order-info_delivery">
                       <div class="Order-infoType">Тип доставки:
                       </div>
-                      <div class="Order-infoContent">{{ order.delivery }}
+                      <div class="Order-infoContent">
+                        {% if order.delivery.id == 1 %} Обычная доставка {% else %} Экспресс доставка {% endif %}
                       </div>
                     </div>
                     <div class="Order-info">
@@ -79,7 +80,8 @@
                     <div class="Order-info Order-info_pay">
                       <div class="Order-infoType">Оплата:
                       </div>
-                      <div class="Order-infoContent">{{ order.pay_method }}
+                      <div class="Order-infoContent">
+                        {% if order.pay_method.id == 1 %} Онлайн картой {% else %} Онлайн со случайного чужого счета {% endif %}
                       </div>
                     </div>
                     <div class="Order-info Order-info_status">
