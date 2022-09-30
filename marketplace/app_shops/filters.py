@@ -40,14 +40,32 @@ class ProductFilter(django_filters.FilterSet):
     )
     published = django_filters.BooleanFilter(
         widget=forms.CheckboxInput,
-        method='indeterminate_checkbox',
+        method='indeterminate_checkbox_stock',
+    )
+    free_delivery = django_filters.BooleanFilter(
+        widget=forms.CheckboxInput,
+        method='indeterminate_checkbox_delivery'
     )
 
     @staticmethod
-    def indeterminate_checkbox(queryset, _, value):
+    def indeterminate_checkbox_stock(queryset, _, value):
         if not value:
             return queryset.all()
         return queryset.filter(published=True)
+
+    @staticmethod
+    def indeterminate_checkbox_delivery(queryset, _, value):
+        if not value:
+            return queryset
+
+        queryset = queryset.annotate(
+            disc_price=Avg('shop_products__price') * Case(
+                When(discount__discount_value__isnull=False, then=1 - (F('discount__discount_value') * 0.01)),
+                default=1,
+                output_field=DecimalField(),
+            )
+        ).filter(disc_price__gte=2000)
+        return queryset
 
     @staticmethod
     def price_range(queryset, _, value):

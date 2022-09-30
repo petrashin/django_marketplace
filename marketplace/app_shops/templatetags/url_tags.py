@@ -30,3 +30,16 @@ def ordering(value, field_name, direction, urlencode=None):
         )
 
     return url
+
+
+@register.simple_tag
+def product_tag(value, urlencode=None):
+    url = '?tag={}'.format(value)
+
+    if urlencode:
+        querystring = urlencode.split('&')
+        filtered_querystring = filter(lambda p: p.split('=')[0] != 'tag', querystring)
+        encoded_querystring = '&'.join(filtered_querystring)
+        url = '?tag={}&{}'.format(value, encoded_querystring)
+
+    return url

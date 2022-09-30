@@ -217,3 +217,16 @@ class Reviews(models.Model):
     class Meta:
         verbose_name = _('review')
         verbose_name_plural = _('reviews')
+
+
+class ProductTag(models.Model):
+    """Тэги для каталога"""
+    tag = models.CharField(max_length=10)
+    product = models.ManyToManyField(Product, related_name='tags')
+
+    def __str__(self):
+        return self.tag
+
+    class Meta:
+        verbose_name = _('tag')
+        verbose_name_plural = _('tags')

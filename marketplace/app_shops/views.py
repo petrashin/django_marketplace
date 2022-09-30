@@ -5,6 +5,7 @@ from django.db.models import Count, F, Avg, Case, When, DecimalField
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, DetailView, ListView
 
+from app_goods.models import ProductTag
 from app_shops.filters import ProductFilter
 from app_shops.models import ShopProduct, Shop, Product
 from cart.forms import CartAddProductShopForm
@@ -72,15 +73,19 @@ class CatalogueView(AddToCartFormMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CatalogueView, self).get_context_data()
         page = self.request.GET.get('page', 1)
+        tag = self.request.GET.get('tag', None)
         get_sort_key = self.request.GET.get('sort', DEFAULT_OPTION)
         get_sort_direction = self.request.GET.get('type', DEFAULT_DIRECTION)
         sort_key = SORT_OPTIONS.get(get_sort_key, DEFAULT_OPTION)
         sort_direction = SORT_DIRECTIONS.get(get_sort_direction, DEFAULT_DIRECTION)
         f = ProductFilter(self.request.GET, queryset=self.get_queryset())
         sorted_qs = f.qs.annotate(count=sort_key).order_by(sort_direction + 'count')
+        if tag:
+            sorted_qs = sorted_qs.filter(tags__tag=tag)
         products = Paginator(sorted_qs, 8).get_page(page)
         context['filter'] = f
         context['products'] = products
+        context['tags'] = ProductTag.objects.all()[:6:]
 
         self.add_to_cart_form(products)
 
