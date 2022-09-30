@@ -76,7 +76,7 @@
                     <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
                   </div>
                   {% if not request.user.is_authenticated %}
-                  <div class="form-group"><a class="btn btn_muted Order-btnReg" href="#">Я уже зарегистрирован</a>
+                  <div class="form-group"><a class="btn btn_muted Order-btnReg" href="{% url 'login' %}">Я уже зарегистрирован</a>
                   </div>
                   {% endif %}
                 </div>
