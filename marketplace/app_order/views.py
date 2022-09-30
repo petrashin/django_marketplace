@@ -30,9 +30,7 @@ class OrderView(View):
 	@staticmethod
 	def get(request):
 		context = dict()
-		print(request.user)
 		print(request.session.session_key)
-		
 		cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
 			'product__discount').annotate(price_discount=ExpressionWrapper(
 			F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
@@ -121,7 +119,7 @@ class OrderPayment(View):
 	def get(self, request):
 		user = request.user
 		profile = Profile.objects.get(user_id=user.id)
-		order = Order.objects.filter(user=user).last()
+		order = Order.objects.filter(user=user).select_related('delivery', 'pay_method').last()
 		cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
 			'product__discount').annotate(price_discount=ExpressionWrapper(
 			F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
