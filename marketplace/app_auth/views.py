@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import PasswordResetForm
 from app_auth.forms import SignUpForm
@@ -25,11 +27,12 @@ class Logout(LogoutView):
 
 
 def register_view(request):
+    print(request)
+    print(request.POST)
     """Вьюшка регистрации пользователя"""
     if request.method == 'POST':
-        print(request.POST)
         if 'username' not in request.POST.keys():
-            data = request.POST.copy()
+            data = json.loads(request.body)
             data['username'] = 'username' + str(User.objects.all().order_by('-id')[0].id)
             form = SignUpForm(data=data)
         else:
@@ -45,7 +48,11 @@ def register_view(request):
             profile = Profile.objects.create(user=user, role=role, phone_number=phone_number, fullname=fullname)
             Image.objects.create(profile=profile)
             login(request, user)
+            print(request.session.session_key)
+            #return redirect('order')
             return redirect('home')
+        else:
+            print(form.errors)
     else:
         form = SignUpForm()
     return render(request, 'register.html', {'form': form})

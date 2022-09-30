@@ -1,5 +1,8 @@
+import decimal
+
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
@@ -21,7 +24,13 @@ class CartItemsListView(ListView):
                 context['total_cost'] = 0
                 context['old_total_cost'] = 0
                 for item in self.object_list:
-                    item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__name=item.shop).price
+                    item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__slug=item.shop).price
+                    if item.product.discount:
+                        if item.product.discount.discount_type.id == 2:
+                            item.price = _check_doublet_discount(self.object_list, item)
+                        if item.product.discount.discount_type.id == 3:
+                            item.price = _check_cart_discount(item)
+
                     context['total_cost'] += (item.quantity * item.price)
                     context['old_total_cost'] += (item.quantity * item.old_price)
                     item.shops_form = CartShopsForm(product=item.product, item_id=item.id)
@@ -29,7 +38,14 @@ class CartItemsListView(ListView):
                                                                                        'item_id': item.id})
             else:
                 item = self.object_list[0]
-                item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__name=item.shop).price
+                item.old_price = get_object_or_404(ShopProduct, product=item.product, shop__slug=item.shop).price
+
+                if item.product.discount:
+                    if item.product.discount.discount_type.id == 2:
+                        item.price = _check_doublet_discount(self.object_list, item)
+                    if item.product.discount.discount_type.id == 3:
+                        item.price = _check_cart_discount(item)
+
                 context['total_cost'] = item.price * item.quantity
                 context['old_total_cost'] = item.quantity * item.old_price
                 shops = CartItems().get_shops_for_cart_item(product=item.product)
@@ -42,7 +58,47 @@ class CartItemsListView(ListView):
         return context
 
     def get_queryset(self):
-        return CartItems().get_cart_items(request=self.request)
+        return CartItems().get_cart_items(request=self.request).order_by('-added_at')
+
+
+def _check_cart_discount(discount_cart_product):
+    if discount_cart_product.quantity >= discount_cart_product.product.discount.discount_amount:
+        discount = discount_cart_product.old_price * decimal.Decimal(
+            (discount_cart_product.product.discount.discount_value / 100))
+        new_price = round(discount_cart_product.old_price - discount, 2)
+        if discount_cart_product.price > new_price:
+            discount_cart_product.price = new_price
+            discount_cart_product.save()
+    else:
+        shop_product = discount_cart_product.get_shops_for_cart_item(discount_cart_product.product.id)[0]
+        discount_value = shop_product.get_discount()
+        discount = discount_cart_product.old_price * decimal.Decimal((discount_value / 100))
+        new_price = round(discount_cart_product.old_price - discount, 2)
+        discount_cart_product.price = new_price
+        discount_cart_product.save()
+    return discount_cart_product.price
+
+
+def _check_doublet_discount(cart_products, discount_cart_product):
+    accept_discount_products = []
+    for product in cart_products:
+        if discount_cart_product.product.discount == product.product.discount:
+            accept_discount_products.append(product)
+    if len(accept_discount_products) >= 2 and discount_cart_product.product.discount_doublet:
+        discount = discount_cart_product.old_price * decimal.Decimal(
+            (discount_cart_product.product.discount.discount_value / 100))
+        new_price = round(discount_cart_product.old_price - discount, 2)
+        if discount_cart_product.price > new_price:
+            discount_cart_product.price = new_price
+            discount_cart_product.save()
+    else:
+        shop_product = discount_cart_product.get_shops_for_cart_item(discount_cart_product.product.id)[0]
+        discount_value = shop_product.get_discount()
+        discount = discount_cart_product.old_price * decimal.Decimal((discount_value / 100))
+        new_price = round(discount_cart_product.old_price - discount, 2)
+        discount_cart_product.price = new_price
+        discount_cart_product.save()
+    return discount_cart_product.price
 
 
 @require_POST
@@ -59,7 +115,7 @@ def cart_add(request, slug):
                  shop=shop,
                  quantity=cd['quantity']
                  )
-        messages.success(request, f'{product.name} успешно добавлен в корзину!')
+        messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
     return redirect('product_detail', slug=slug)
 
 
@@ -71,12 +127,16 @@ def cart_shop_add(request, slug):
     form = CartAddProductShopForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
+        if cd['shop'] == '':
+            shop = None
+        else:
+            shop = cd['shop']
         cart.add(request=request,
                  product=product,
-                 shop=cd['shop'],
+                 shop=shop,
                  quantity=cd['quantity']
                  )
-        messages.success(request, f'{product.name} успешно добавлен в корзину!')
+        messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
     return redirect('shops')
 
 

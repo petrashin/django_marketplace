@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Shop, ShopProduct
+from modeltranslation.admin import TranslationAdmin
+from .models import Shop, ShopProduct, ShopImage
+
+
+class ShopImageInline(admin.TabularInline):
+    model = ShopImage
+    raw_id_fields = ['shop']
+    extra = 0
 
 
 class ShopProductInline(admin.TabularInline):
@@ -9,7 +16,7 @@ class ShopProductInline(admin.TabularInline):
 
 
 @admin.register(Shop)
-class ShopAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+class ShopAdmin(TranslationAdmin):
+    list_display = ['name', 'about', 'country', 'city', 'street']
     prepopulated_fields = {'slug': ('name',)}
-    inlines = (ShopProductInline, )
+    inlines = (ShopProductInline, ShopImageInline)
