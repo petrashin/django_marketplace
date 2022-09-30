@@ -114,7 +114,7 @@ class OrderPayment(View):
 			payment_amount += 200
 		elif order.delivery.id == 2:
 			payment_amount += 500
-		# handle_payment.delay(order.id, card_num, payment_amount)
+		handle_payment.delay(order.id, card_num, payment_amount)
 		return render(request, template_name='order/progressPayment.html')
 	
 	@transaction.atomic
@@ -129,7 +129,8 @@ class OrderPayment(View):
 			total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
 		if order.payment_status == 'Оплачено':
 			for product in cart:
-				shop = Shop.objects.get(name=product.shop)
+				#shop = Shop.objects.get(name=product.shop)
+				shop = Shop.objects.get(slug=product.shop)
 				shop_product = ShopProduct.objects.get(product=product.product, shop=shop.id)
 				if shop_product.quantity - product.quantity >= 0:
 					shop_product.quantity -= product.quantity
