@@ -32,7 +32,11 @@
                 {# Слайдер с диапазоном цены #}
                 <div class="form-group">
                   <div class="range Section-columnRange">
-                    {{ filter.form.price|attr:"data-min: 0"|attr:"data-max: 50000" }}
+                    <tr>
+                      <td>
+                        <input type="text" name="price" class="range-line" data-type="double" data-min={{ min_price }} data-max={{ max_price }} id="id_price">
+                      </td>
+                    </tr>
                     <div class="range-price">{% trans 'Price' %}:&#32;
                       <div class="rangePrice">
                       </div>

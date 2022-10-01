@@ -1,7 +1,8 @@
+import math
 import random
 
 from django.core.paginator import Paginator
-from django.db.models import Count, F, Avg, Case, When, DecimalField
+from django.db.models import Count, F, Avg, Case, When, DecimalField, Max, Min
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, DetailView, ListView
 
@@ -86,6 +87,10 @@ class CatalogueView(AddToCartFormMixin, ListView):
         context['filter'] = f
         context['products'] = products
         context['tags'] = ProductTag.objects.all()[:6:]
+        context['max_price'] = math.ceil(self.get_queryset().annotate(
+            avg_price=SORT_OPTIONS['price']).aggregate(Max('avg_price'))['avg_price__max'])
+        context['min_price'] = math.trunc(self.get_queryset().annotate(
+            avg_price=SORT_OPTIONS['price']).aggregate(Min('avg_price'))['avg_price__min'])
 
         self.add_to_cart_form(products)
 
