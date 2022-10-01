@@ -91,8 +91,6 @@ class CatalogueView(AddToCartFormMixin, ListView):
             avg_price=SORT_OPTIONS['price']).aggregate(Max('avg_price'))['avg_price__max'])
         context['min_price'] = math.trunc(self.get_queryset().annotate(
             avg_price=SORT_OPTIONS['price']).aggregate(Min('avg_price'))['avg_price__min'])
-        print(self.get_queryset().annotate(
-            avg_price=SORT_OPTIONS['price']).aggregate(Min('avg_price'))['avg_price__min'])
 
         self.add_to_cart_form(products)
 
