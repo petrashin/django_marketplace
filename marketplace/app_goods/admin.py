@@ -42,3 +42,8 @@ class ProductAdmin(TranslationAdmin):
 @admin.register(Reviews)
 class ReviewsAdmin(TranslationAdmin):
     list_display = ['product', 'text', 'user', 'published']
+
+
+@admin.register(ProductTag)
+class ProductTagAdmin(admin.ModelAdmin):
+    pass

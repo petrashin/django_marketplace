@@ -57,7 +57,8 @@
                 {# Не реализовано ввиду отсутствия поля #}
                 <div class="form-group">
                   <label class="toggle">
-                    <input type="checkbox"/><span class="toggle-box"></span><span class="toggle-text">{% trans 'With free shipping' %}</span>
+                    {{ filter.form.free_delivery }}
+                      <span class="toggle-box"></span><span class="toggle-text">{% trans 'With free shipping' %}</span>
                   </label>
                 </div>
                 <div class="form-group">
@@ -73,16 +74,18 @@
               <strong class="Section-title">{% trans 'Popular tags' %}
               </strong>
             </header>
+
+            {# тэги #}
             <div class="Section-columnContent">
               <div class="buttons">
-                  <a class="btn btn_default btn_sm" href="#">{% trans 'Video' %}</a>
-                  <a class="btn btn_default btn_sm" href="#">{% trans 'Development' %}</a>
-                  <a class="btn btn_default btn_sm" href="#">{% trans 'Gaming' %}</a>
-                  <a class="btn btn_default btn_sm" href="#">{% trans 'Asus' %}</a>
-                  <a class="btn btn_default btn_sm" href="#">{% trans 'Development' %}</a>
-                  <a class="btn btn_default btn_sm" href="#">{% trans 'Video' %}</a>
+                  {% for tag in tags %}
+                    <a class="btn btn_default btn_sm"
+                       href="{% product_tag tag.tag request.GET.urlencode %}">
+                        {{ tag.tag }}</a>
+                  {% endfor %}
               </div>
             </div>
+
           </div>
         </div>
         <div class="Section-content">
