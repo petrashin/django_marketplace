@@ -19,14 +19,6 @@ class ProductFilter(django_filters.FilterSet):
     )
     price = django_filters.CharFilter(
         method='price_range',
-        widget=forms.TextInput(
-            attrs={
-                'class': 'range-line',
-                'data-type': 'double',
-                'data-min': '0',
-                'data-max': '20000',
-            }
-        )
     )
     shop = django_filters.ModelChoiceFilter(
         method='filter_by_shop',
