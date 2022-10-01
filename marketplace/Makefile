@@ -1,18 +1,18 @@
 run:
-	py manage.py runserver
+	python manage.py runserver
 
 migrate:
-	py manage.py makemigrations
-	py manage.py migrate
+	python manage.py makemigrations
+	python manage.py migrate
 
 fixtures:
-	py manage.py loaddata default
-	py manage.py loaddata goods
-	py manage.py loaddata shops
-	py manage.py loaddata tags
+	python manage.py loaddata default
+	python manage.py loaddata goods
+	python manage.py loaddata shops
+	python manage.py loaddata tags
 
 admin:
-	py manage.py createsuperuser
+	python manage.py createsuperuser
 
 start:
 	make migrate
