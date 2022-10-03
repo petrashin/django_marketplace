@@ -8,7 +8,7 @@
           <h1 class="Middle-title">Оформление заказа
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="#">home</a>
+            <li class="breadcrumbs-item"><a href="index.html">home</a>
             </li>
             <li class="breadcrumbs-item breadcrumbs-item_current"><span>Оформление заказа</span>
             </li>
@@ -26,10 +26,20 @@
             </header>
             <div class="Section-columnContent">
               <ul class="menu menu_vt Order-navigate">
-                <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
-                </li>
-                <li class="menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
-                </li>
+                {% if request.path|slice:"-1:" != '2' %}
+                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
+                  </li>
+                {% else %}
+                  <li class="menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
+                  </li>
+                {%endif %}
+                {% if request.path|slice:"-1:" != '2' %}
+                  <li class="menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                  </li>
+                {% else %}
+                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                  </li>
+                {% endif %}
                 <li class="menu-item"><a class="menu-link" href="#step3">Шаг 3. Способ оплаты</a>
                 </li>
                 <li class="menu-item"><a class="menu-link" href="#step4">Шаг 4. Подтверждение заказа</a>
@@ -39,13 +49,13 @@
           </div>
         </div>
         <div class="Section-content">
-          {% if request.user.is_authenticated %}
           <form class="form" action="#" method="post">
-          {% else %}
-          <form class="form" action="order_register" method="post">
-          {% endif %}
             {% csrf_token %}
+            {% if request.path|slice:"-1:" != '2' %}
             <div class="Order-block Order-block_OPEN" id="step1">
+            {% else %}
+            <div class="Order-block" id="step1">
+            {% endif %}
               <header class="Section-header Section-header_sm">
                 <h2 class="Section-title">Шаг 1. Параметры пользователя
                 </h2>
@@ -55,17 +65,17 @@
                   <div class="form-group">
                     <label class="form-label" for="name">ФИО
                     </label>
-                    <input class="form-input" id="name" name="name" type="text" value="{{ profile.fullname }}" onkeyup="CopyFullname()" data-validate="require"/>
+                    <input class="form-input" id="name" name="name" type="text" value="{{ profile.fullname }}" data-validate="require"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="phone">Телефон
                     </label>
-                    <input class="form-input" id="phone" name="phone" type="text" value="{{ profile.phone_number }}" onkeyup="CopyPhoneNumber()" data-validate="require"/>
+                    <input class="form-input" id="phone" name="phone" type="text" value="{{ profile.phone_number }}" data-validate="require"/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="mail">E-mail
                     </label>
-                    <input class="form-input" id="mail" name="mail" type="text" value="{{ user.email }}" onkeyup="CopyEmail()" data-validate="require"/>
+                    <input class="form-input" id="mail" name="mail" type="text" value="{{ user.email }}" data-validate="require"/>
                   </div>
                 </div>
                 <div class="row-block">
@@ -79,21 +89,16 @@
                     </label>
                     <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
                   </div>
-                  {% if not request.user.is_authenticated %}
-                  <div class="form-group"><a class="btn btn_muted Order-btnReg" href="auth/login">Я уже зарегистрирован</a>
-                  </div>
-                  {% endif %}
                 </div>
               </div>
-              {% if request.user.is_authenticated %}
               <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">Дальше</a>
               </div>
-              {% else %}
-              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2"><button class="btn btn_success" type="submit">Дальше</button></a>
-              {% endif %}
-              </div>
             </div>
+            {% if request.path|slice:"-1:" != '2' %}
             <div class="Order-block" id="step2">
+            {% else %}
+            <div class="Order-block Order-block_OPEN" id="step2">
+            {% endif %}
               <header class="Section-header Section-header_sm">
                 <h2 class="Section-title">Шаг 2. Способ доставки
                 </h2>
@@ -101,12 +106,12 @@
               <div class="form-group">
                 <div>
                   <label class="toggle">
-                    <input id="delivery_ordinary" type="radio" name="delivery" value="ordinary" checked="checked"/><span class="toggle-box"></span><span class="toggle-text">Обычная доставка</span>
+                    <input id="delivery_ordinary" type="radio" name="delivery" value="1" checked="checked"/><span class="toggle-box"></span><span class="toggle-text">Обычная доставка</span>
                   </label>
                 </div>
                 <div>
                   <label class="toggle">
-                    <input id="delivery_express" type="radio" name="delivery" value="express"/><span class="toggle-box"></span><span class="toggle-text">Экспресс доставка</span>
+                    <input id="delivery_express" type="radio" name="delivery" value="2"/><span class="toggle-box"></span><span class="toggle-text">Экспресс доставка</span>
                   </label>
                 </div>
               </div>
@@ -131,12 +136,12 @@
               <div class="form-group">
                 <div>
                   <label class="toggle">
-                    <input id="pay_online" type="radio" name="pay" value="online" checked="checked"/><span class="toggle-box"></span><span class="toggle-text">Онлайн картой</span>
+                    <input id="pay_online" type="radio" name="pay" value="1" checked="checked"/><span class="toggle-box"></span><span class="toggle-text">Онлайн картой</span>
                   </label>
                 </div>
                 <div>
                   <label class="toggle">
-                    <input id="pay_someone" type="radio" name="pay" value="someone"/><span class="toggle-box"></span><span class="toggle-text">Онлайн со случайного чужого счета</span>
+                    <input id="pay_someone" type="radio" name="pay" value="2"/><span class="toggle-box"></span><span class="toggle-text">Онлайн со случайного чужого счета</span>
                   </label>
                 </div>
               </div>
@@ -156,19 +161,19 @@
                       <div class="Order-info">
                         <div class="Order-infoType">ФИО:
                         </div>
-                        <div id="name_info" class="Order-infoContent">{{ profile.fullname }}
+                        <div class="Order-infoContent">{{ profile.phone_number }}
                         </div>
                       </div>
                       <div class="Order-info">
                         <div class="Order-infoType">Телефон:
                         </div>
-                        <div id="phone_info" class="Order-infoContent">{{ profile.phone_number }}
+                        <div class="Order-infoContent">{{ profile.phone_number }}
                         </div>
                       </div>
                       <div class="Order-info">
                         <div class="Order-infoType">E-mail:
                         </div>
-                        <div id="mail_info" class="Order-infoContent">{{ user.email }}
+                        <div class="Order-infoContent">{{ user.email }}
                         </div>
                       </div>
                     </div>
@@ -237,8 +242,7 @@
                     </div>
                   </div>
                   {% endfor %}
-
-                <div class="Cart-product">
+                  <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_pict">
                         <br>
@@ -257,12 +261,12 @@
                     </div>
                   </div>
 
-                  <div class="Cart-total" style="justify-content: space-between;">
-                    <div class="Cart-block Cart-block_total" style="margin-right: 0;">
+                  <div class="Cart-total">
+                    <div class="Cart-block Cart-block_total">
                       <strong class="Cart-title">Итого:</strong>
                       {% if total_sum|floatformat:2 != total_sum_with_discount|floatformat:2 %}
-                      <span id="total_sum_with_discount" class="Cart-price">{{ total_sum_with_discount|floatformat:2 }}$</span>
-                      <span class="Cart-price_old">{{ total_sum|floatformat:2 }}$</span>
+                      <span id="total_sum_with_discount" class="Cart-price">{{ total_cost_with_discount|floatformat:2 }}</span>
+                      <span class="Cart-price_old">{{ total_cost|floatformat:2 }}</span>
                       {% else %}
                       <span id="total_sum" class="Cart-price">{{ total_sum|floatformat:2 }}$</span>
                       {% endif %}
@@ -292,81 +296,63 @@
     </div>
   </div>
 {% endblock %}
-
 {% block order_scripts %}
-{#{% if anchor %}#}
-{#<script type='text/javascript'>#}
-{#const step1 = document.getElementById("step1");#}
-{#const step2 = document.getElementById("step2")#}
-{#step1.classList.remove("Order-block_OPEN");#}
-{#step2.classList.add("Order-block_OPEN");#}
-{#</script>#}
-{#{% endif %}#}
-<script>
-  const delivery_ordinary = document.getElementById("delivery_ordinary");
-  const delivery_express = document.getElementById("delivery_express");
-  const total_sum = parseFloat({{ total_sum }})
-  const q_shops = {{ q_shops }}
+  <script>
+    const delivery_ordinary = document.getElementById("delivery_ordinary");
+    const delivery_express = document.getElementById("delivery_express");
+    const total_sum = parseFloat({{ total_sum }})
+    const q_shops = {{ q_shops }}
 
-  DeliveryCoast(total_sum, q_shops);
-  function DeliveryCoast(total_sum, q_shops) {
-      let delivery_coast;
-      if (total_sum < 2000 || q_shops > 1) {
-          document.getElementById("delivery_coast").innerHTML = "200,00$"
-          delivery_coast = 200.00
-          TotalSum(delivery_coast)
-          return 200.00
-      } else {
-          document.getElementById("delivery_coast").innerHTML = "0,00$"
-          delivery_coast = 0.00
-          TotalSum(delivery_coast)
-          return 0.00
-      }
-  }
+    DeliveryCoast(total_sum, q_shops);
+    function DeliveryCoast(total_sum, q_shops) {
+        let delivery_coast;
+        if (total_sum < 2000 || q_shops > 1) {
+            document.getElementById("delivery_coast").innerHTML = "200,00$"
+            delivery_coast = 200.00
+            TotalSum(delivery_coast)
+            return 200.00
+        } else {
+            document.getElementById("delivery_coast").innerHTML = "0,00$"
+            delivery_coast = 0.00
+            TotalSum(delivery_coast)
+            return 0.00
+        }
+    }
+    delivery_ordinary.addEventListener('click', function () {
+      document.getElementById("delivery_info").innerHTML = "Обычная доставка"
+      let delivery_coast = DeliveryCoast()
+      TotalSum(delivery_coast)
+    });
+    delivery_express.addEventListener('click', function () {
+      document.getElementById("delivery_info").innerHTML = "Экспресс доставка"
+      document.getElementById("delivery_coast").innerHTML = "500,00$"
+      const delivery_coast = 500.00;
+      TotalSum(delivery_coast)
+    });
 
-  delivery_ordinary.addEventListener('click', function () {
-    document.getElementById("delivery_info").innerHTML = "Обычная доставка"
-    let delivery_coast = DeliveryCoast()
-    TotalSum(delivery_coast)
-  });
-  delivery_express.addEventListener('click', function () {
-    document.getElementById("delivery_info").innerHTML = "Экспресс доставка"
-    document.getElementById("delivery_coast").innerHTML = "500,00$"
-    const delivery_coast = 500.00;
-    TotalSum(delivery_coast)
-  });
+    function TotalSum(delivery_coast) {
+        let total_sum = parseFloat({{ total_sum }});
+        const total_sum_with_discount = parseFloat({{ total_sum_with_discount }});
+        if (total_sum_with_discount !== total_sum) {
+            total_sum = total_sum_with_discount + delivery_coast;
+            document.getElementById("total_sum_with_discount").innerHTML = String(total_sum).replace('.', ',') + "$"
+        } else {
+            total_sum = total_sum + delivery_coast;
+            document.getElementById("total_sum").innerHTML = String(total_sum).replace('.', ',') + "$"
+        }
+    }
 
-  function TotalSum(delivery_coast) {
-      let total_sum = parseFloat({{ total_sum }});
-      const total_sum_with_discount = parseFloat({{ total_sum_with_discount }});
-      if (total_sum_with_discount !== total_sum) {
-          total_sum = total_sum_with_discount + delivery_coast;
-          document.getElementById("total_sum_with_discount").innerHTML = String(total_sum).replace('.', ',') + "$"
-      } else {
-          total_sum = total_sum + delivery_coast;
-          document.getElementById("total_sum").innerHTML = String(total_sum).replace('.', ',') + "$"
-      }
-  }
-  const input_pay_online = document.getElementById("pay_online");
-  const input_pay_someone = document.getElementById("pay_someone");
-  input_pay_online.addEventListener('click', function () {
-    document.getElementById("pay_info").innerHTML = "Онлайн картой"
-  });
-  input_pay_someone.addEventListener('click', function () {
-    document.getElementById("pay_info").innerHTML = "Онлайн со случайного чужого счета"
-  });
+    const input_pay_online = document.getElementById("pay_online");
+    const input_pay_someone = document.getElementById("pay_someone");
 
-  function CopyFullname(){document.getElementById("name_info").innerHTML = document.getElementById("name").value;
-  }
-  function CopyPhoneNumber(){document.getElementById("phone_info").innerHTML = document.getElementById("phone").value;
-  }
-  function CopyEmail(){document.getElementById("mail_info").innerHTML = document.getElementById("mail").value;
-  }
-  function CopyCity() {
-      document.getElementById("city_info").innerHTML = document.getElementById("city").value;
-  }
-  function CopyAddress() {
-      document.getElementById("address_info").innerHTML = document.getElementById("address").value;
-  }
-</script>
+    input_pay_online.addEventListener('click', function () {
+      document.getElementById("pay_info").innerHTML = "Онлайн картой"
+    });
+    input_pay_someone.addEventListener('click', function () {
+      document.getElementById("pay_info").innerHTML = "Онлайн со случайного чужого счета"
+    });
+
+    function CopyCity() {document.getElementById("city_info").innerHTML = document.getElementById("city").value;}
+    function CopyAddress() {document.getElementById("address_info").innerHTML = document.getElementById("address").value;}
+  </script>
 {% endblock %}

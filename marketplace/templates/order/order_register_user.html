@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="Section-content">
-          <form class="form" action="order_register" method="post">
+          <form class="form" action="{% url 'register' %}" method="post">
             {% csrf_token %}
             <div class="Order-block Order-block_OPEN" id="step1">
               <header class="Section-header Section-header_sm">
@@ -48,11 +48,6 @@
               </header>
               <div class="row">
                 <div class="row-block">
-{#                  <div class="form-group">#}
-{#                    <label class="form-label" for="username">username#}
-{#                    </label>#}
-{#                    <input class="form-input" id="name" name="username" type="text" required/>#}
-{#                  </div>#}
                   <div class="form-group">
                     <label class="form-label" for="fullname">ФИО
                     </label>
@@ -73,17 +68,15 @@
                   <div class="form-group">
                     <label class="form-label" for="password">Пароль - мин. 8 символов, мин. 1 буква и 1 цифра:
                     </label>
-                    <input class="form-input" id="password" name="password1" type="password" placeholder="Введите пароль" minlength="8" required/>
+                    <input class="form-input" id="password" name="password1" type="password" placeholder="Введите пароль" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" required/>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="passwordReply">Подтверждение пароля
                     </label>
-                    <input class="form-input" id="passwordReply" name="password2" type="password" placeholder="Введите пароль повторно" minlength="8" required/>
+                    <input class="form-input" id="passwordReply" name="password2" type="password" placeholder="Введите пароль повторно" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" required/>
                   </div>
-
                   <div class="form-group"><a class="btn btn_muted Order-btnReg" href="{% url 'login' %}">Я уже зарегистрирован</a>
                   </div>
-
                 </div>
               </div>
               <div class="Order-footer"><button class="btn btn_success" type="submit">Дальше</button>
@@ -94,10 +87,4 @@
       </div>
     </div>
   </div>
-{% endblock %}
-
-{% block order_scripts %}
-<script>
-
-</script>
 {% endblock %}

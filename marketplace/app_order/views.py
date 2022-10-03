@@ -22,21 +22,22 @@ from decimal import *
 from app_auth.forms import SignUpForm
 from app_auth.views import register_view
 from django.contrib import messages
-import json
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class OrderView(View):
+class OrderView(LoginRequiredMixin, View):
+	
+	login_url = reverse_lazy('register')
 	
 	@staticmethod
-	def get(request):
+	def get(request, **kwargs):
 		context = dict()
-		print(request.session.session_key)
 		cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
 			'product__discount').annotate(price_discount=ExpressionWrapper(
 			F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
 			output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
 			total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
-		
 		q_shops = CartItems.objects.filter(session_id=request.session.session_key).aggregate(
 			q_shops=Count('shop', distinct=True))
 		
@@ -65,12 +66,10 @@ class OrderView(View):
 				profile = Profile.objects.create(user=user, phone_number='', role=role)
 			context['profile'] = profile
 			
-		return render(request, template_name='order/order1.html', context=context)
-		#return render(request, template_name='order/order_register_user.html', context=context)
+		return render(request, template_name='order/order.html', context=context)
 	
 	@staticmethod
 	def post(request):
-		print(request.session.session_key)
 		data = request.POST
 		comment = data['comment']
 		email = data['mail']
@@ -92,8 +91,8 @@ class OrderView(View):
 		if pay_method.id == 1:
 			return render(request, template_name='order/payment.html', )
 		return render(request, template_name='order/payment_someone.html')
-
-
+	
+	
 class OrderPayment(View):
 	
 	def post(self, request):
