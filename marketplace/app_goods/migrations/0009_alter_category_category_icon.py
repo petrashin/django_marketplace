@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app_goods', '0008_alter_category_category_icon'),
+        ('app_goods', '0008_auto_20220926_1200'),
     ]
 
     operations = [

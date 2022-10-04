@@ -1,0 +1,92 @@
+[
+{
+  "model": "app_goods.producttag",
+  "pk": 1,
+  "fields": {
+    "tag": "fridges",
+    "product": [
+      10, 11, 12
+    ]
+  }
+},
+{
+  "model": "app_goods.producttag",
+  "pk": 2,
+  "fields": {
+    "tag": "office",
+    "product": [
+      1, 2, 4
+    ]
+  }
+},
+{
+  "model": "app_goods.producttag",
+  "pk": 3,
+  "fields": {
+    "tag": "gaming",
+    "product": [
+      3, 5, 6
+    ]
+  }
+},
+{
+  "model": "app_goods.producttag",
+  "pk": 4,
+  "fields": {
+    "tag": "mobile",
+    "product": [
+      7, 8, 9
+    ]
+  }
+},
+{
+  "model": "app_goods.producttag",
+  "pk": 5,
+  "fields": {
+    "tag": "clothes",
+    "product": [
+      19, 20, 21, 22, 23, 24, 25, 26, 27
+    ]
+  }
+},
+{
+  "model": "app_goods.producttag",
+  "pk": 6,
+  "fields": {
+    "tag": "washers",
+    "product": [
+      13, 14, 15
+    ]
+  }
+},
+{
+  "model": "app_goods.producttag",
+  "pk": 7,
+  "fields": {
+    "tag": "shirts",
+    "product": [
+      19, 20, 21, 22, 23, 24
+    ]
+  }
+},
+{
+  "model": "app_goods.producttag",
+  "pk": 8,
+  "fields": {
+    "tag": "tvs",
+    "product": [
+      16, 17, 18
+    ]
+  }
+},
+{
+  "model": "app_goods.producttag",
+  "pk": 9,
+  "fields": {
+    "tag": "jeans",
+    "product": [
+      25, 26, 27
+    ]
+  }
+}
+]
