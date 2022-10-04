@@ -33,14 +33,23 @@ class OrderView(LoginRequiredMixin, View):
 	@staticmethod
 	def get(request, **kwargs):
 		context = dict()
-		cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
+		
+		cart = CartItems.objects.filter(user=request.user.id).select_related(
 			'product__discount').annotate(price_discount=ExpressionWrapper(
 			F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
 			output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
 			total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
-		q_shops = CartItems.objects.filter(session_id=request.session.session_key).aggregate(
+		q_shops = CartItems.objects.filter(session_id=request.user.id).aggregate(
 			q_shops=Count('shop', distinct=True))
-		
+			
+		if kwargs.get('pk') == '2':
+			cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
+				'product__discount').annotate(price_discount=ExpressionWrapper(
+				F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
+				output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
+				total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
+			q_shops = CartItems.objects.filter(session_id=request.session.session_key).aggregate(
+				q_shops=Count('shop', distinct=True))
 		total_sum = 0
 		total_sum_with_discount = 0
 		q = Decimal(10) ** -2
