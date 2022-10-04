@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import OrderCommentForm
+from .forms import ProfileForm, DeliveryForm, PayMethodForm, OrderCommentForm
 from .models import Order, Delivery, PayMethod
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
-from app_users.models import Profile, Role
+from app_users.models import Profile
 from app_goods.models import Product
-from app_shops.models import Shop, ShopProduct
+from django.db import transaction
 from cart.models import CartItems
 from django.conf import settings
 from custom_admin.models import DefaultSettings
