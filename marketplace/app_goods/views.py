@@ -58,6 +58,7 @@ class ProductDetailView(FormMixin, DetailView):
         return context
 
 
+
 class AddReview(View):
     """ Отзыв """
 
