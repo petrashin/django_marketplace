@@ -70,7 +70,7 @@ class OrderView(LoginRequiredMixin, View):
 		return render(request, template_name='order/order.html', context=context)
 	
 	@staticmethod
-	def post(request):
+	def post(request, **kwargs):
 		data = request.POST
 		comment = data['comment']
 		email = data['mail']

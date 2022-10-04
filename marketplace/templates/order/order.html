@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class="Section-content">
-          <form class="form" action="#" method="post">
+          <form class="form" action="{% url 'order' %}" method="post">
             {% csrf_token %}
             {% if request.path|slice:"-1:" != '2' %}
             <div class="Order-block Order-block_OPEN" id="step1">

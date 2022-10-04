@@ -6,9 +6,9 @@ migrate:
 	py manage.py migrate
 
 fixtures:
+	py manage.py loaddata default
 	py manage.py loaddata goods
 	py manage.py loaddata shops
-	python manage.py loaddata tags
 
 admin:
 	py manage.py createsuperuser

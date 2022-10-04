@@ -10,6 +10,7 @@ class PayStatus(models.Model):
         ('3', 'Ошибка оплаты - time_out'),
         ('4', 'Ошибка оплаты - err 35653'),
         ('5', 'Ошибка оплаты - err 999'),
+        ('6', 'Ошибка - недостаточное кол-во товара')
     )
 
     title = models.CharField(max_length=50, verbose_name='Статусы оплаты', choices=PAY_STATUS, blank=False,
