@@ -1,33 +1,25 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views import View
-from .forms import ProfileForm, DeliveryForm, PayMethodForm, OrderCommentForm
+from .forms import OrderCommentForm
 from .models import Order, Delivery, PayMethod
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
 from app_users.models import Profile, Role
 from app_goods.models import Product
 from django.db import transaction
 from cart.models import CartItems
-from django.conf import settings
 from custom_admin.models import DefaultSettings
-from django.db.models import Count, F, Value, Subquery, DecimalField, Exists, ExpressionWrapper, FloatField, Sum
+from django.db.models import Count, F, ExpressionWrapper, FloatField, Sum
 from django.db import transaction
-from decimal import Decimal
+from decimal import *
 from app_payment.tasks import handle_payment
 from custom_admin.views import logger
 from app_payment.models import PayStatus
-from decimal import *
-from app_auth.forms import SignUpForm
-from app_auth.views import register_view
-from django.contrib import messages
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class OrderView(LoginRequiredMixin, View):
-	
 	login_url = reverse_lazy('register')
 	
 	@staticmethod
@@ -41,7 +33,7 @@ class OrderView(LoginRequiredMixin, View):
 			total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
 		q_shops = CartItems.objects.filter(session_id=request.user.id).aggregate(
 			q_shops=Count('shop', distinct=True))
-			
+		
 		if kwargs.get('pk') == '2':
 			cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
 				'product__discount').annotate(price_discount=ExpressionWrapper(
@@ -74,7 +66,7 @@ class OrderView(LoginRequiredMixin, View):
 				role = Role.objects.get(name='покупатель')
 				profile = Profile.objects.create(user=user, phone_number='', role=role)
 			context['profile'] = profile
-			
+		
 		return render(request, template_name='order/order.html', context=context)
 	
 	@staticmethod
@@ -91,7 +83,7 @@ class OrderView(LoginRequiredMixin, View):
 		products = CartItems.objects.filter(session_id=request.session.session_key).select_related('product')
 		order_goods = {}
 		for product in products:
-			if not product.shop in order_goods.keys():
+			if product.shop not in order_goods.keys():
 				order_goods[product.shop] = {}
 			order_goods[product.shop][product.product_id] = product.quantity
 		Order.objects.create(user=user, order_goods=order_goods, delivery=delivery, city=city,
@@ -100,11 +92,12 @@ class OrderView(LoginRequiredMixin, View):
 		if pay_method.id == 1:
 			return render(request, template_name='order/payment.html', )
 		return render(request, template_name='order/payment_someone.html')
-	
-	
+
+
 class OrderPayment(View):
 	
-	def post(self, request):
+	@staticmethod
+	def post(request):
 		card_num = request.POST['numero1'].replace(' ', '')
 		user = request.user
 		profile = Profile.objects.get(user_id=user.id)
@@ -128,14 +121,17 @@ class OrderPayment(View):
 		user = request.user
 		profile = Profile.objects.get(user_id=user.id)
 		order = Order.objects.filter(user=user).select_related('delivery', 'pay_method').last()
-		cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
-			'product__discount').annotate(price_discount=ExpressionWrapper(
+		expression_wrapper = ExpressionWrapper(
 			F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
-			output_field=FloatField()), total_sum=Sum(F('price') * F('quantity')),
-			total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
+			output_field=FloatField())
+		cart = CartItems.objects.filter(session_id=request.session.session_key). \
+			select_related('product__discount'). \
+			annotate(price_discount=expression_wrapper,
+		             total_sum=Sum(F('price') * F('quantity')),
+		             total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
 		if order.payment_status == 'Оплачено':
 			for product in cart:
-				#shop = Shop.objects.get(name=product.shop)
+				# shop = Shop.objects.get(name=product.shop)
 				shop = Shop.objects.get(slug=product.shop)
 				shop_product = ShopProduct.objects.get(product=product.product, shop=shop.id)
 				if shop_product.quantity - product.quantity >= 0:
@@ -173,7 +169,8 @@ class OrderPayment(View):
 
 class OrderRepeat(View):
 	
-	def get(self, request):
+	@staticmethod
+	def get(request):
 		order = Order.objects.filter(user=request.user).last()
 		if order.pay_method_id == 1:
 			return render(request, template_name='order/payment.html', )
