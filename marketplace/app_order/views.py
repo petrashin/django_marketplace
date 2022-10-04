@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from .forms import ProfileForm, DeliveryForm, PayMethodForm, OrderCommentForm
+from .forms import OrderCommentForm
 from .models import Order, Delivery, PayMethod
 from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest
