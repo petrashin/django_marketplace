@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'marketplace.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": 'django.db.backends.postgresql_psycopg2',
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
         "NAME": os.environ.get("DATABASE_NAME", BASE_DIR / "db.sqlite3"),
         "USER": os.environ.get("DATABASE_USER", "user"),
         "PASSWORD": os.environ.get("DATABASE_PASSWORD", "password"),
