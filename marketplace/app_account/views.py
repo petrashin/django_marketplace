@@ -2,7 +2,7 @@ import re
 from django.shortcuts import render
 from app_users.models import Profile, Image, Role, ViewsHistory
 from app_order.models import Order
-from app_shops.models import ShopProduct
+from app_shops.models import ShopProduct, Shop
 from django.views import View
 from django.views import generic
 from django.contrib.auth.models import User
@@ -196,6 +196,19 @@ class OrderDetailView(generic.DetailView):
             new_product = ShopProduct.objects.get(product_id=product_id)
             products[new_product] = quantity
         context['products'] = products
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        order = Order.objects.get(pk=self.object.id)
+        products = {}
+        for shop in order.order_goods:
+            #shop_id = Shop.objects.get(name=shop)
+            shop_id = Shop.objects.get(slug=shop)
+            for product_id, quantity in order.order_goods[shop].items():
+                new_product = ShopProduct.objects.get(product_id=product_id, shop_id=shop_id)
+                products[new_product] = quantity
+            context['products'] = products
         return context
 
 
