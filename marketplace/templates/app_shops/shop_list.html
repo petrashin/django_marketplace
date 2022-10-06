@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+{#      Shop Products#}
+    <div class="Section-content">
+        <header class="Section-header">
+            <h2 class="Section-title">{% trans 'Shops' %}
+            </h2>
+        </header>
+          <div class="Cards">
+          {% if products %}
+            {% for item in products %}
+            <div class="Card">
+              {% if item.product.product_images.main_image %}
+              <a class="Cart-pict" href="{% url 'product_detail' item.product.slug %}">
+                <img class="Cart-img" src="{{ item.product.product_images.main_image.url }}" alt="card.jpg"/></a>
+              {% else %}
+              <a class="Cart-pict" href="{% url 'product_detail' item.product.slug %}">
+                <img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
+              {% endif %}
+              <div class="Card-content">
+                <strong class="Card-title"><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
+                </strong>
+                <strong class="Card-title"><a href="{% url 'shop_detail' item.shop.slug %}">{{ item.shop.name }}</a>
+                </strong>
+                <div class="Card-description">
+                  <div class="Card-cost">
+                    {% if item.product.discount.discount_value > 0 %}
+                    <span class="Card-priceOld">{{ item.price }} {% trans 'rub' %}.</span>
+                    {% endif %}
+                    <span class="Card-price">{{ item.get_discounted_price }} {% trans 'rub' %}.</span>
+                  </div>
+                  {% for cat in item.product.category.all %}
+                  <div class="Card-category">{{ cat.name }}
+                  </div>
+                  {% endfor %}
+                  <div class="Card-hover">
+                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
+                      <form action="{% url 'cart_shop_add' item.product.slug %}" method="post">
+                          {% csrf_token %}
+                          {{ item.add_to_cart_form }}
+                          <button type="submit" class="Card-btn buy">
+                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
+                          </button>
+                      </form>
+                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
+                  </div>
+                </div>
+              </div>
+              {% if item.product.discount.discount_value > 0 %}
+              <div class="Card-sale">-{{ item.product.discount.discount_value }}
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+              {% else %}
+                {% include 'empty_category.html' %}
+          {% endif %}
+          </div>
+        </div>
+{% endblock %}
