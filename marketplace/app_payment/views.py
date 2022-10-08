@@ -28,7 +28,6 @@ class OrderPayment(APIView):
     def post(self, request):
         serializer = PostBillingSerializer(data=request.query_params)
         if serializer.is_valid():
-
             card = request.query_params['card_num']
             if int(card) % 2 == 0 and card[-1] != '0':
                 serializer.save(payment_status=PayStatus.objects.get(id=2))

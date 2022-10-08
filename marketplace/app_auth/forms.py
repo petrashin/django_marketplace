@@ -18,7 +18,6 @@ class SignUpForm(UserCreationForm):
         fields = ("username", "email", "phone", "fullname")
 
     def clean(self):
-       
        email = self.cleaned_data.get('email')
        username = self.cleaned_data.get('username')
        phone = self.cleaned_data.get('phone')

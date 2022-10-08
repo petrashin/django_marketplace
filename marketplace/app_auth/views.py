@@ -1,5 +1,4 @@
 import copy
-import json
 import time
 
 from django.contrib.auth import authenticate, login
@@ -12,7 +11,7 @@ from django.core.mail import BadHeaderError, send_mail
 from django.db.models.query_utils import Q
 from django.http import HttpResponse
 from cart.models import CartItems
-from django.shortcuts import redirect, render, reverse
+from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode

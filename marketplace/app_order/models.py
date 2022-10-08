@@ -55,7 +55,6 @@ class Order(models.Model):
         total_cost = 0
         for shop in self.order_goods:
             for key, value in self.order_goods[shop].items():
-                #shop_id = Shop.objects.get(name=shop).id
                 shop_id = Shop.objects.get(slug=shop).id
                 product = ShopProduct.objects.get(product_id=key, shop=shop_id)
                 total_cost += product.price * value
@@ -66,7 +65,6 @@ class Order(models.Model):
         total_cost = 0
         for shop in self.order_goods:
             for key, value in self.order_goods[shop].items():
-                #shop_id = Shop.objects.get(name=shop).id
                 shop_id = Shop.objects.get(slug=shop).id
                 product = ShopProduct.objects.get(product_id=key, shop=shop_id)
                 total_cost += product.get_discounted_price() * value

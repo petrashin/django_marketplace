@@ -39,18 +39,6 @@ class CartItems(models.Model):
 
     published = models.BooleanField(default=True, verbose_name='опубликовать')
 
-    published = models.BooleanField(default=True, verbose_name='опубликовать')
-
-    published = models.BooleanField(default=True, verbose_name='опубликовать')
-
-    published = models.BooleanField(default=True, verbose_name='опубликовать')
-
-    published = models.BooleanField(default=True, verbose_name='опубликовать')
-
-    published = models.BooleanField(default=True, verbose_name='опубликовать')
-
-    published = models.BooleanField(default=True, verbose_name='опубликовать')
-
     def get_session_id(self, request):
         """ Получение id корзины из cookies для пользователя """
         self.session = request.session
@@ -211,4 +199,3 @@ class CartItems(models.Model):
         ordering = ('added_at',)
         verbose_name = _('cart item')
         verbose_name_plural = _('cart items')
-
