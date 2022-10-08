@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='category',
             name='category_icon',
-            field=models.FileField(default='/Users/shaikhutdinovdinar/PycharmProjects/python_django_group_flow11/marketplace/media/icons/categories/test_category_icon.jpg', upload_to='icons/categories/', verbose_name='иконка категории'),
+            field=models.FileField(default='/marketplace/media/icons/categories/test_category_icon.jpg', upload_to='icons/categories/', verbose_name='иконка категории'),
         ),
     ]
