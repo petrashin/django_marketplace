@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest
 from app_users.models import Profile, Role
 from app_goods.models import Product
+from app_shops.models import Shop, ShopProduct
 from django.db import transaction
 from cart.models import CartItems
 from custom_admin.models import DefaultSettings
