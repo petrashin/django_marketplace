@@ -1,3 +1,6 @@
+import copy
+import time
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import PasswordResetForm
 from app_auth.forms import SignUpForm
@@ -7,11 +10,13 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import BadHeaderError, send_mail
 from django.db.models.query_utils import Q
 from django.http import HttpResponse
+from cart.models import CartItems
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from app_users.models import Profile, Role, Image
+from django.http import HttpResponseBadRequest
 
 
 class Login(LoginView):
@@ -27,7 +32,12 @@ class Logout(LogoutView):
 def register_view(request):
     """Вьюшка регистрации пользователя"""
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        if 'username' not in request.POST.keys():
+            data = copy.deepcopy(request.POST)
+            data['username'] = 'username' + str(User.objects.all().order_by('-id')[0].id)
+            form = SignUpForm(data=data)
+        else:
+            form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -38,11 +48,28 @@ def register_view(request):
             role = Role.objects.get_or_create(name='Пользователь')[0]
             profile = Profile.objects.create(user=user, role=role, phone_number=phone_number, fullname=fullname)
             Image.objects.create(profile=profile)
+            try:
+                cart = CartItems.objects.get(session_id=request.session.session_key)
+            except Exception as ex:
+                cart = None
+
             login(request, user)
+            time.sleep(.5)
+
+            if cart:
+                cart.session_id = request.session.session_key
+                cart.save()
+            if 'username' not in request.POST.keys():
+                return redirect('order', pk=2)
             return redirect('home')
+        else:
+            print(form.errors)
+            return HttpResponseBadRequest(f'400 ошибка - {form.errors}')
+    elif 'next' in request.GET.keys():
+        return render(request, 'order/order_register_user.html')
     else:
         form = SignUpForm()
-    return render(request, 'register.html', {'form': form})
+        return render(request, 'register.html', {'form': form})
 
 
 def password_reset_request(request):

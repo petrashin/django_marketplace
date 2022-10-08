@@ -1,169 +1,178 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views import View
-from .forms import ProfileForm, DeliveryForm, PayMethodForm, OrderCommentForm
+from .forms import OrderCommentForm
 from .models import Order, Delivery, PayMethod
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
-from app_users.models import Profile
+from app_users.models import Profile, Role
 from app_goods.models import Product
+from app_shops.models import Shop, ShopProduct
 from django.db import transaction
 from cart.models import CartItems
-from django.conf import settings
-
+from custom_admin.models import DefaultSettings
+from django.db.models import Count, F, ExpressionWrapper, FloatField, Sum
+from django.db import transaction
+from decimal import *
 from app_payment.tasks import handle_payment
+from custom_admin.views import logger
+from app_payment.models import PayStatus
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class OrderUserView(View):
+class OrderView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('register')
 
     @staticmethod
-    def get(request):
-        titles = Delivery.objects.values_list('title', flat=True)
-        if 'Доставка' not in titles:
-            Delivery.objects.create(title='Доставка')
-        if 'Экспресс-Доставка' not in titles:
-            Delivery.objects.create(title='Экспресс-Доставка')
-        pay_methods = PayMethod.objects.values_list('title', flat=True)
-        if 'Онлайн картой' not in pay_methods:
-            PayMethod.objects.create(title='Онлайн картой')
-        if 'Онлайн со случайного чужого счёта' not in pay_methods:
-            PayMethod.objects.create(title='Онлайн со случайного чужого счёта')
+    def get(request, **kwargs):
+        context = dict()
 
-        user_form = ProfileForm()
-        profile_form = ProfileForm()
+        cart = CartItems.objects.filter(user=request.user.id).select_related(
+            'product__discount').annotate(price_discount=ExpressionWrapper(
+            F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
+            output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
+            total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
+        q_shops = CartItems.objects.filter(session_id=request.user.id).aggregate(
+            q_shops=Count('shop', distinct=True))
+
+        if kwargs.get('pk') == '2':
+            cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
+                'product__discount').annotate(price_discount=ExpressionWrapper(
+                F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
+                output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
+                total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
+            q_shops = CartItems.objects.filter(session_id=request.session.session_key).aggregate(
+                q_shops=Count('shop', distinct=True))
+        total_sum = 0
+        total_sum_with_discount = 0
+        q = Decimal(10) ** -2
+        for product in cart:
+            total_sum += Decimal(product.total_sum).quantize(q)
+            if product.total_sum_with_discount:
+                total_sum_with_discount += Decimal(product.total_sum_with_discount).quantize(q)
+            else:
+                total_sum_with_discount += Decimal(product.total_sum).quantize(q)
+        context['cart'] = cart
+        context['total_sum'] = str(total_sum)
+        context['total_sum_with_discount'] = str(total_sum_with_discount)
+        context['q_shops'] = q_shops['q_shops']
+
         if request.user.is_authenticated:
             user = User.objects.get(id=request.user.id)
-            user_form = ProfileForm(instance=user)
+            context['user'] = user
             profile = Profile.objects.filter(user_id=request.user.id)
             if profile:
                 profile = Profile.objects.get(user_id=request.user.id)
             else:
-                profile = Profile.objects.create(user=user, phone_number='')
-            profile_form = ProfileForm(instance=profile)
-        return render(request, template_name='order_user.html',
-                      context={'user_form': user_form, 'profile_form': profile_form})
+                role = Role.objects.get(name='покупатель')
+                profile = Profile.objects.create(user=user, phone_number='', role=role)
+            context['profile'] = profile
+
+        return render(request, template_name='order/order.html', context=context)
+
+    @staticmethod
+    def post(request, **kwargs):
+        data = request.POST
+        comment = data['comment']
+        email = data['mail']
+        user = User.objects.get(email=email)
+        delivery = Delivery.objects.get(title=data['delivery'])
+        city = data['city']
+        address = data['address']
+        pay_method = PayMethod.objects.get(title=data['pay'])
+
+        products = CartItems.objects.filter(session_id=request.session.session_key).select_related('product')
+        order_goods = {}
+        for product in products:
+            if product.shop not in order_goods.keys():
+                order_goods[product.shop] = {}
+            order_goods[product.shop][product.product_id] = product.quantity
+        Order.objects.create(user=user, order_goods=order_goods, delivery=delivery, city=city,
+                             address=address, pay_method=pay_method, order_comment=comment, payment_status='')
+
+        if pay_method.id == 1:
+            return render(request, template_name='order/payment.html', )
+        return render(request, template_name='order/payment_someone.html')
+
+
+class OrderPayment(View):
 
     @staticmethod
     def post(request):
-        user_form = ProfileForm(request.POST)
-        delivery_form = DeliveryForm()
-        if request.user.is_authenticated:
-            user = request.user
-            profile = Profile.objects.get(user_id=user.id)
-            profile_form = ProfileForm(request.POST, instance=profile)
-            if profile_form.is_valid():
-                user.username = profile_form.cleaned_data.get('username')
-                user.first_name = profile_form.cleaned_data.get('first_name')
-                user.last_name = profile_form.cleaned_data.get('last_name')
-                user.email = profile_form.cleaned_data.get('email')
-                user.save()
-                profile.phone_number = profile_form.cleaned_data.get('phone_number')
-                profile.save()
-            else:
-                print(profile_form.errors)
-                if profile_form.errors.get('phone_number'):
-                    raise ValidationError('неверный номер телефона')
+        card_num = request.POST['numero1'].replace(' ', '')
+        user = request.user
+        profile = Profile.objects.get(user_id=user.id)
+        profile.card = card_num
+        profile.save()
+        q_shops = CartItems.objects.filter(session_id=request.session.session_key). \
+            aggregate(q_shops=Count('shop', distinct=True))['q_shops']
+        order = Order.objects.filter(user=user).last()
+        payment_amount = order.get_total_cost()
+        if order.get_total_cost_with_discount():
+            payment_amount = order.get_total_cost_with_discount()
+        if order.delivery.id == 1 and (payment_amount < 2000 or q_shops > 1):
+            payment_amount += 200
+        elif order.delivery.id == 2:
+            payment_amount += 500
+        handle_payment.delay(order.id, card_num, payment_amount)
+        return render(request, template_name='order/progressPayment.html')
+
+    @transaction.atomic
+    def get(self, request):
+        user = request.user
+        profile = Profile.objects.get(user_id=user.id)
+        order = Order.objects.filter(user=user).select_related('delivery', 'pay_method').last()
+        expression_wrapper = ExpressionWrapper(
+            F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
+            output_field=FloatField())
+        cart = CartItems.objects.filter(session_id=request.session.session_key). \
+            select_related('product__discount'). \
+            annotate(price_discount=expression_wrapper,
+                     total_sum=Sum(F('price') * F('quantity')),
+                     total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
+        if order.payment_status == 'Оплачено':
+            for product in cart:
+                # shop = Shop.objects.get(name=product.shop)
+                shop = Shop.objects.get(slug=product.shop)
+                shop_product = ShopProduct.objects.get(product=product.product, shop=shop.id)
+                if shop_product.quantity - product.quantity >= 0:
+                    shop_product.quantity -= product.quantity
+                    shop_product.save()
                 else:
-                    raise ValidationError('некорректные данные')
+                    logger.error(f'Заказ не оформлен. Недостаточное количество товара {product.product}')
+                    # order.payment_status = f'Недостаточное количество товара {product.product}'
+                    pay_status = PayStatus.objects.get(title='недостаточное кол-во товаров')
+                    order.payment_status = pay_status.title
+                    order.save()
+                    return render(request, template_name='order/order_detail.html',
+                                  context={'user': user,
+                                           'profile': profile,
+                                           'cart': cart,
+                                           'order': order
+                                           })
+            logger.info(f'Оформление заказа {order.id} пользователем {user.id}')
+            cart.delete()
+            return render(request, template_name='order/order_detail.html',
+                          context={'user': user,
+                                   'profile': profile,
+                                   'order': order
+                                   })
+        elif order.payment_status:
+            logger.error('Ошибка оплаты')
+            return render(request, template_name='order/order_detail.html', context={'user': user,
+                                                                                     'profile': profile,
+                                                                                     'cart': cart,
+                                                                                     'order': order
+                                                                                     })
         else:
-            if user_form.is_valid():
-                if not user_form.cleaned_data.get('password_1') or not user_form.cleaned_data.get('password_2'):
-                    raise ValidationError('введите пароли')
-                elif user_form.cleaned_data.get('password_1') != user_form.cleaned_data.get('password_2'):
-                    raise ValidationError('пароли не совпадают')
-                else:
-                    user = user_form.save()
-                    password = user_form.cleaned_data.get('password_1')
-                    user.set_password(password)
-                    user.save()
-                    user = authenticate(username=user.username, password=password)
-                    login(request, user)
-                    phone_number = user_form.cleaned_data.get('phone_number')
-                    Profile.objects.create(user=user, phone_number=phone_number)
-            else:
-                if user_form.errors.get('username'):
-                    raise ValidationError('имя пользователя уже существует')
-                elif user_form.errors.get('email'):
-                    raise ValidationError('email уже существует')
-                elif user_form.errors.get('phone_number'):
-                    raise ValidationError('неверный номер телефона')
-                else:
-                    raise ValidationError('некорректные данные')
-        return render(request, template_name='order_delivery.html', context={'delivery_form': delivery_form})
+            return render(request, template_name='order/progressPayment.html')
 
 
-class OrderDeliveryView(View):
+class OrderRepeat(View):
 
     @staticmethod
-    def post(request):
-        pay_method_form = PayMethodForm()
-        delivery_form = DeliveryForm(request.POST)
-        user = User.objects.get(id=request.user.id)
-        print(delivery_form.errors)
-        if delivery_form.is_valid():
-            id_delivery = delivery_form.cleaned_data.get('title')
-            city = delivery_form.cleaned_data.get('city')
-            address = delivery_form.cleaned_data.get('address')
-            delivery = Delivery.objects.get(id=id_delivery)
-            Order.objects.create(user=user, delivery=delivery, city=city, address=address)
-            return render(request, template_name='order_pay_method.html', context={'pay_method_form': pay_method_form})
-
-
-class OrderPayMethodView(View):
-
-    @staticmethod
-    def post(request):
-        order_comment = OrderCommentForm()
-        pay_method_form = PayMethodForm(request.POST)
-        order = Order.objects.filter(user=request.user).order_by('-id')[0]
-        if pay_method_form.is_valid():
-            id_pay_method = pay_method_form.cleaned_data.get('title')
-            pay_method = PayMethod.objects.get(id=id_pay_method)
-            order.pay_method = pay_method
-            order.save()
-
-        order_total_sum = 0
-        cart_products = CartItems.objects.filter(user=request.user.id)
-        for product in cart_products:
-            order_total_sum += product.price * product.quantity
-
-        order_delivery_pay = 0
-        if order.delivery.title == 'Экспресс-Доставка':
-            order_delivery_pay = 500
-        elif order_total_sum < 2000:
-            order_delivery_pay = 200
-
-        return render(request, template_name='order_total.html', context={'order': order, 'products': cart_products,
-                                                                          'order_delivery_pay': order_delivery_pay,
-                                                                          'order_comment': order_comment})
-
-
-class OrderTotal(View):
-
-    @staticmethod
-    def post(request):
-        order_comment = OrderCommentForm(request.POST)
-        if order_comment.is_valid():
-            order = Order.objects.filter(user=request.user).order_by('-id')[0]
-            order_comment = order_comment.cleaned_data.get('order_comment')
-            order.order_comment = order_comment
-            order.save()
-
-
-            # Передаю в модуль оплаты
-            order_total_sum = 0
-            cart_products = CartItems.objects.filter(user=request.user.id)
-            for product in cart_products:
-                order_total_sum += product.price * product.quantity
-
-            card = Profile.objects.filter(user=request.user).values('card')[0]['card']
-            handle_payment.delay(order.id, card, order_total_sum)
-
-        service_payment()
-        return redirect('/')
-
-
-@transaction.atomic
-def service_payment():
-    pass
+    def get(request):
+        order = Order.objects.filter(user=request.user).last()
+        if order.pay_method_id == 1:
+            return render(request, template_name='order/payment.html', )
+        return render(request, template_name='order/payment_someone.html')
