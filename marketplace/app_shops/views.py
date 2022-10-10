@@ -2,7 +2,7 @@ import math
 import random
 
 from django.core.paginator import Paginator
-from django.db.models import Count, F, Avg, Case, When, DecimalField, Max, Min
+from django.db.models import Count, F, Avg, Case, When, DecimalField, Max, Min, Q
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, DetailView, ListView
 
@@ -10,7 +10,6 @@ from app_goods.models import ProductTag
 from app_shops.filters import ProductFilter
 from app_shops.models import ShopProduct, Shop, Product
 from cart.forms import CartAddProductShopForm
-
 
 SORT_OPTIONS = {
     'price': Avg('shop_products__price') * Case(
@@ -69,7 +68,14 @@ class CatalogueView(AddToCartFormMixin, ListView):
     template_name = 'catalog.html'
 
     def get_queryset(self):
-        return Product.objects.filter(category=self.kwargs["category_id"])
+        if self.kwargs.get("category_id"):
+            return Product.objects.filter(category=self.kwargs["category_id"])
+        else:
+            keyword = self.request.GET.get("query")
+            if keyword:
+                return Product.objects.filter(
+                    Q(name__icontains=keyword) | Q(category__name__icontains=keyword)).distinct()
+            return Product.objects.all()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CatalogueView, self).get_context_data()
@@ -145,12 +151,10 @@ class ShopDetailView(AddToCartFormMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # товары магазина
-        products = ShopProduct.objects. \
-                       filter(shop__slug=self.object.slug, product__published=True). \
-                       select_related('product'). \
-                       prefetch_related('product__category', 'product__product_images'). \
-                       order_by('-product__sales_count')[:10]
+        products = ShopProduct.objects.filter(shop__slug=self.object.slug, product__published=True). \
+                                       select_related('product'). \
+                                       prefetch_related('product__category', 'product__product_images'). \
+                                       order_by('-product__sales_count')[:10]
         context['products'] = products
         self.add_to_cart_form(products)
         return context
-
