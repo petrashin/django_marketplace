@@ -161,7 +161,11 @@
         <div class="Header-search">
           <div class="search">
             <form class="form form_search" action="{% url 'search_results' %}" method="get">
+                {% if request.GET.query %}
+              <input class="search-input" id="query" name="query" type="text" placeholder="{{ request.GET.query }}"/>
+                {% else %}
               <input class="search-input" id="query" name="query" type="text" placeholder="{% trans 'What are you looking for' %}..."/>
+                {% endif %}
               <button class="search-button" type="submit">
                   <img src="{% static 'assets/img/icons/search.svg' %}" alt="search.svg"/>{% trans 'Search' %}
               </button>

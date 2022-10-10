@@ -29,6 +29,13 @@
             {# Фильтры #}
             <div class="Section-columnContent">
               <form class="form" method="get">
+
+                {% if request.GET.page %}<input type="hidden" name="page" value="{{ request.GET.page }}">{% endif %}
+                {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
+                {% if request.GET.type %}<input type="hidden" name="type" value="{{ request.GET.type }}">{% endif %}
+                {% if request.GET.tag %}<input type="hidden" name="tag" value="{{ request.GET.tag }}">{% endif %}
+                {% if request.GET.query %}<input type="hidden" name="query" value="{{ request.GET.query }}">{% endif %}
+
                 {# Слайдер с диапазоном цены #}
                 <div class="form-group">
                   <div class="range Section-columnRange">
@@ -65,12 +72,6 @@
                       <span class="toggle-box"></span><span class="toggle-text">{% trans 'With free shipping' %}</span>
                   </label>
                 </div>
-
-                {% if request.GET.page %}<input type="hidden" name="page" value="{{ request.GET.page }}">{% endif %}
-                {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
-                {% if request.GET.type %}<input type="hidden" name="type" value="{{ request.GET.type }}">{% endif %}
-                {% if request.GET.tag %}<input type="hidden" name="tag" value="{{ request.GET.tag }}">{% endif %}
-                {% if request.GET.query %}<input type="hidden" name="query" value="{{ request.GET.query }}">{% endif %}
 
                 <div class="form-group">
                   <div class="buttons">
