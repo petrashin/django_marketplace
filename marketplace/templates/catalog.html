@@ -41,7 +41,10 @@
                   <div class="range Section-columnRange">
                     <tr>
                       <td>
-                        <input type="text" name="price" class="range-line" data-type="double" data-min={{ min_price }} data-max={{ max_price }} id="id_price">
+                        <input type="text" name="price" class="range-line" data-type="double"
+                               {% if selected_min_price %}data-from="{{ selected_min_price }}"{% endif %}
+                               {% if selected_max_price %}data-to="{{ selected_max_price }}"{% endif %}
+                               data-min={{ min_price }} data-max={{ max_price }} id="id_price">
                       </td>
                     </tr>
                     <div class="range-price">{% trans 'Price' %}:&#32;
