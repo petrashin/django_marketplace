@@ -162,7 +162,7 @@
           <div class="search">
             <form class="form form_search" action="{% url 'search_results' %}" method="get">
                 {% if request.GET.query %}
-              <input class="search-input" id="query" name="query" type="text" placeholder="{{ request.GET.query }}"/>
+              <input class="search-input" id="query" name="query" type="text" value="{{ request.GET.query }}"/>
                 {% else %}
               <input class="search-input" id="query" name="query" type="text" placeholder="{% trans 'What are you looking for' %}..."/>
                 {% endif %}
