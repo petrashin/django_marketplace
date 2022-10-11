@@ -2,11 +2,17 @@
 
 1.Устанавливаем docker
 
-2.Переходим в дерикторию
+2.Переходим в директорию
+
+python_django_group_diploma/marketplace/marketplace
+
+3.Создаем .env файл
+
+4.Возвращаемся в директорию 
 
 python_django_group_diploma/marketplace
 
-3.В консоли выпоняем команду:
+5.В консоли выпоняем команду:
 
 ```bash
 docker compose up
