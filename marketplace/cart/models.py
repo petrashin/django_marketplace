@@ -53,7 +53,7 @@ class CartItems(models.Model):
         user_id = user.id
         if user.is_anonymous:
             user_id = 0
-            session_id = session_id
+            # session_id = session_id
         else:
             if CartItems:
                 # получаем корзину неавторизованного пользователя и присваиваем user_id
