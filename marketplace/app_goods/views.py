@@ -1,8 +1,7 @@
-from statistics import mean
+from django.shortcuts import render
 
 from django.core.paginator import Paginator
-from django.shortcuts import render
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from django.views import View
