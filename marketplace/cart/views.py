@@ -141,6 +141,15 @@ def cart_shop_add(request, slug):
     return redirect('shops')
 
 
+def cart_random_shop_add(request, slug):
+    """ Представление для добавления товара в корзину с случайным продавцом """
+    cart = CartItems()
+    product = get_object_or_404(Product, slug=slug)
+    cart.add(request, product)
+    messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
+    return redirect('shops')
+
+
 def cart_remove(request, **kwargs):
     """ Представление для удаления товара из корзины """
     item_id = kwargs['pk']
