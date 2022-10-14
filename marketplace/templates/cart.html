@@ -37,15 +37,15 @@
                             </div>
                             <div class="Cart-block Cart-block_info">
                                 <a class="Cart-title" href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                                <div class="Cart-desc">{{ product.description }}
+                                <div class="Cart-desc">{{ product.description | truncatechars:100 }}
                                 </div>
                             </div>
                             <div class="Cart-block Cart-block_row">
-                                <div class="Cart-block Cart-block_price">
+                                <div  style="min-width: 200px" class="Cart-block Cart-block_price">
                                     {% if item.old_price > item.price %}
                                     <div class="Cart-price_old">{{ item.old_price }}</div>
                                     {% endif %}
-                                    <div class="Cart-price">{{ item.price }} {% trans 'rub' %}.
+                                    <div style="font-size: 16px" class="Cart-price">{{ item.price }} {% trans 'rub' %}.
                                     </div>
                                 </div>
                                 <div class="Cart-block Cart-block_seller">

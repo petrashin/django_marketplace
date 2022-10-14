@@ -30,7 +30,7 @@ class CartModelTestCase(TestCase):
         self.assertEqual(items[0].quantity, 1)
 
     def test_cart_add_different_products(self):
-        # добавляем в корзину другой продукт
+        # тестируем добавление в корзину разных продуктов
         self.cart.add(product=self.product_1, request=self.request)
         self.cart.add(product=self.product_2, request=self.request)
         items = self.cart.get_cart_items(self.request)
@@ -40,7 +40,7 @@ class CartModelTestCase(TestCase):
         self.assertEqual(total_cost, cost)
 
     def test_cart_add_the_same_products(self):
-        # тестируем увеличение количества при добавлении в корзину такого-же продукта
+        # тестируем увеличение количества при добавлении в корзину одинаковых продуктов
         self.cart.add(product=self.product_1, request=self.request)
         items = self.cart.get_cart_items(self.request)
         product = items[0].product

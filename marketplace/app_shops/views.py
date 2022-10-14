@@ -110,13 +110,14 @@ class CatalogueView(AddToCartFormMixin, ListView):
 
 
 class BaseTemplateView(AddToCartFormMixin, TemplateView):
-    """ Вьюха для демонстрации базового шаблона """
+    """ Главная страница магазина """
     template_name = 'index.html'
     extra_context = {'title': _("Megano")}
 
     def get_context_data(self, **kwargs):
         context = super(BaseTemplateView, self).get_context_data()
-        products = Product.objects.filter(published=True)
+        products = Product.objects.filter(published=True).\
+            prefetch_related('category', 'product_images')
         popular_products = products.order_by('-sales_count')[:8]
         limited_products = products.filter(limited_edition=True)
         hot_offers = products.filter(discount__discount_value__gt=0)[:9]
@@ -140,6 +141,7 @@ class ShopListView(AddToCartFormMixin, ListView):
     queryset = ShopProduct.objects.select_related('shop', 'product'). \
         filter(product__published=True). \
         prefetch_related('product__category', 'product__product_images').order_by('shop__name')
+    extra_context = {'title': _("Shops")}
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -163,4 +165,5 @@ class ShopDetailView(AddToCartFormMixin, DetailView):
                                        order_by('-product__sales_count')[:10]
         context['products'] = products
         self.add_to_cart_form(products)
+        context['title'] = self.object.name
         return context

@@ -25,7 +25,7 @@ class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
     context_object_name = 'product'
     template_name = 'app_goods/product.html'
     form_class = CartAddProductForm
-    extra_context = {'title': _('Product'), 'review_form': ReviewForm, 'reviews': Reviews.objects.all}
+    extra_context = {'review_form': ReviewForm, 'reviews': Reviews.objects.all}
 
     def get_object(self, *args, **kwargs):
         view_object = super(ProductDetailView, self).get_object()
@@ -44,10 +44,11 @@ class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
                 ViewsHistory.objects.create(profile=profile, product=product)
 
         # добавляем в контекст магазины, которые продают этот товар и активируем кнопку добавления в корзину
-        shops = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')
+        shop_product = ShopProduct()
+        shops = shop_product.get_shops_for_product(product=self.object)
         context['shops'] = shops
+        context['title'] = self.object.name
         self.add_to_cart_form(shops)
-
         return context
 
 

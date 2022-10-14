@@ -18,24 +18,33 @@ class CartViewTestCase(TestCase):
         self.session = self.client.session
         self.cart = CartItems()
         self.product_1 = Product.objects.get(pk=1)
-        self.product_2 = Product.objects.get(pk=2)
+        self.shop_1 = Shop.objects.get(pk=1)
+        self.prod_slug = self.product_1.slug
+        self.shop_slug = self.shop_1.slug
 
-    # def test_cart_add_view(self):
-    #     slug = self.product_1.slug
-    #     request = self.factory.get('cart_detail')
-    #     request.user = AnonymousUser()
-    #     request.session = self.session
-    #     resp_cart_detail = self.client.get(reverse('cart_detail'))
-    #     self.assertEqual(resp_cart_detail.status_code, 200)
-    #     self.assertTemplateUsed(resp_cart_detail, 'cart.html')
-    #     resp_product_detail = self.client.get(reverse('product_detail', kwargs={'slug': slug}))
-    #     self.assertEqual(resp_product_detail.status_code, 200)
-    #     self.assertTemplateUsed(resp_product_detail, 'app_goods/product.html')
-    #     resp = self.client.post(f'/cart/add/{slug}/', follow=True)
-    #     print(resp.context)
-    #     self.assertEqual(resp.status_code, 200)
-        # resp_cart_detail = self.client.get(reverse('cart_detail'))
-        # print(resp_cart_detail.context)
+    def test_cart_add_view(self):
+        # тестируем добавление товара в корзину из детальной страницы товара
+        # количество товара не указано
+        resp_incorrect = self.client.post(reverse('cart_add', kwargs={'slug': self.prod_slug}), {'quantity': 0}, follow=True)
+        self.assertEqual(resp_incorrect.status_code, 200)
+        resp_cart_detail = self.client.get(reverse('cart_detail'))
+        self.assertEqual(len(resp_cart_detail.context['cart_items']), 0)
+
+        resp_correct = self.client.post(reverse('cart_add', kwargs={'slug': self.prod_slug}), {'quantity': 2}, follow=True)
+        self.assertEqual(resp_correct.status_code, 200)
+        resp_cart_detail = self.client.get(reverse('cart_detail'))
+        self.assertEqual(len(resp_cart_detail.context['cart_items']), 1)
+
+    def test_cart_shop_add_view(self):
+        # тестируем добавление товара с магазином в корзину
+        resp_shop_detail = self.client.get(reverse('shop_detail', kwargs={'slug': self.shop_slug}))
+        shop = resp_shop_detail.context['object']
+        data = {'shop': shop.slug, 'quantity': 1}
+        resp = self.client.post(reverse('cart_shop_add', kwargs={'slug': self.prod_slug}), data, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        resp_cart_detail = self.client.get(reverse('cart_detail'))
+        self.assertEqual(len(resp_cart_detail.context['cart_items']), 1)
+
 
 
 
