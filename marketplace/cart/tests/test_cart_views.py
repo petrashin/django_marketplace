@@ -38,6 +38,8 @@ class CartViewTestCase(TestCase):
     def test_cart_shop_add_view(self):
         # тестируем добавление товара с магазином в корзину
         resp_shop_detail = self.client.get(reverse('shop_detail', kwargs={'slug': self.shop_slug}))
+        self.assertEqual(resp_shop_detail.status_code, 200)
+        self.assertTemplateUsed(resp_shop_detail, 'app_shops/shop.html')
         shop = resp_shop_detail.context['object']
         data = {'shop': shop.slug, 'quantity': 1}
         resp = self.client.post(reverse('cart_shop_add', kwargs={'slug': self.prod_slug}), data, follow=True)
