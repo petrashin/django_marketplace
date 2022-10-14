@@ -16,6 +16,7 @@ class CartItemsListView(ListView):
     model = CartItems
     context_object_name = 'cart_items'
     template_name = 'cart.html'
+    extra_context = {'title': _("Cart")}
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
