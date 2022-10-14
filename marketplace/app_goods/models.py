@@ -32,6 +32,7 @@ class Discount(models.Model):
 
     discount_type = models.ForeignKey(DiscountType, on_delete=models.DO_NOTHING, verbose_name=_('discount_type'))
     discount_name = models.CharField(max_length=50,
+                                     blank=True,
                                      verbose_name=_('discount_name'),
                                      help_text='название скидки')
     discount_value = models.PositiveSmallIntegerField(null=True,
