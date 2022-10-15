@@ -128,14 +128,10 @@ def cart_shop_add(request, slug):
     form = CartAddProductShopForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
-        if cd['shop'] == '':
-            shop = None
-        else:
-            shop = cd['shop']
+        shop = cd['shop']
         cart.add(request=request,
                  product=product,
                  shop=shop,
-                 quantity=cd['quantity']
                  )
         messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
     return redirect('shops')

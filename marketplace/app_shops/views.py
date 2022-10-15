@@ -1,5 +1,4 @@
 import math
-import random
 
 from django.core.paginator import Paginator
 from django.db.models import Count, F, Avg, Case, When, DecimalField, Max, Min
@@ -10,7 +9,6 @@ from app_goods.models import ProductTag
 from app_shops.filters import ProductFilter
 from app_shops.models import ShopProduct, Shop, Product
 from cart.forms import CartAddProductShopForm
-
 
 SORT_OPTIONS = {
     'price': Avg('shop_products__price') * Case(
@@ -35,37 +33,22 @@ DEFAULT_DIRECTION = ''
 class AddToCartFormMixin:
     """ Миксин для активации кнопки добавления товара в корзину на карточках товаров """
 
-    def get_form_params(self, object):
-        if not hasattr(object, 'shop'):
-            shop = None
-        else:
-            shop = object.shop.slug
-        if not hasattr(object, 'product'):
-            product_id = object.id
-        else:
-            product_id = object.product.id
-        return [shop, product_id]
+    def get_shop(self, object):
+        shop = object.shop.slug
+        return shop
 
     def add_to_cart_form(self, products):
         if products:
             if len(products) > 1:
                 for product in products:
-                    shop = self.get_form_params(product)[0]
-                    product_id = self.get_form_params(product)[1]
-                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                               'shop': shop,
-                                                                               'product': product_id
-                                                                               })
+                    shop = self.get_shop(product)
+                    product.add_to_cart_form = CartAddProductShopForm(initial={'shop': shop})
             else:
-                shop = self.get_form_params(products[0])[0]
-                product_id = self.get_form_params(products[0])[1]
-                products[0].add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                               'shop': shop,
-                                                                               'product': product_id
-                                                                               })
+                shop = self.get_shop(products[0])
+                products[0].add_to_cart_form = CartAddProductShopForm(initial={'shop': shop})
 
 
-class CatalogueView(AddToCartFormMixin, ListView):
+class CatalogueView(ListView):
     template_name = 'catalog.html'
 
     def get_queryset(self):
@@ -92,26 +75,21 @@ class CatalogueView(AddToCartFormMixin, ListView):
         context['min_price'] = math.trunc(self.get_queryset().annotate(
             avg_price=SORT_OPTIONS['price']).aggregate(Min('avg_price'))['avg_price__min'])
 
-        self.add_to_cart_form(products)
-
         return context
 
 
-class BaseTemplateView(AddToCartFormMixin, TemplateView):
+class BaseTemplateView(TemplateView):
     """ Главная страница магазина """
     template_name = 'index.html'
     extra_context = {'title': _("Megano")}
 
     def get_context_data(self, **kwargs):
         context = super(BaseTemplateView, self).get_context_data()
-        products = Product.objects.filter(published=True).\
+        products = Product.objects.filter(published=True). \
             prefetch_related('category', 'product_images')
         popular_products = products.order_by('-sales_count')[:8]
         limited_products = products.filter(limited_edition=True)
         hot_offers = products.filter(discount__discount_value__gt=0)[:9]
-        self.add_to_cart_form(popular_products)
-        self.add_to_cart_form(limited_products)
-        self.add_to_cart_form(hot_offers)
         if limited_products:
             if len(limited_products) > 1:
                 context['lim_products'] = limited_products[:16]
@@ -156,4 +134,3 @@ class ShopDetailView(AddToCartFormMixin, DetailView):
         self.add_to_cart_form(products)
         context['title'] = self.object.name
         return context
-
