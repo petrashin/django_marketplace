@@ -26,3 +26,9 @@ db.sqlite3
 debug.log
 test*.docx
 test*.json
+
+# exclude everything
+pgdata/*
+
+# exception to the rule
+!pgdata/.gitkeep
