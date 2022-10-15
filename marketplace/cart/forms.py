@@ -11,8 +11,6 @@ class CartAddProductForm(forms.Form):
 
 class CartAddProductShopForm(forms.Form):
     """Форма для добавления товара выбранного магазина в корзину"""
-    quantity = forms.IntegerField(min_value=1, widget=forms.HiddenInput)
-    product = forms.IntegerField(required=False, widget=forms.HiddenInput)
     shop = forms.CharField(required=False, widget=forms.HiddenInput)
 
 
