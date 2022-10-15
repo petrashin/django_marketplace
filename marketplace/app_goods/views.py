@@ -1,5 +1,6 @@
 from statistics import mean
 
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
@@ -170,3 +171,14 @@ def add_to_comparison(request, pk):
         ComparedProducts.objects.create(profile=profile, product_id=pk)
 
     return redirect('compare')
+
+
+class SaleView(View):
+    def get(self, request):
+        sale_products = Product.objects.filter(discount__isnull=False, discount__active=True)
+        paginator = Paginator(sale_products, 8)
+        page_number = request.GET.get('page')
+        if page_number is None:
+            page_number = 1
+        products = paginator.get_page(page_number)
+        return render(request, 'app_goods/sale.html', context={'products': products})

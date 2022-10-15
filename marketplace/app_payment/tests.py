@@ -1,13 +1,8 @@
-import requests_mock
-import requests
-from django.test import TestCase
 from rest_framework.test import APITestCase, RequestsClient
 
 from django.contrib.auth.models import User
 from app_order.models import Order, Delivery, PayMethod
 from app_users.models import Profile, Role
-
-from app_payment.tasks import handle_payment
 
 
 class LoadingPresets:
