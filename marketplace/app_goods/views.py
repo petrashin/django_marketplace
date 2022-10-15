@@ -12,7 +12,7 @@ from app_users.models import ViewsHistory, ComparedProducts, Role, Image
 from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
-from cart.forms import CartAddProductForm, CartAddProductShopForm
+from cart.forms import CartAddProductForm
 from app_users.models import Profile
 
 from app_shops.views import AddToCartFormMixin
