@@ -16,6 +16,7 @@ class CartItemsListView(ListView):
     model = CartItems
     context_object_name = 'cart_items'
     template_name = 'cart.html'
+    extra_context = {'title': _("Cart")}
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -137,6 +138,15 @@ def cart_shop_add(request, slug):
                  quantity=cd['quantity']
                  )
         messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
+    return redirect('shops')
+
+
+def cart_random_shop_add(request, slug):
+    """ Представление для добавления товара в корзину с случайным продавцом """
+    cart = CartItems()
+    product = get_object_or_404(Product, slug=slug)
+    cart.add(request, product)
+    messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
     return redirect('shops')
 
 

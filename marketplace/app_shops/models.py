@@ -124,8 +124,8 @@ class ShopProduct(models.Model):
     def get_shops_for_product(self, product):
         """ Получаем магазины для продукта"""
         return ShopProduct.objects.filter(product=product). \
-            select_related('shop', 'product'). \
-            prefetch_related('shop')
+            select_related('shop', 'product', 'product__discount'). \
+            prefetch_related('shop', 'product__category')
 
     def __str__(self):
         return f'{self.shop.name}:{self.product.name}'
