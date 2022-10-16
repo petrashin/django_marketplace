@@ -1,10 +1,7 @@
-from statistics import mean
-
-from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
-from django.utils.translation import gettext_lazy as _
+
 from django.views import View
 from django.views.generic.edit import FormMixin
 from django.views.generic import DetailView
@@ -13,20 +10,18 @@ from app_users.models import ViewsHistory, ComparedProducts, Role, Image
 from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
-from cart.forms import CartAddProductForm, CartAddProductShopForm
+from cart.forms import CartAddProductForm
 from app_users.models import Profile
 
-from app_shops.views import AddToCartFormMixin
 
-
-class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
+class ProductDetailView(FormMixin, DetailView):
     """ Представление для получения детальной информации о продукте
     и добавления его в корзину"""
     model = Product
     context_object_name = 'product'
     template_name = 'app_goods/product.html'
     form_class = CartAddProductForm
-    extra_context = {'title': _('Product'), 'review_form': ReviewForm, 'reviews': Reviews.objects.all}
+    extra_context = {'review_form': ReviewForm, 'reviews': Reviews.objects.all}
 
     def get_object(self, *args, **kwargs):
         view_object = super(ProductDetailView, self).get_object()
@@ -45,10 +40,10 @@ class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
                 ViewsHistory.objects.create(profile=profile, product=product)
 
         # добавляем в контекст магазины, которые продают этот товар и активируем кнопку добавления в корзину
-        shops = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')
+        shop_product = ShopProduct()
+        shops = shop_product.get_shops_for_product(product=self.object)
         context['shops'] = shops
-        self.add_to_cart_form(shops)
-
+        context['title'] = self.object.name
         return context
 
 
@@ -171,14 +166,3 @@ def add_to_comparison(request, pk):
         ComparedProducts.objects.create(profile=profile, product_id=pk)
 
     return redirect('compare')
-
-
-class SaleView(View):
-    def get(self, request):
-        sale_products = Product.objects.filter(discount__isnull=False, discount__active=True)
-        paginator = Paginator(sale_products, 8)
-        page_number = request.GET.get('page')
-        if page_number is None:
-            page_number = 1
-        products = paginator.get_page(page_number)
-        return render(request, 'app_goods/sale.html', context={'products': products})

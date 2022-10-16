@@ -782,9 +782,9 @@ select {
   border: 1px solid #e0e0e0;
   background-color: #fff;
   display: block;
-  font-size: 18px;
+  font-size: 14px;
   box-sizing: border-box;
-  min-width: 180px;
+  min-width: 120px;
   color: #777;
   padding-left: 25px;
 }
