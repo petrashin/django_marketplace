@@ -178,14 +178,9 @@
                                         </strong>
                                     </div>
                                     <div class="Categories-block Categories-button">
-                                        <form action="{% url 'cart_shop_add' product.slug %}" method="post">
-                                            {% csrf_token %}
-                                            {{ shop.add_to_cart_form }}
-                                            <button type="submit" class="btn btn_primary" value="Купить">
+                                        <a class="btn btn_primary" href="{% url 'cart_shop_add' product.slug shop.shop.slug %}">
                                             <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
-                                            alt="cart_white.svg"/><span class="btn-content">{% trans 'Buy' %}</span>
-                                            </button>
-                                        </form>
+                                            alt="cart_white.svg"/><span class="btn-content">{% trans 'Buy' %}</span></a>
                                     </div>
                                 </div>
                                 {% endfor %}
