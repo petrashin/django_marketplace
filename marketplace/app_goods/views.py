@@ -15,10 +15,8 @@ from app_goods.forms import ReviewForm
 from cart.forms import CartAddProductForm
 from app_users.models import Profile
 
-from app_shops.views import AddToCartFormMixin
 
-
-class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
+class ProductDetailView(FormMixin, DetailView):
     """ Представление для получения детальной информации о продукте
     и добавления его в корзину"""
     model = Product
@@ -48,7 +46,6 @@ class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
         shops = shop_product.get_shops_for_product(product=self.object)
         context['shops'] = shops
         context['title'] = self.object.name
-        self.add_to_cart_form(shops)
         return context
 
 

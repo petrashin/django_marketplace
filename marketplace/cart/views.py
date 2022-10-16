@@ -7,8 +7,8 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
 from app_goods.models import Product
-from app_shops.models import ShopProduct
-from .forms import CartAddProductForm, CartAddProductShopForm, CartShopsForm, CartUpdateQuantityProductForm
+from app_shops.models import ShopProduct, Shop
+from .forms import CartAddProductForm, CartShopsForm, CartUpdateQuantityProductForm
 from .models import CartItems
 
 
@@ -120,20 +120,15 @@ def cart_add(request, slug):
     return redirect('product_detail', slug=slug)
 
 
-@require_POST
-def cart_shop_add(request, slug):
+def cart_shop_add(request, slug1, slug2):
     """ Представление для добавления товара в корзину с выбранным продавцом """
     cart = CartItems()
-    product = get_object_or_404(Product, slug=slug)
-    form = CartAddProductShopForm(request.POST)
-    if form.is_valid():
-        cd = form.cleaned_data
-        shop = cd['shop']
-        cart.add(request=request,
-                 product=product,
-                 shop=shop,
-                 )
-        messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
+    product = get_object_or_404(Product, slug=slug1)
+    cart.add(request=request,
+             product=product,
+             shop=slug2,
+             )
+    messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
     return redirect('shops')
 
 

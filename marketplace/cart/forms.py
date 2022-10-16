@@ -9,11 +9,6 @@ class CartAddProductForm(forms.Form):
                                   widget=forms.NumberInput(attrs={'style': 'max-width: 5em'}))
 
 
-class CartAddProductShopForm(forms.Form):
-    """Форма для добавления товара выбранного магазина в корзину"""
-    shop = forms.CharField(required=False, widget=forms.HiddenInput)
-
-
 class CartUpdateQuantityProductForm(forms.Form):
     """Форма для обновления количества товара на странице корзины"""
     quantity = forms.IntegerField(label=_('quantity'), min_value=0,

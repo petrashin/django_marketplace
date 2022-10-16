@@ -159,15 +159,6 @@
                           <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/bookmark.svg' %} alt="bookmark.svg"/></a>
                           <a class="Card-btn" href="{% url 'cart_random_shop_add' product.slug %}">
                             <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
-
-<!--                            <form action="{% url 'cart_shop_add' product.slug %}" method="post">-->
-<!--                            {% csrf_token %}-->
-<!--                            {{ product.add_to_cart_form }}-->
-<!--                            <button type="submit" class="Card-btn buy">-->
-<!--                            <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>-->
-<!--                            </button>-->
-<!--                            </form>-->
-
                           <a class="Card-btn" href="#"><img src={% static 'assets/img/icons/card/change.svg' %} alt="change.svg"/></a>
                         </div>
                       </div>

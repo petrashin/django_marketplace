@@ -8,7 +8,6 @@ from django.views.generic import TemplateView, DetailView, ListView
 from app_goods.models import ProductTag
 from app_shops.filters import ProductFilter
 from app_shops.models import ShopProduct, Shop, Product
-from cart.forms import CartAddProductShopForm
 
 SORT_OPTIONS = {
     'price': Avg('shop_products__price') * Case(
@@ -28,24 +27,6 @@ SORT_DIRECTIONS = {
 
 DEFAULT_OPTION = F('id')
 DEFAULT_DIRECTION = ''
-
-
-class AddToCartFormMixin:
-    """ Миксин для активации кнопки добавления товара в корзину на карточках товаров """
-
-    def get_shop(self, object):
-        shop = object.shop.slug
-        return shop
-
-    def add_to_cart_form(self, products):
-        if products:
-            if len(products) > 1:
-                for product in products:
-                    shop = self.get_shop(product)
-                    product.add_to_cart_form = CartAddProductShopForm(initial={'shop': shop})
-            else:
-                shop = self.get_shop(products[0])
-                products[0].add_to_cart_form = CartAddProductShopForm(initial={'shop': shop})
 
 
 class CatalogueView(ListView):
@@ -114,7 +95,7 @@ class BaseTemplateView(TemplateView):
         return context
 
 
-class ShopListView(AddToCartFormMixin, ListView):
+class ShopListView(ListView):
     context_object_name = 'products'
     template_name = 'app_shops/shop_list.html'
     queryset = ShopProduct.objects.select_related('shop', 'product'). \
@@ -122,14 +103,8 @@ class ShopListView(AddToCartFormMixin, ListView):
         prefetch_related('product__category', 'product__product_images').order_by('shop__name')
     extra_context = {'title': _("Shops")}
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        products = self.object_list
-        self.add_to_cart_form(products)
-        return context
 
-
-class ShopDetailView(AddToCartFormMixin, DetailView):
+class ShopDetailView(DetailView):
     """ Детальная страница магазина """
     model = Shop
     context_object_name = 'shop'
@@ -143,6 +118,5 @@ class ShopDetailView(AddToCartFormMixin, DetailView):
                                        prefetch_related('product__category', 'product__product_images'). \
                                        order_by('-product__sales_count')[:10]
         context['products'] = products
-        self.add_to_cart_form(products)
         context['title'] = self.object.name
         return context

@@ -155,7 +155,21 @@ class CartItems(models.Model):
         if cart_item:
             cart_item.price = price
             cart_item.shop = shop
-            cart_item.save()
+        cart_items = self.get_cart_items(request)
+        if cart_items:
+            if len(cart_items) > 1:
+                match = False
+                for item in cart_items:
+                    if item.product == cart_item.product and item.shop == cart_item.shop:
+                        match = True
+                        item.quantity += cart_item.quantity
+                        cart_item.delete()
+                        item.save()
+                        break
+                if not match:
+                    cart_item.save()
+            else:
+                cart_item.save()
 
     def get_item_total_price(self):
         return self.price * self.quantity
