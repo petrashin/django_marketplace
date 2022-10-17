@@ -1,4 +1,4 @@
-import math
+import math, random
 
 from django.core.paginator import Paginator
 from django.db.models import Count, F, Avg, Case, When, DecimalField, Max, Min
@@ -73,9 +73,11 @@ class BaseTemplateView(TemplateView):
         hot_offers = products.filter(discount__discount_value__gt=0)[:9]
         if limited_products:
             if len(limited_products) > 1:
-                context['lim_products'] = limited_products[:16]
+                lim_product = random.choice(limited_products)
+                context['lim_product'] = lim_product
+                context['lim_products'] = limited_products.exclude(id=lim_product.id)[:16]
             else:
-                context['lim_products'] = limited_products[0]
+                context['lim_product'] = limited_products[0]
 
         context['popular_products'] = popular_products
         context['hot_offers'] = hot_offers

@@ -3,7 +3,6 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from cart.models import CartItems
-from app_goods.models import *
 from app_shops.models import *
 
 
