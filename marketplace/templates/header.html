@@ -4,7 +4,7 @@
     <div class="ControlPanel">
       <div class="wrap">
         <div class="row ControlPanel-row">
-          <div class="row-block">
+          <div class="row-block" style="display: flex">
             <div class="row ControlPanel-rowSplit">
               <div class="row-block"><a class="ControlPanel-title" href="#">{% trans 'Free Delivery' %}</a>
               </div>
@@ -25,7 +25,7 @@
             </div>
           </div>
         <div class="input-group">
-            <form class="form-select" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+            <form class="form-select" style="display: flex" action="{% url 'set_language' %}" method="post">{% csrf_token %}
                 <input name="next" type="hidden" value="{{ redirect_to }}">
                     <select class="form-select" name="language">
                         {% get_current_language as LANGUAGE_CODE %}
@@ -43,7 +43,7 @@
             </form>
         </div>
 
-          <nav class="row-block">
+          <nav class="row-block" style="display: flex">
             <div class="row ControlPanel-rowSplit">
 
                 <!--Доступ к профилю для авторизованного пользователя-->
@@ -93,7 +93,7 @@
               <li class="menu-item"><span class="menu-label menu-label_danger">{% trans 'New' %}</span>
                   <a class="menu-link" href="{% url 'shops' %}">{% trans 'Shops' %}</a>
               </li>
-              <li class="menu-item"><a class="menu-link" href="{% url 'sale_list' %}">{% trans 'Sales' %}</a>
+              <li class="menu-item"><a class="menu-link" href="#">{% trans 'Sales' %}</a>
               </li>
               <li class="menu-item"><span class="menu-label menu-label_success">{% trans 'Hot' %}</span>
                   <a class="menu-link" href="{% url 'shops' %}">{% trans 'Gallery' %}</a>
@@ -160,13 +160,9 @@
         </div>
         <div class="Header-search">
           <div class="search">
-            <form class="form form_search" action="{% url 'search_results' %}" method="get">
-                {% if request.GET.query %}
-              <input class="search-input" id="query" name="query" type="text" value="{{ request.GET.query }}"/>
-                {% else %}
+            <form class="form form_search" action="#" method="post">
               <input class="search-input" id="query" name="query" type="text" placeholder="{% trans 'What are you looking for' %}..."/>
-                {% endif %}
-              <button class="search-button" type="submit">
+              <button class="search-button" type="submit" name="search" id="search">
                   <img src="{% static 'assets/img/icons/search.svg' %}" alt="search.svg"/>{% trans 'Search' %}
               </button>
             </form>
