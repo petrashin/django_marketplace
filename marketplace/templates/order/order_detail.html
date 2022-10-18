@@ -48,7 +48,7 @@
                       </div>
                     </div>
                     <div class="Order-info">
-                      <div class="Order-infoType">E-mail:
+                      <div class="Order-infoType">{% trans 'E-mail' %}:
                       </div>
                       <div class="Order-infoContent">{{ request.user.email }}
                       </div>
@@ -143,8 +143,8 @@
                     </strong>
                   </div>
                   {% if order.payment_status != 'Оплачено' %}
-                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="/cart">В корзину</a> </div>
-                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="repeat">Оплатить</a> </div>
+                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'cart_detail' %}">{% trans To cart %}</a> </div>
+                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'order_repeat' %}">{% trans Pay %}</a> </div>
                   {% endif %}
                 </div>
               </div>
