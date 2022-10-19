@@ -4,6 +4,7 @@
 {% block content %}
 {#      Shop Products#}
     <div class="Section-content">
+      <div class="wrap">
         <header class="Section-header">
             <h2 class="Section-title">{% trans 'Shops' %}
             </h2>
@@ -57,6 +58,7 @@
               {% else %}
                 {% include 'empty_category.html' %}
           {% endif %}
-          </div>
         </div>
+      </div>
+    </div>
 {% endblock %}

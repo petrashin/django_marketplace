@@ -4,7 +4,7 @@
     <div class="ControlPanel">
       <div class="wrap">
         <div class="row ControlPanel-row">
-          <div class="row-block">
+          <div class="row-block" style="display: flex">
             <div class="row ControlPanel-rowSplit">
               <div class="row-block"><a class="ControlPanel-title" href="#">{% trans 'Free Delivery' %}</a>
               </div>
@@ -25,7 +25,7 @@
             </div>
           </div>
         <div class="input-group">
-            <form class="form-select" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+            <form class="form-select" style="display: flex" action="{% url 'set_language' %}" method="post">{% csrf_token %}
                 <input name="next" type="hidden" value="{{ redirect_to }}">
                     <select class="form-select" name="language">
                         {% get_current_language as LANGUAGE_CODE %}
@@ -43,7 +43,7 @@
             </form>
         </div>
 
-          <nav class="row-block">
+          <nav class="row-block" style="display: flex">
             <div class="row ControlPanel-rowSplit">
 
                 <!--Доступ к профилю для авторизованного пользователя-->
@@ -175,3 +175,4 @@
       </div>
     </div>
   </header>
+
