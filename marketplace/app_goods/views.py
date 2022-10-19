@@ -1,7 +1,6 @@
-from statistics import mean
+from django.shortcuts import render
 
 from django.core.paginator import Paginator
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
@@ -13,7 +12,7 @@ from app_users.models import ViewsHistory, ComparedProducts, Role, Image
 from app_goods.models import Product, Reviews
 from app_shops.models import ShopProduct
 from app_goods.forms import ReviewForm
-from cart.forms import CartAddProductForm, CartAddProductShopForm
+from cart.forms import CartAddProductForm
 from app_users.models import Profile
 
 from app_shops.views import AddToCartFormMixin
@@ -116,38 +115,49 @@ class CompareGoodsView(View):
 
     def get(self, request):
 
-        if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
-            role = Role.objects.get_or_create(name='Администратор')[0]
-            profile = Profile.objects.create(user=request.user, role=role)
-            Image.objects.create(profile=profile)
+        if request.user.is_anonymous:
+            data = {}
         else:
-            profile = Profile.objects.get(user=request.user)
+            if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
+                role = Role.objects.get_or_create(name='Администратор')[0]
+                profile = Profile.objects.create(user=request.user, role=role)
+                Image.objects.create(profile=profile)
+            else:
+                profile = Profile.objects.get(user=request.user)
 
-        products = []
-        tech_specs = []
-        not_enough_data = False
+            compared_products = ComparedProducts.objects.filter(profile=profile)
+            products = []
+            tech_specs = []
+            not_enough_data = False
 
-        for obj in ComparedProducts.objects.filter(profile=profile):
-            product = Product.objects.get(pk=obj.product.id)
-            products.append(product)
-            tech_specs.append(product.technical_specs)
+            if len(compared_products) != 0:
 
-        if len(tech_specs) < 2:
-            not_enough_data = True
-            all_specs, diff_specs, same_specs = {}, {}, {}
-        else:
-            all_specs, diff_specs, same_specs = self.parse_technical_specs(tech_specs)
+                for obj in compared_products:
+                    product = Product.objects.get(pk=obj.product.id)
+                    products.append(product)
+                    tech_specs.append(product.technical_specs)
 
-        can_compare = self.can_be_compared(tech_specs)
+                if len(tech_specs) < 2:
+                    not_enough_data = True
+                    all_specs, diff_specs, same_specs = {}, {}, {}
+                else:
+                    all_specs, diff_specs, same_specs = self.parse_technical_specs(tech_specs)
 
-        data = {
-            'can_compare': can_compare,
-            'same_specs': same_specs,
-            'all_specs': all_specs,
-            'diff_specs': diff_specs,
-            'not_enough_data': not_enough_data,
-            'compared_products': products
-        }
+                can_compare = self.can_be_compared(tech_specs)
+
+                data = {
+                    'can_compare': can_compare,
+                    'same_specs': same_specs,
+                    'all_specs': all_specs,
+                    'diff_specs': diff_specs,
+                    'not_enough_data': not_enough_data,
+                    'compared_products': products
+                }
+
+            else:
+                data = {
+                    'not_enough_data': True
+                }
 
         return render(request, 'app_goods/compare.html', context=data)
 
