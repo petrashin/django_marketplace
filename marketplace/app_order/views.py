@@ -160,8 +160,8 @@ class OrderPayment(View):
                 else:
                     logger.error(f'Заказ не оформлен. Недостаточное количество товара {product.product}')
                     # order.payment_status = f'Недостаточное количество товара {product.product}'
-                    pay_status = PayStatus.objects.get(title='недостаточное кол-во товаров')
-                    order.payment_status = pay_status.title
+                    pay_status = PayStatus.objects.get(id=6)
+                    order.payment_status = pay_status.get_title_display()
                     order.save()
                     return render(request, template_name='order/order_detail.html',
                                   context={'user': user,

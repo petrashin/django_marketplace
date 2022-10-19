@@ -70,3 +70,14 @@ class Order(models.Model):
                 product = ShopProduct.objects.get(product_id=key, shop=shop_id)
                 total_cost += product.get_discounted_price() * value
         return float(total_cost)
+    
+    def get_products(self):
+        products = {}
+        
+        for shop in self.order_goods:
+            # shop_id = Shop.objects.get(name=shop)
+            shop_id = Shop.objects.get(slug=shop)
+            for product_id, quantity in self.order_goods[shop].items():
+                new_product = ShopProduct.objects.get(product_id=product_id, shop_id=shop_id)
+                products[new_product] = quantity
+        return products
