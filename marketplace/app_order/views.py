@@ -1,14 +1,25 @@
+import re
+
 from decimal import Decimal
 
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import BadHeaderError, send_mail
 from django.db import transaction
 from django.db.models import Count, ExpressionWrapper, F, FloatField, Sum
+from django.db.models.query_utils import Q
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic.base import ContextMixin
 
+from app_account.views import EditProfile
 from app_payment.models import PayStatus
 from app_payment.tasks import handle_payment
 from app_shops.models import Shop, ShopProduct
@@ -21,7 +32,7 @@ from .forms import OrderCommentForm
 from .models import Delivery, Order, PayMethod
 
 
-class OrderView(LoginRequiredMixin, View):
+class OrderView(LoginRequiredMixin, EditProfile, View):
     login_url = reverse_lazy('register')
    
     @staticmethod
@@ -79,15 +90,26 @@ class OrderView(LoginRequiredMixin, View):
 
         return render(request, template_name='order/order.html', context=context)
 
-    @staticmethod
-    def post(request, **kwargs):
+    
+    def post(self, request, **kwargs):
+        super().post(request, **kwargs)
         data = request.POST
         order_comment = OrderCommentForm(request.POST)
         comment = ''
         if order_comment.is_valid():
             comment = order_comment.cleaned_data.get('comment')
-        email = data['mail']
         user = request.user
+        new_password = request.POST.get("password")
+        new_password_reply = request.POST.get("passwordReply")
+        data_pass = {}
+        if new_password != "":
+            data_pass["password_correct"], data_pass["password_error"] = self.validate_passwords(new_password, new_password_reply)
+            if data_pass["password_correct"]:
+                user.set_password(new_password)
+                user.save()
+                user = authenticate(username=user.username, password=new_password)
+                login(request, user)
+
         delivery = Delivery.objects.get(title=data['delivery'])
         city = data['city']
         address = data['address']
@@ -103,8 +125,16 @@ class OrderView(LoginRequiredMixin, View):
                              address=address, pay_method=pay_method, order_comment=comment, payment_status='')
 
         if pay_method.id == 1:
-            return render(request, template_name='order/payment.html', context = {'title': _('Megano-order')})
-        return render(request, template_name='order/payment_someone.html', context = {'title': _('Megano-order')})
+            return render(request, template_name='order/payment.html', context = {'title': _('Megano-order'), 'data_pass': data_pass})
+        return render(request, template_name='order/payment_someone.html', context = {'title': _('Megano-order'), 'data_pass': data_pass})
+
+    def validate_passwords(self, password, password_reply):
+        if len(password) >= 8 and password == password_reply:
+            return True, None
+        elif len(password) < 8:
+            return False, _("New password is too short")
+        else:
+            return False, _("New passwords don't match")
 
 
 class OrderPayment(View):
