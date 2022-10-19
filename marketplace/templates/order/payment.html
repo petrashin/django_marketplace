@@ -21,6 +21,11 @@
     </div>
     <div class="Section">
       <div class="wrap">
+        {% if data_pass.password_correct %}
+          <div class="Profile-success">{% trans 'Password changed successfully' %}</div>
+        {% else %}
+          <div><p style="color:red;">{{ data_pass.password_error }}</p></div>
+        {% endif %}
         <form class="form Payment" action="{% url 'order_payment' %}" method="post">
           {% csrf_token %}
           <div class="Payment-card">

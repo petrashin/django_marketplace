@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-18 17:15+0300\n"
+"POT-Creation-Date: 2022-10-20 00:43+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -206,7 +206,7 @@ msgstr "Каталог"
 msgid "tags"
 msgstr "Тэги"
 
-#: .\app_goods\views.py:29 .\templates\app_goods\product.html:14
+#: .\app_goods\views.py:28 .\templates\app_goods\product.html:14
 #: .\templates\app_goods\product.html:19
 msgid "Product"
 msgstr "Товар"
@@ -247,14 +247,22 @@ msgstr "текст ошибки, возникшей при оплате"
 msgid "order"
 msgstr "заказ"
 
-#: .\app_order\views.py:29 .\app_order\views.py:106 .\app_order\views.py:107
-#: .\app_order\views.py:137 .\app_order\views.py:171 .\app_order\views.py:179
-#: .\app_order\views.py:187 .\app_order\views.py:190 .\app_order\views.py:199
-#: .\app_order\views.py:200
+#: .\app_order\views.py:40 .\app_order\views.py:128 .\app_order\views.py:129
+#: .\app_order\views.py:167 .\app_order\views.py:201 .\app_order\views.py:209
+#: .\app_order\views.py:217 .\app_order\views.py:220 .\app_order\views.py:229
+#: .\app_order\views.py:230
 #, fuzzy
 #| msgid "Megano"
 msgid "Megano-order"
 msgstr "Мегано"
+
+#: .\app_order\views.py:135
+msgid "New password is too short"
+msgstr "Новый пароль слишком короткий"
+
+#: .\app_order\views.py:137
+msgid "New passwords don't match"
+msgstr "Новые пароли не совпадают"
 
 #: .\app_payment\apps.py:8 .\app_payment\models.py:35
 msgid "payment"
@@ -411,19 +419,19 @@ msgstr "ФИО"
 msgid "card number"
 msgstr "номер банковской карты"
 
-#: .\app_users\models.py:33
+#: .\app_users\models.py:40
 msgid "profile"
 msgstr "профиль"
 
-#: .\app_users\models.py:34
+#: .\app_users\models.py:41
 msgid "relationship with the Profile model"
 msgstr "связь с моделью Profile"
 
-#: .\app_users\models.py:35
+#: .\app_users\models.py:42
 msgid "avatar"
 msgstr "аватар"
 
-#: .\app_users\models.py:36
+#: .\app_users\models.py:43
 msgid "Field for saving the user's avatar"
 msgstr "поле для сохранения аватарки пользователя"
 
@@ -467,11 +475,11 @@ msgstr "товары в корзине"
 msgid " successfully added to cart!"
 msgstr " успешно добавлен в корзину!"
 
-#: .\marketplace\settings.py:136
+#: .\marketplace\settings.py:142
 msgid "Russian"
 msgstr "Русский"
 
-#: .\marketplace\settings.py:137
+#: .\marketplace\settings.py:143
 msgid "English"
 msgstr "English"
 
@@ -530,13 +538,15 @@ msgid "Order"
 msgstr "Заказ"
 
 #: .\templates\account.html:71 .\templates\historyorder.html:55
-#: .\templates\order\order_detail.html:59 .\templates\order_detail.html:59
+#: .\templates\order\order.html:184 .\templates\order\order_detail.html:59
+#: .\templates\order_detail.html:59
 msgid "Delivery type"
 msgstr "Способ доставки"
 
 #: .\templates\account.html:77 .\templates\historyorder.html:61
-#: .\templates\order\order_detail.html:77 .\templates\order\payment.html:11
-#: .\templates\order\payment.html:16 .\templates\order\payment_someone.html:11
+#: .\templates\order\order.html:202 .\templates\order\order_detail.html:77
+#: .\templates\order\payment.html:11 .\templates\order\payment.html:16
+#: .\templates\order\payment_someone.html:11
 #: .\templates\order\payment_someone.html:16 .\templates\order_detail.html:77
 msgid "Payment"
 msgstr "Платеж"
@@ -751,7 +761,7 @@ msgstr "Желаете продолжить покупки?"
 msgid "Continue"
 msgstr "Продолжить"
 
-#: .\templates\base.html:89 .\templates\order\order_detail.html:146
+#: .\templates\base.html:89 .\templates\order\order_detail.html:145
 msgid "To cart"
 msgstr "К корзине"
 
@@ -763,8 +773,8 @@ msgstr "Корзина"
 msgid "Update"
 msgstr "Обновить"
 
-#: .\templates\cart.html:86 .\templates\order\order_detail.html:142
-#: .\templates\order_detail.html:142
+#: .\templates\cart.html:86 .\templates\order\order.html:282
+#: .\templates\order\order_detail.html:141 .\templates\order_detail.html:142
 msgid "Total"
 msgstr "Итого"
 
@@ -1040,15 +1050,18 @@ msgstr "Шаг 3. Способ оплаты"
 msgid "Step 4: Order confirmation"
 msgstr "Шаг 4. Подтверждение заказа"
 
-#: .\templates\order\order.html:68
+#: .\templates\order\order.html:68 .\templates\order\order.html:164
+#: .\templates\order\order_detail.html:39 .\templates\order_detail.html:39
+#: .\templates\profile.html:65
 msgid "Fullname"
 msgstr "ФИО"
 
-#: .\templates\order\order.html:73
+#: .\templates\order\order.html:73 .\templates\order\order.html:170
 msgid "Phone number"
 msgstr "Номер телефона"
 
-#: .\templates\order\order.html:78 .\templates\order\order_detail.html:51
+#: .\templates\order\order.html:78 .\templates\order\order.html:176
+#: .\templates\order\order_detail.html:51
 #: .\templates\order\order_register_user.html:64
 msgid "E-mail"
 msgstr "E-mail"
@@ -1089,12 +1102,12 @@ msgstr "Бесплатная доставка"
 msgid "Express delivery"
 msgstr "Экспресс доставка"
 
-#: .\templates\order\order.html:121 .\templates\order\order_detail.html:65
-#: .\templates\order_detail.html:65
+#: .\templates\order\order.html:121 .\templates\order\order.html:190
+#: .\templates\order\order_detail.html:65 .\templates\order_detail.html:65
 msgid "City"
 msgstr "Город"
 
-#: .\templates\order\order.html:126
+#: .\templates\order\order.html:126 .\templates\order\order.html:196
 msgid "Adress"
 msgstr "Адрес"
 
@@ -1106,20 +1119,21 @@ msgstr "Онлайн картой"
 msgid "Online from a random someone else's account"
 msgstr "Онлайн со случайного чужого счета"
 
-#: .\templates\order\order.html:176
-msgid "E-mail:"
-msgstr "E-mail:"
-
 #: .\templates\order\order.html:211
 msgid "Comment to the order"
 msgstr "Комментарий к заказу"
 
-#: .\templates\order\order.html:253
+#: .\templates\order\order.html:248
+msgid "Shop"
+msgstr "Магазин"
+
+#: .\templates\order\order.html:253 .\templates\order\order_detail.html:134
+#: .\templates\order_detail.html:134
 msgid "pieces"
 msgstr "шт"
 
-#: .\templates\order\order.html:291 .\templates\order\order_detail.html:147
-#: .\templates\order\payment.html:33 .\templates\order\payment_someone.html:35
+#: .\templates\order\order.html:291 .\templates\order\order_detail.html:146
+#: .\templates\order\payment.html:38 .\templates\order\payment_someone.html:35
 #: .\templates\order_detail.html:147
 msgid "Pay"
 msgstr "Оплатить"
@@ -1144,7 +1158,13 @@ msgstr "Введите пароль снова"
 msgid "I'm already registered"
 msgstr "Я уже зарегистрирован"
 
-#: .\templates\order\payment.html:28
+#: .\templates\order\payment.html:25
+#, fuzzy
+#| msgid "Profile saved successfully"
+msgid "Password changed successfully"
+msgstr "Профиль успешно сохранен"
+
+#: .\templates\order\payment.html:33
 msgid "Card number"
 msgstr "номер банковской карты"
 
@@ -1255,6 +1275,9 @@ msgstr "Сохранить"
 #: .\templates\profile.html:122
 msgid "Profile saved successfully"
 msgstr "Профиль успешно сохранен"
+
+#~ msgid "E-mail:"
+#~ msgstr "E-mail:"
 
 #~ msgid "Video"
 #~ msgstr "Видео"
