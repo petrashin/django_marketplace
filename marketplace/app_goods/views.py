@@ -1,9 +1,9 @@
-from django.core.paginator import Paginator
 from django.shortcuts import render
 
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 
 from django.views import View
 from django.views.generic.edit import FormMixin
@@ -181,6 +181,7 @@ def add_to_comparison(request, pk):
 
     return redirect('compare')
 
+
 class SaleView(View):
     def get(self, request):
         sale_products = Product.objects.filter(discount__isnull=False, discount__active=True)
@@ -189,4 +190,4 @@ class SaleView(View):
         if page_number is None:
             page_number = 1
         products = paginator.get_page(page_number)
-        return render(request, 'app_goods/sale.html', context={'products': products})
+        return render(request, 'app_goods/sale.html', context={'products': products, 'title': _("Sales")})
