@@ -27,6 +27,13 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
+    def get_number_of_compared_products(self, request):
+        if request.user.is_anonymous or not Profile.objects.filter(user_id=request.user.id).exists():
+            return 0
+        else:
+            profile = Profile.objects.get(user_id=request.user.id)
+            return ComparedProducts.objects.filter(profile=profile).count()
+
 
 class Image(models.Model):
     """Модель изображения аватарки"""
