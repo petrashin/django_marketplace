@@ -36,6 +36,7 @@ class CartItems(models.Model):
     quantity = models.PositiveSmallIntegerField(default=1,
                                                 verbose_name=_('quantity'))
     added_at = models.DateTimeField(auto_now_add=True, verbose_name=_('added_at'))
+    published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def get_session_id(self, request):
         """ Получение id корзины из cookies для пользователя """
