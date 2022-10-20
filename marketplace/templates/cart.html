@@ -50,10 +50,8 @@
                                 </div>
                                 <div class="input-group">
                                     {{ item.shop }}
-<!--                                <div class="Cart-block Cart-block_seller">-->
                                     <form class="form-select" style= "display: flex" action="{% url 'cart_update_price' item.id %}" method="post">
                                         {% csrf_token %}
-<!--                                        {{ item.shop }}-->
                                         {{ item.shops_form }}
                                         <span style="align: center">
                                             <input type='submit' value='{% trans 'Update' %}'>
