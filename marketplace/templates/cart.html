@@ -48,12 +48,16 @@
                                     <div style="font-size: 16px" class="Cart-price">{{ item.price }} {% trans 'rub' %}.
                                     </div>
                                 </div>
-                                <div class="Cart-block Cart-block_seller">
-                                    <form class="form-select" action="{% url 'cart_update_price' item.id %}" method="post">
+                                <div class="input-group">
+                                    {{ item.shop }}
+<!--                                <div class="Cart-block Cart-block_seller">-->
+                                    <form class="form-select" style= "display: flex" action="{% url 'cart_update_price' item.id %}" method="post">
                                         {% csrf_token %}
-                                        {{ item.shop }}
+<!--                                        {{ item.shop }}-->
                                         {{ item.shops_form }}
-                                        <input type='submit' value='{% trans 'Update' %}'>
+                                        <span style="align: center">
+                                            <input type='submit' value='{% trans 'Update' %}'>
+                                        </span>
                                     </form>
                                 </div>
                             </div>
