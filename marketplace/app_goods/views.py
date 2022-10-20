@@ -174,13 +174,16 @@ def add_to_comparison(request, pk):
     Функция для добавления товара в меню сравнения
     При добавлении пятого товара в сравнение удаляет первый добавленный товар
     """
-    profile = Profile.objects.get(user=request.user)
-    if not ComparedProducts.objects.filter(profile=profile, product_id=pk).exists():
-        if ComparedProducts.objects.filter(profile=profile).count() > 3:
-            ComparedProducts.objects.filter(profile=profile).order_by('added_at').first().delete()
-        ComparedProducts.objects.create(profile=profile, product_id=pk)
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        profile = Profile.objects.get(user=request.user)
+        if not ComparedProducts.objects.filter(profile=profile, product_id=pk).exists():
+            if ComparedProducts.objects.filter(profile=profile).count() > 3:
+                ComparedProducts.objects.filter(profile=profile).order_by('added_at').first().delete()
+            ComparedProducts.objects.create(profile=profile, product_id=pk)
 
-    return redirect('compare')
+        return redirect('compare')
 
 
 class SaleView(View):

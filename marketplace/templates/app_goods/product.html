@@ -70,9 +70,13 @@
                                     </div>
                                     {% endif %}
                                 </div>
-                                <div class="ProductCard-compare"><a class="btn btn_default" href="#"><img
-                                        class="btn-icon" src="{% static 'assets/img/icons/card/change.svg' %}"
-                                        alt="change.svg"/></a>
+                                <div class="ProductCard-compare">
+                                    <form action="{% url 'add_to_comparison' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="Card-btn">
+                                          <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
