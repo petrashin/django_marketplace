@@ -47,6 +47,7 @@ class ProductDetailView(FormMixin, DetailView):
         shops = shop_product.get_shops_for_product(product=self.object)
         context['shops'] = shops
         context['title'] = self.object.name
+        context['specs'] = self.object.technical_specs
         return context
 
 
