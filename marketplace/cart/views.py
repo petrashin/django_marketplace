@@ -120,6 +120,7 @@ def cart_add(request, slug):
     return redirect('product_detail', slug=slug)
 
 
+@require_POST
 def cart_shop_add(request, slug1, slug2):
     """ Представление для добавления товара в корзину с выбранным продавцом """
     cart = CartItems()
@@ -149,6 +150,7 @@ def cart_remove(request, **kwargs):
     return redirect('cart_detail')
 
 
+@require_POST
 def cart_update_quantity(request, **kwargs):
     """ Представление для обновления количества товара в корзине """
     item_id = kwargs['pk']
@@ -157,6 +159,7 @@ def cart_update_quantity(request, **kwargs):
     return redirect('cart_detail')
 
 
+@require_POST
 def cart_update_price(request, **kwargs):
     """ Представление для обновления магазина и цены товара в корзине """
     item_id = kwargs['pk']
