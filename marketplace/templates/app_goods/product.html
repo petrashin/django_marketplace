@@ -151,12 +151,14 @@
                                         <th>{% trans 'Notation' %}
                                         </th>
                                     </tr>
+                                    {% for spec, value in specs.items %}
                                     <tr>
-                                        <td>ываыв
-                                        </td>
-                                        <td>llslssl
-                                        </td>
+                                            <td>{{spec}}
+                                            </td>
+                                            <td>{{value}}
+                                            </td>
                                     </tr>
+                                    {% endfor %}
                                 </table>
                             </div>
                         </div>
