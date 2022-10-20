@@ -18,7 +18,7 @@
                 <img class="Cart-img" src="{{ item.product.product_images.main_image.url }}" alt="card.jpg"/></a>
               {% else %}
               <a class="Cart-pict" href="{% url 'product_detail' item.product.slug %}">
-                <img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
+                <img class="Cart-img" src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
               {% endif %}
               <div class="Card-content">
                 <strong class="Card-title"><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
