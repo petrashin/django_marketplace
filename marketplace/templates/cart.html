@@ -16,12 +16,13 @@
                     </ul>
                 </div>
             </div>
+
         </div>
-        {% if cart_items %}
+        <div class="Section">
+            <div class="wrap">
+            {% if cart_items %}
             {% for item in cart_items %}
             {% with product=item.product %}
-                    <div class="Section">
-                    <div class="wrap">
 {#                     <form class="form Cart" action="" method="">#}
                     <div class="Cart-product">
                         <div class="Cart-block Cart-block_row">
@@ -74,24 +75,22 @@
                             </div>
                         </div>
                     </div>
-                    </div>
 {#                     </form>#}
             {% endwith %}
-        {% endfor %}
-    {% else %}
-    {% include 'empty_category.html' %} {% endif %}
-
-        <div class="Cart-total">
-            <div class="Cart-block Cart-block_total">
-                <strong class="Cart-title">{% trans 'Total' %}:
-                </strong><span class="Cart-price">{{ total_cost }}</span><span
-                    class="Cart-price_old">{{ old_total_cost }}</span>
-            </div>
-            <div class="Cart-block"><a class="btn btn_success btn_lg" href="order">{% trans 'Checkout' %}</a>
-            </div>
-        </div>
-        </div>
+            {% endfor %}
+                    <div class="Cart-total">
+    <div class="Cart-block Cart-block_total">
+        <strong class="Cart-title">{% trans 'Total' %}:
+        </strong><span class="Cart-price">{{ total_cost }}</span><span
+            class="Cart-price_old">{{ old_total_cost }}</span>
+    </div>
+    <div class="Cart-block"><a class="btn btn_success btn_lg" href="order">{% trans 'Checkout' %}</a>
+    </div>
+</div>
+            {% else %}
+            {% include 'empty_category.html' %}
+            {% endif %}
+                </div>
         </div>
     </div>
-
 {% endblock %}

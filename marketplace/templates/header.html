@@ -4,7 +4,7 @@
     <div class="ControlPanel">
       <div class="wrap">
         <div class="row ControlPanel-row">
-          <div class="row-block">
+          <div class="row-block" style="display: flex">
             <div class="row ControlPanel-rowSplit">
               <div class="row-block"><a class="ControlPanel-title" href="#">{% trans 'Free Delivery' %}</a>
               </div>
@@ -24,26 +24,26 @@
               </div>
             </div>
           </div>
-            <div class="form-selectWrap">
-                <div class="row ControlPanel-rowSplit">
-                    <form class="form-select" action="{% url 'set_language' %}" method="post">{% csrf_token %}
-                        <input name="next" type="hidden" value="{{ redirect_to }}">
-                            <select style="padding: 0px; font-size: 14px; min-width: 120px" class="form-select" name="language">
-                                {% get_current_language as LANGUAGE_CODE %}
-                                {% get_available_languages as LANGUAGES %}
-                                {% get_language_info_list for LANGUAGES as languages %}
-                                {% for language in languages %}
-                                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
-                                        {{ language.name_local }} ({{ language.code }})
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            <input type="submit" style="left: 42em; top: 7px; font-size: 14px" value="{% trans 'Go' %}">
-                    </form>
-                </div>
-            </div>
+        <div class="input-group">
+            <form class="form-select" style="display: flex" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                <input name="next" type="hidden" value="{{ redirect_to }}">
+                    <select class="form-select" name="language">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                {{ language.name_local }} ({{ language.code }})
+                            </option>
+                        {% endfor %}
+                    <span style="align: center">
+                        <input type="submit" value="{% trans 'Go' %}">
+                    </span>
+                    </select>
+            </form>
+        </div>
 
-          <nav class="row-block">
+          <nav class="row-block" style="display: flex">
             <div class="row ControlPanel-rowSplit">
 
                 <!--Доступ к профилю для авторизованного пользователя-->
@@ -175,3 +175,4 @@
       </div>
     </div>
   </header>
+
