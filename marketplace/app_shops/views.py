@@ -1,7 +1,7 @@
 import math, random
 
 from django.core.paginator import Paginator
-from django.db.models import Count, F, Avg, Case, When, DecimalField, Max, Min, Q
+from django.db.models import Count, F, Avg, Case, When, DecimalField, Max, Min
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, DetailView, ListView
 
@@ -33,14 +33,7 @@ class CatalogueView(ListView):
     template_name = 'catalog.html'
 
     def get_queryset(self):
-        if self.kwargs.get("category_id"):
-            return Product.objects.filter(category=self.kwargs["category_id"])
-        else:
-            keyword = self.request.GET.get("query")
-            if keyword:
-                return Product.objects.filter(
-                    Q(name__icontains=keyword) | Q(category__name__icontains=keyword)).distinct()
-            return Product.objects.all()
+        return Product.objects.filter(category=self.kwargs["category_id"])
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CatalogueView, self).get_context_data()
@@ -58,12 +51,6 @@ class CatalogueView(ListView):
         context['filter'] = f
         context['products'] = products
         context['tags'] = ProductTag.objects.all()[:6:]
-
-        if self.request.GET.get('price'):
-            min_price, max_price = self.request.GET.get('price').split(';')
-            context['selected_min_price'] = min_price
-            context['selected_max_price'] = max_price
-
         context['max_price'] = math.ceil(self.get_queryset().annotate(
             avg_price=SORT_OPTIONS['price']).aggregate(Max('avg_price'))['avg_price__max'])
         context['min_price'] = math.trunc(self.get_queryset().annotate(
@@ -115,10 +102,11 @@ class ShopDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # товары магазина
-        products = ShopProduct.objects.filter(shop__slug=self.object.slug, product__published=True). \
-                                       select_related('product'). \
-                                       prefetch_related('product__category', 'product__product_images'). \
-                                       order_by('-product__sales_count')[:10]
+        products = ShopProduct.objects. \
+                       filter(shop__slug=self.object.slug, product__published=True). \
+                       select_related('product'). \
+                       prefetch_related('product__category', 'product__product_images'). \
+                       order_by('-product__sales_count')[:10]
         context['products'] = products
         context['title'] = self.object.name
         return context
