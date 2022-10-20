@@ -72,7 +72,7 @@ class Category(models.Model):
                                         related_name="sub", verbose_name=_('parent category'))
     category_icon = models.FileField(upload_to="icons/categories/", verbose_name=_('category icon'),
                                      default=os.path.abspath(
-                                         f'{settings.BASE_DIR}/media/icons/categories/test_category_icon.jpg'))
+                                         f'/icons/categories/test_category_icon.jpg'))
     category_image = models.ImageField(upload_to='cat_image/',
                                        blank=True,
                                        null=True,

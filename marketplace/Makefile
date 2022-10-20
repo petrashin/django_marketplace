@@ -10,6 +10,7 @@ fixtures:
 	python manage.py loaddata goods
 	python manage.py loaddata shops
 	python manage.py loaddata tags
+	python manage.py update_tech_specs
 
 admin:
 	python manage.py createsuperuser
