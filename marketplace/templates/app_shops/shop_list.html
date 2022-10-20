@@ -38,12 +38,13 @@
                   {% endfor %}
                   <div class="Card-hover">
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                      <form action="{% url 'cart_shop_add' item.product.slug %}" method="post">
+<!--                    <a class="Card-btn" href="{% url 'cart_shop_add' item.product.slug item.shop.slug %}">-->
+<!--                        <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>-->
+                      <form action="{% url 'cart_shop_add' item.product.slug item.shop.slug %}" method="post">
                           {% csrf_token %}
-                          {{ item.add_to_cart_form }}
-                          <button type="submit" class="Card-btn buy">
-                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
-                          </button>
+                      <button type="submit" class="Card-btn buy">
+                          <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
+                      </button>
                       </form>
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
                   </div>
