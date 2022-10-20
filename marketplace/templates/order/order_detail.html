@@ -48,7 +48,7 @@
                       </div>
                     </div>
                     <div class="Order-info">
-                      <div class="Order-infoType">E-mail:
+                      <div class="Order-infoType">{% trans 'E-mail' %}:
                       </div>
                       <div class="Order-infoContent">{{ request.user.email }}
                       </div>
@@ -92,7 +92,7 @@
                       <div class="Order-info Order-info_error">
                         <div class="Order-infoType">{% trans 'Payment failed' %}:
                         </div>
-                        <div class="Order-infoContent">{% trans 'The payment was not completed because' %} {{ order.payment_error }}
+                        <div class="Order-infoContent">{% trans 'The payment was not completed because' %} {{ order.payment_status }}
                         </div>
                       </div>
                     {% endif %}
@@ -100,7 +100,7 @@
                 </div>
               </div>
               <div class="Cart Cart_order">
-                {% for product in cart %}
+                {% for product, quantity in order.get_products.items %}
                   <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_pict">
@@ -136,15 +136,14 @@
                     </div>
                   </div>
                 {% endfor %}
-
                 <div class="Cart-total">
                   <div class="Cart-block Cart-block_total">
                     <strong class="Cart-title">{% trans 'Total' %}:<span class="Cart-price">{{ order.get_total_cost_with_discount }}$</span> <span class="Cart-price_old">{{ order.get_total_cost }}$</span>
                     </strong>
                   </div>
                   {% if order.payment_status != 'Оплачено' %}
-                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="/cart">В корзину</a> </div>
-                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="repeat">Оплатить</a> </div>
+                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'cart_detail' %}">{% trans 'To cart' %}</a> </div>
+                    <div class="Cart-block"><a class="btn btn_primary btn_lg" href="{% url 'order_repeat' %}">{% trans 'Pay' %}</a> </div>
                   {% endif %}
                 </div>
               </div>

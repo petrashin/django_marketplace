@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Delivery, PayMethod, Order
+
+from .models import Delivery, Order, PayMethod
 
 
 @admin.register(Delivery)
