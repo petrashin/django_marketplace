@@ -7,7 +7,7 @@
     <div class="Middle-top">
       <div class="wrap">
         <div class="Middle-header">
-          <h1 class="Middle-title">{% trans 'Checkout' %}
+          <h1 class="Middle-title">{% trans 'Checkout' %}{{ data_custom.delivery_express_coast }}
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
             <li class="breadcrumbs-item"><a href="../index.html">{% trans 'home' %}</a>
@@ -67,29 +67,17 @@
                   <div class="form-group">
                     <label class="form-label" for="name">{% trans 'Fullname' %}
                     </label>
-                    <input class="form-input" id="name" name="name" type="text" value="{{ profile.fullname }}" data-validate="require"/>
+                    <div class="form-input">{{ profile.fullname }}</div>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="phone">{% trans 'Phone number' %}
                     </label>
-                    <input class="form-input" id="phone" name="phone" type="text" value="{{ profile.phone_number }}" data-validate="require"/>
+                    <div class="form-input">{{ profile.phone_number }}</div>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="mail">{% trans 'E-mail' %}
                     </label>
-                    <input class="form-input" id="mail" name="mail" type="text" value="{{ user.email }}" data-validate="require"/>
-                  </div>
-                </div>
-                <div class="row-block">
-                  <div class="form-group">
-                    <label class="form-label" for="password">{% trans 'Password' %}
-                    </label>
-                    <input class="form-input" id="password" name="password" type="password" placeholder='{% trans "Here you can change your password" %}'/>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="passwordReply">{% trans 'Password confirmation' %}
-                    </label>
-                    <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder='{% trans "Enter your password again" %}'/>
+                    <div class="form-input">{{ user.email }}</div>
                   </div>
                 </div>
               </div>
@@ -303,47 +291,53 @@
 {% endblock %}
 {% block order_scripts %}
   <script>
-    const delivery_ordinary = document.getElementById("delivery_ordinary");
-    const delivery_express = document.getElementById("delivery_express");
-    const total_sum = parseFloat({{ total_sum }})
-    const q_shops = {{ q_shops }}
-
-    DeliveryCoast(total_sum, q_shops);
-    function DeliveryCoast(total_sum, q_shops) {
-        let delivery_coast;
-        if (total_sum < 2000 || q_shops > 1) {
-            document.getElementById("delivery_coast").innerHTML = "200,00$"
-            delivery_coast = 200.00
-            TotalSum(delivery_coast)
-            return 200.00
-        } else {
-            document.getElementById("delivery_coast").innerHTML = "0,00$"
-            delivery_coast = 0.00
-            TotalSum(delivery_coast)
-            return 0.00
+    delivery_ordinary = document.getElementById("delivery_ordinary");
+    delivery_express = document.getElementById("delivery_express");
+    total_sum = parseFloat({{ total_sum }});
+    q_shops = {{ q_shops }};
+    min_order = parseFloat({{ data_custom.min_order }});
+    delivery_min = parseFloat({{ data_custom.delivery_min }});
+    delivery_express_coast = parseFloat({{ data_custom.delivery_express_coast }});
+    if (!delivery_express_coast || !min_order || !delivery_express_coast){
+        min_order = 0;
+        delivery_min = 0;
+        delivery_express_coast = 0;
+    }
+    let delivery_coast;
+    DeliveryCoast(total_sum, min_order, delivery_min, q_shops);
+    function DeliveryCoast(total_sum, min_order, delivery_min, q_shops) {
+        if (total_sum < min_order || q_shops > 1) {
+            delivery_coast = delivery_min;
+            TotalSum(delivery_coast);
+            return delivery_coast;
+        }
+        else {
+            delivery_coast = 0;
+            TotalSum(delivery_coast);
+            return 0;
         }
     }
     delivery_ordinary.addEventListener('click', function () {
-      document.getElementById("delivery_info").innerHTML = document.getElementById("regular_delivery").innerHTML
-      delivery_coast = DeliveryCoast()
-      TotalSum(delivery_coast)
+      document.getElementById("delivery_info").innerHTML = document.getElementById("regular_delivery").innerHTML;
+      delivery_coast = DeliveryCoast();
+      TotalSum(delivery_coast);
     });
     delivery_express.addEventListener('click', function () {
-      document.getElementById("delivery_info").innerHTML = document.getElementById("express_delivery").innerHTML
-      document.getElementById("delivery_coast").innerHTML = "500,00$"
-      const delivery_coast = 500.00;
-      TotalSum(delivery_coast)
+      document.getElementById("delivery_info").innerHTML = document.getElementById("express_delivery").innerHTML;
+      TotalSum(delivery_express_coast);
     });
 
     function TotalSum(delivery_coast) {
-        let total_sum = parseFloat({{ total_sum }});
-        const total_sum_with_discount = parseFloat({{ total_sum_with_discount }});
+        document.getElementById("delivery_coast").innerHTML = String(delivery_coast).replace('.', ',') + "$";
+        total_sum = parseFloat({{ total_sum }});
+        total_sum_with_discount = parseFloat({{ total_sum_with_discount }});
         if (total_sum_with_discount !== total_sum) {
             total_sum = total_sum_with_discount + delivery_coast;
-            document.getElementById("total_sum_with_discount").innerHTML = String(total_sum).replace('.', ',') + "$"
-        } else {
+            document.getElementById("total_sum_with_discount").innerHTML = String(total_sum).replace('.', ',') + "$";
+        }
+        else {
             total_sum = total_sum + delivery_coast;
-            document.getElementById("total_sum").innerHTML = String(total_sum).replace('.', ',') + "$"
+            document.getElementById("total_sum").innerHTML = String(total_sum).replace('.', ',') + "$";
         }
     }
 
@@ -357,7 +351,7 @@
       document.getElementById("pay_info").innerHTML = document.getElementById("pay_online_card_someone").innerHTML
     });
 
-    function CopyCity() {document.getElementById("city_info").innerHTML = document.getElementById("city").value;}
-    function CopyAddress() {document.getElementById("address_info").innerHTML = document.getElementById("address").value;}
+    function CopyCity() {document.getElementById("city_info").innerHTML = document.getElementById("city").value}
+    function CopyAddress() {document.getElementById("address_info").innerHTML = document.getElementById("address").value}
   </script>
 {% endblock %}
