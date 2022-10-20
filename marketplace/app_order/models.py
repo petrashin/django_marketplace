@@ -1,7 +1,9 @@
-from django.db import models
-from app_shops.models import ShopProduct, Shop
 from django.contrib.auth.models import User
+from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from app_shops.models import Shop, ShopProduct
+from custom_admin.models import DefaultSettings
 
 
 class Delivery(models.Model):
@@ -58,6 +60,7 @@ class Order(models.Model):
                 shop_id = Shop.objects.get(slug=shop).id
                 product = ShopProduct.objects.get(product_id=key, shop=shop_id)
                 total_cost += product.price * value
+        total_cost += self.get_delivery_coast(total_cost)
         return float(total_cost)
 
     def get_total_cost_with_discount(self):
@@ -68,4 +71,34 @@ class Order(models.Model):
                 shop_id = Shop.objects.get(slug=shop).id
                 product = ShopProduct.objects.get(product_id=key, shop=shop_id)
                 total_cost += product.get_discounted_price() * value
+        total_cost += self.get_delivery_coast(total_cost)
         return float(total_cost)
+    
+    def get_delivery_coast(self, total_cost):
+        data_custom = DefaultSettings.objects.all()
+    
+        if data_custom:
+            delivery_express_coast = data_custom[0].delivery_express_coast
+            min_order = data_custom[0].min_order
+            delivery_min = data_custom[0].delivery_min
+        else:
+            delivery_express_coast, min_order, delivery_min = 0, 0, 0
+       
+        delivery_coast = 0
+        if self.delivery.id == 1 and (total_cost < min_order or len(self.order_goods) > 1):
+            delivery_coast = delivery_min
+        elif self.delivery.id == 2:
+            delivery_coast = delivery_express_coast
+        
+        return delivery_coast
+    
+    def get_products(self):
+        products = {}
+        
+        for shop in self.order_goods:
+            # shop_id = Shop.objects.get(name=shop)
+            shop_id = Shop.objects.get(slug=shop)
+            for product_id, quantity in self.order_goods[shop].items():
+                new_product = ShopProduct.objects.get(product_id=product_id, shop_id=shop_id)
+                products[new_product] = quantity
+        return products
