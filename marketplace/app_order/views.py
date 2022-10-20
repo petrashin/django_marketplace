@@ -32,7 +32,7 @@ from .forms import OrderCommentForm
 from .models import Delivery, Order, PayMethod
 
 
-class OrderView(LoginRequiredMixin, EditProfile, View):
+class OrderView(LoginRequiredMixin, View):
     login_url = reverse_lazy('register')
    
     @staticmethod
@@ -46,10 +46,9 @@ class OrderView(LoginRequiredMixin, EditProfile, View):
             total_sum=(Sum(F('price') * F('quantity'))),
             total_sum_with_discount=Sum(F('price_discount') * F('quantity'))
         )
-        q_shops = CartItems.objects.filter(session_id=request.user.id).aggregate(
+        q_shops = CartItems.objects.filter(user=request.user.id).aggregate(
             q_shops=Count('shop', distinct=True)
         )
-
         if kwargs.get('pk') == '2':
             cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
                 'product__discount'
@@ -64,6 +63,7 @@ class OrderView(LoginRequiredMixin, EditProfile, View):
             q_shops = CartItems.objects.filter(session_id=request.session.session_key).aggregate(
                 q_shops=Count('shop', distinct=True)
             )
+            
         total_sum = 0
         total_sum_with_discount = 0
         q = Decimal(10) ** -2
@@ -77,7 +77,7 @@ class OrderView(LoginRequiredMixin, EditProfile, View):
         context['total_sum'] = str(total_sum)
         context['total_sum_with_discount'] = str(total_sum_with_discount)
         context['q_shops'] = q_shops['q_shops']
-
+        
         if request.user.is_authenticated:
             context['user'] = request.user
             profile = Profile.objects.filter(user_id=request.user.id)
@@ -92,30 +92,19 @@ class OrderView(LoginRequiredMixin, EditProfile, View):
 
     
     def post(self, request, **kwargs):
-        super().post(request, **kwargs)
         data = request.POST
         order_comment = OrderCommentForm(request.POST)
         comment = ''
         if order_comment.is_valid():
             comment = order_comment.cleaned_data.get('comment')
         user = request.user
-        new_password = request.POST.get("password")
-        new_password_reply = request.POST.get("passwordReply")
-        data_pass = {}
-        if new_password != "":
-            data_pass["password_correct"], data_pass["password_error"] = self.validate_passwords(new_password, new_password_reply)
-            if data_pass["password_correct"]:
-                user.set_password(new_password)
-                user.save()
-                user = authenticate(username=user.username, password=new_password)
-                login(request, user)
-
         delivery = Delivery.objects.get(title=data['delivery'])
         city = data['city']
         address = data['address']
         pay_method = PayMethod.objects.get(title=data['pay'])
 
         products = CartItems.objects.filter(session_id=request.session.session_key).select_related('product')
+        
         order_goods = {}
         for product in products:
             if product.shop not in order_goods.keys():
@@ -123,7 +112,19 @@ class OrderView(LoginRequiredMixin, EditProfile, View):
             order_goods[product.shop][product.product_id] = product.quantity
         Order.objects.create(user=user, order_goods=order_goods, delivery=delivery, city=city,
                              address=address, pay_method=pay_method, order_comment=comment, payment_status='')
-
+        
+        new_password = request.POST.get("password")
+        new_password_reply = request.POST.get("passwordReply")
+        data_pass = {}
+        if new_password != "":
+            data_pass["password_correct"], data_pass["password_error"] = self.validate_passwords(new_password,
+                                                                                                 new_password_reply)
+            if data_pass["password_correct"]:
+                user.set_password(new_password)
+                user.save()
+                user = authenticate(username=user.username, password=new_password)
+                login(request, user)
+        
         if pay_method.id == 1:
             return render(request, template_name='order/payment.html', context = {'title': _('Megano-order'), 'data_pass': data_pass})
         return render(request, template_name='order/payment_someone.html', context = {'title': _('Megano-order'), 'data_pass': data_pass})
@@ -174,7 +175,7 @@ class OrderPayment(View):
         expression_wrapper = ExpressionWrapper(
             F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
             output_field=FloatField())
-        cart = CartItems.objects.filter(session_id=request.session.session_key). \
+        cart = CartItems.objects.filter(user=user.id). \
             select_related('product__discount'). \
             annotate(price_discount=expression_wrapper,
                      total_sum=Sum(F('price') * F('quantity')),

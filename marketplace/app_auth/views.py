@@ -49,16 +49,17 @@ def register_view(request):
             profile = Profile.objects.create(user=user, role=role, phone_number=phone_number, fullname=fullname)
             Image.objects.create(profile=profile)
             try:
-                cart = CartItems.objects.get(session_id=request.session.session_key)
+                carts = CartItems.objects.filter(session_id=request.session.session_key)
             except Exception as ex:
-                cart = None
+                carts = None
 
             login(request, user)
             time.sleep(.5)
 
-            if cart:
-                cart.session_id = request.session.session_key
-                cart.save()
+            if carts:
+                for cart in carts:
+                    cart.session_id = request.session.session_key
+                    cart.save()
             if 'username' not in request.POST.keys():
                 return redirect('order', pk=2)
             return redirect('home')
