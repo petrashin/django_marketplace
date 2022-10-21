@@ -63,6 +63,7 @@ class CartItemsListView(ListView):
 
 
 def _check_cart_discount(discount_cart_product):
+    """ Проверка на наличие скидок по количеству и обычной"""
     if discount_cart_product.quantity >= discount_cart_product.product.discount.discount_amount:
         discount = discount_cart_product.old_price * decimal.Decimal(
             (discount_cart_product.product.discount.discount_value / 100))
@@ -81,6 +82,7 @@ def _check_cart_discount(discount_cart_product):
 
 
 def _check_doublet_discount(cart_products, discount_cart_product):
+    """ Проверка на наличие скидок - при наличии 2-х товаров """
     accept_discount_products = []
     for product in cart_products:
         if discount_cart_product.product.discount == product.product.discount:

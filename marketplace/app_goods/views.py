@@ -60,11 +60,10 @@ class AddReview(View):
         product = Product.objects.get(slug=slug)
         if form.is_valid():
             form = form.save(commit=False)
-            user = User.objects.get(id=request.user.id)
+            user = request.user
             form.user = user
             form.email = user.email
             form.product = product
-
             form.save()
 
         return redirect(product.get_absolute_url())
