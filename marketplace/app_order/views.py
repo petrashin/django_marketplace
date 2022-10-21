@@ -38,8 +38,9 @@ class OrderView(LoginRequiredMixin, View):
     @staticmethod
     def get(request, **kwargs):
         context = {'title': _('Megano-order')}
+        data_custom = None
         if DefaultSettings.objects.all():
-            data_custom = DefaultSettings.objects.get(id=1)
+            data_custom = DefaultSettings.objects.first()
         cart = CartItems.objects.filter(user=request.user.id).select_related('product__discount').annotate(
             price_discount=ExpressionWrapper(
                 F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
@@ -87,8 +88,8 @@ class OrderView(LoginRequiredMixin, View):
             if profile:
                 profile = Profile.objects.get(user_id=request.user.id)
             else:
-                role = Role.objects.get_or_create(name='Покупатель')
-                profile = Profile.objects.create(user=user, phone_number='', role=role)
+                role = Role.objects.get_or_create(name='Покупатель')[0]
+                profile = Profile.objects.create(user=request.user, phone_number='', role=role)
             context['profile'] = profile
 
         return render(request, template_name='order/order.html', context=context)
