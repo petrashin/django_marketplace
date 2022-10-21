@@ -38,6 +38,8 @@ class OrderView(LoginRequiredMixin, View):
     @staticmethod
     def get(request, **kwargs):
         context = {'title': _('Megano-order')}
+        if DefaultSettings.objects.all():
+            data_custom = DefaultSettings.objects.get(id=1)
         cart = CartItems.objects.filter(user=request.user.id).select_related('product__discount').annotate(
             price_discount=ExpressionWrapper(
                 F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
@@ -74,6 +76,7 @@ class OrderView(LoginRequiredMixin, View):
             else:
                 total_sum_with_discount += Decimal(product.total_sum).quantize(q)
         context['cart'] = cart
+        context['data_custom'] = data_custom
         context['total_sum'] = str(total_sum)
         context['total_sum_with_discount'] = str(total_sum_with_discount)
         context['q_shops'] = q_shops['q_shops']
@@ -84,7 +87,7 @@ class OrderView(LoginRequiredMixin, View):
             if profile:
                 profile = Profile.objects.get(user_id=request.user.id)
             else:
-                role = Role.objects.get(name='покупатель')
+                role = Role.objects.get_or_create(name='Покупатель')
                 profile = Profile.objects.create(user=user, phone_number='', role=role)
             context['profile'] = profile
 
@@ -113,29 +116,9 @@ class OrderView(LoginRequiredMixin, View):
         Order.objects.create(user=user, order_goods=order_goods, delivery=delivery, city=city,
                              address=address, pay_method=pay_method, order_comment=comment, payment_status='')
         
-        new_password = request.POST.get("password")
-        new_password_reply = request.POST.get("passwordReply")
-        data_pass = {}
-        if new_password != "":
-            data_pass["password_correct"], data_pass["password_error"] = self.validate_passwords(new_password,
-                                                                                                 new_password_reply)
-            if data_pass["password_correct"]:
-                user.set_password(new_password)
-                user.save()
-                user = authenticate(username=user.username, password=new_password)
-                login(request, user)
-        
         if pay_method.id == 1:
-            return render(request, template_name='order/payment.html', context = {'title': _('Megano-order'), 'data_pass': data_pass})
-        return render(request, template_name='order/payment_someone.html', context = {'title': _('Megano-order'), 'data_pass': data_pass})
-
-    def validate_passwords(self, password, password_reply):
-        if len(password) >= 8 and password == password_reply:
-            return True, None
-        elif len(password) < 8:
-            return False, _("New password is too short")
-        else:
-            return False, _("New passwords don't match")
+            return render(request, template_name='order/payment.html', context = {'title': _('Megano-order')})
+        return render(request, template_name='order/payment_someone.html', context = {'title': _('Megano-order')})
 
 
 class OrderPayment(View):
