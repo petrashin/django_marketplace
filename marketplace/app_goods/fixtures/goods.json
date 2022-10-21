@@ -878,7 +878,7 @@
         "views_count": 0,
         "sales_count": 0,
         "published": true,
-        "limited_edition": false,
+        "limited_edition": true,
         "technical_specs": {},
         "category": [
             3,
@@ -904,7 +904,7 @@
         "views_count": 0,
         "sales_count": 0,
         "published": true,
-        "limited_edition": true,
+        "limited_edition": false,
         "technical_specs": {},
         "category": [
             3,
