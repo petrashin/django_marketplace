@@ -89,6 +89,7 @@ class OrderView(LoginRequiredMixin, View):
             else:
                 role = Role.objects.get_or_create(name='Покупатель')[0]
                 profile = Profile.objects.create(user=request.user, phone_number='', role=role)
+                Image.objects.create(profile=profile)
             context['profile'] = profile
 
         return render(request, template_name='order/order.html', context=context)
