@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from django.views import View
@@ -188,7 +189,8 @@ def add_to_comparison(request, pk):
 
 class SaleView(View):
     def get(self, request):
-        sale_products = Product.objects.filter(discount__isnull=False, discount__active=True)
+        sale_products = Product.objects.filter(discount__isnull=False, discount__active=True,
+                                               ).exclude(discount__end_date__lt=timezone.now())
         paginator = Paginator(sale_products, 8)
         page_number = request.GET.get('page')
         if page_number is None:
