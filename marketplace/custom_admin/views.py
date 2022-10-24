@@ -87,26 +87,18 @@ class ImportGoodsView(View):
                             name_category = product['category']
                             value_price = product['price']
 
-                            if not Shop.objects.filter(name=name_shop):
-                                Shop.objects.create(name=name_shop)
-
-                            if not Category.objects.filter(name=name_category):
-                                Category.objects.create(name=name_category)
-
-                            shop = Shop.objects.get(name=name_shop)
-                            category = Category.objects.get(name=name_category)
+                            shop = Shop.objects.get_or_create(name=name_shop, slug=name_shop)[0]
+                            category = Category.objects.get_or_create(name=name_category, slug=name_category)[0]
                             try:
                                 product = Product.objects.filter(name=name)
                                 if product:
-                                    print(product)
                                     shop_product = ShopProduct.objects.get(product=product[0])
                                     shop_product.quantity += quantity
                                     shop_product.save()
                                 else:
-                                    product = Product.objects.create(name=name, description=description)
+                                    product = Product.objects.create(name=name, description=description, slug=name)
                                     product.category.add(category)
                                     product.save()
-                                    print(shop, product, value_price, quantity)
                                     ShopProduct.objects.create(shop=shop,
                                                                product=product,
                                                                price=value_price,
@@ -140,32 +132,22 @@ class ImportGoodsView(View):
         return redirect('/admin/')
 
     def save_file(self, request, shop, file):
-
+        
         if shop:
             file_for_import = File.objects.create(file=file, shop=shop)
-            if not os.path.exists(f'media/import/successful/shop_{shop.id}'):
-                os.makedirs(f'media/import/successful/shop_{shop.id}')
-            file_name = file_for_import.file.name.split('import/')[-1]
-            destination_path = os.path.abspath(f'{settings.MEDIA_ROOT}/import/successful/shop_{shop.id}/{file_name}')
+            if not os.path.exists(f'media/import/successful/shop_{shop.name}'):
+                os.makedirs(f'media/import/successful/shop_{shop.name}')
+            file_name = str(file_for_import.id) + '_' + file_for_import.file.name.split('import/')[-1]
+            destination_path = os.path.abspath(f'{settings.MEDIA_ROOT}/import/successful/shop_{shop.name}/{file_name}')
         else:
             if not os.path.exists(f'media/import/unsuccessful'):
                 os.makedirs(f'media/import/unsuccessful')
             file_for_import = File.objects.create(file=file)
-            file_name = file_for_import.file.name.split('import/')[-1]
+            file_name = str(file_for_import.id) + '_' + file_for_import.file.name.split('import/')[-1]
             destination_path = os.path.abspath(f'{settings.MEDIA_ROOT}/import/unsuccessful/{file_name}')
 
         source_path = os.path.abspath(f'{settings.MEDIA_ROOT}/{file_for_import.file.name}')
         shutil.move(source_path, destination_path)
-
-    # @staticmethod
-    # def delete_file(request, file_name):
-    # 	file_path = os.path.abspath(f'{settings.MEDIA_ROOT}/{file_name}')
-    # 	print(os.path.isfile(file_path))
-    # 	try:
-    # 		os.remove(file_path)
-    # 	except Exception as ex:
-    # 		print(ex)
-    # 		messages.error(request, 'Error deleting file')
 
     @staticmethod
     def send_message_for_admin(request, email, log):

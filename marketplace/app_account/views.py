@@ -9,8 +9,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
 
-from app_shops.views import AddToCartFormMixin
-
 
 def account_view(request):
     if request.user.is_superuser and not Profile.objects.filter(user_id=request.user.id).exists():
@@ -202,7 +200,7 @@ class OrderDetailView(generic.DetailView):
         return context
 
 
-class HistoryViewListView(AddToCartFormMixin, generic.ListView):
+class HistoryViewListView(generic.ListView):
     model = ViewsHistory
     template_name = 'historyview.html'
 
@@ -212,6 +210,5 @@ class HistoryViewListView(AddToCartFormMixin, generic.ListView):
         profile = Profile.objects.get(user=self.request.user)
         recent_views = ViewsHistory.objects.filter(profile=profile).order_by('-viewed_at')[:20]
         context['recent_views'] = recent_views
-        self.add_to_cart_form(recent_views)
 
         return context

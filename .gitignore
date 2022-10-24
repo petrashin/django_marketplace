@@ -22,7 +22,7 @@ db.sqlite3
 *.sublime-project
 *.sublime-workspace
 
-.env
+marketplace/marketplace/.env
 debug.log
 test*.docx
 test*.json

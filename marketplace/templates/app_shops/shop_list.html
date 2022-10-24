@@ -18,7 +18,7 @@
                 <img class="Cart-img" src="{{ item.product.product_images.main_image.url }}" alt="card.jpg"/></a>
               {% else %}
               <a class="Cart-pict" href="{% url 'product_detail' item.product.slug %}">
-                <img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
+                <img class="Cart-img" src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
               {% endif %}
               <div class="Card-content">
                 <strong class="Card-title"><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
@@ -38,14 +38,20 @@
                   {% endfor %}
                   <div class="Card-hover">
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                      <form action="{% url 'cart_shop_add' item.product.slug %}" method="post">
+<!--                    <a class="Card-btn" href="{% url 'cart_shop_add' item.product.slug item.shop.slug %}">-->
+<!--                        <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>-->
+                      <form action="{% url 'cart_shop_add' item.product.slug item.shop.slug %}" method="post">
                           {% csrf_token %}
-                          {{ item.add_to_cart_form }}
-                          <button type="submit" class="Card-btn buy">
-                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
-                          </button>
+                      <button type="submit" class="Card-btn buy">
+                          <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
+                      </button>
                       </form>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
+                    <form action="{% url 'add_to_comparison' item.product.id %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="Card-btn">
+                        <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/>
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>

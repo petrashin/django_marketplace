@@ -1,48 +1,72 @@
-from django.shortcuts import render
-from django.views import View
-from .forms import OrderCommentForm
-from .models import Order, Delivery, PayMethod
+import re
+
+from decimal import Decimal
+
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponseBadRequest
-from app_users.models import Profile, Role
-from app_goods.models import Product
-from app_shops.models import Shop, ShopProduct
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import BadHeaderError, send_mail
 from django.db import transaction
+from django.db.models import Count, ExpressionWrapper, F, FloatField, Sum
+from django.db.models.query_utils import Q
+from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.utils.translation import gettext_lazy as _
+from django.views import View
+from django.views.generic.base import ContextMixin
+
+from app_account.views import EditProfile
+from app_payment.models import PayStatus
+from app_payment.tasks import handle_payment
+from app_shops.models import Shop, ShopProduct
+from app_users.models import Profile, Role
 from cart.models import CartItems
 from custom_admin.models import DefaultSettings
-from django.db.models import Count, F, ExpressionWrapper, FloatField, Sum
-from django.db import transaction
-from decimal import *
-from app_payment.tasks import handle_payment
 from custom_admin.views import logger
-from app_payment.models import PayStatus
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .forms import OrderCommentForm
+from .models import Delivery, Order, PayMethod
 
 
 class OrderView(LoginRequiredMixin, View):
     login_url = reverse_lazy('register')
-
+   
     @staticmethod
     def get(request, **kwargs):
-        context = dict()
-
-        cart = CartItems.objects.filter(user=request.user.id).select_related(
-            'product__discount').annotate(price_discount=ExpressionWrapper(
-            F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
-            output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
-            total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
-        q_shops = CartItems.objects.filter(session_id=request.user.id).aggregate(
-            q_shops=Count('shop', distinct=True))
-
+        context = {'title': _('Megano-order')}
+        data_custom = DefaultSettings.objects.first()
+        if data_custom:
+            context['data_custom'] = data_custom
+        cart = CartItems.objects.filter(user=request.user.id).select_related('product__discount').annotate(
+            price_discount=ExpressionWrapper(
+                F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
+                output_field=FloatField()
+            ),
+            total_sum=(Sum(F('price') * F('quantity'))),
+            total_sum_with_discount=Sum(F('price_discount') * F('quantity'))
+        )
+        q_shops = CartItems.objects.filter(user=request.user.id).aggregate(
+            q_shops=Count('shop', distinct=True)
+        )
         if kwargs.get('pk') == '2':
             cart = CartItems.objects.filter(session_id=request.session.session_key).select_related(
-                'product__discount').annotate(price_discount=ExpressionWrapper(
-                F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
-                output_field=FloatField()), total_sum=(Sum(F('price') * F('quantity'))),
-                total_sum_with_discount=Sum(F('price_discount') * F('quantity')))
+                'product__discount'
+            ).annotate(
+                price_discount=ExpressionWrapper(
+                    F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
+                    output_field=FloatField()
+                ),
+                total_sum=(Sum(F('price') * F('quantity'))),
+                total_sum_with_discount=Sum(F('price_discount') * F('quantity'))
+            )
             q_shops = CartItems.objects.filter(session_id=request.session.session_key).aggregate(
-                q_shops=Count('shop', distinct=True))
+                q_shops=Count('shop', distinct=True)
+            )
+            
         total_sum = 0
         total_sum_with_discount = 0
         q = Decimal(10) ** -2
@@ -56,32 +80,35 @@ class OrderView(LoginRequiredMixin, View):
         context['total_sum'] = str(total_sum)
         context['total_sum_with_discount'] = str(total_sum_with_discount)
         context['q_shops'] = q_shops['q_shops']
-
+        
         if request.user.is_authenticated:
-            user = User.objects.get(id=request.user.id)
-            context['user'] = user
+            context['user'] = request.user
             profile = Profile.objects.filter(user_id=request.user.id)
             if profile:
                 profile = Profile.objects.get(user_id=request.user.id)
             else:
-                role = Role.objects.get(name='покупатель')
-                profile = Profile.objects.create(user=user, phone_number='', role=role)
+                role = Role.objects.get_or_create(name='Покупатель')[0]
+                profile = Profile.objects.create(user=request.user, phone_number='', role=role)
+                Image.objects.create(profile=profile)
             context['profile'] = profile
 
         return render(request, template_name='order/order.html', context=context)
 
-    @staticmethod
-    def post(request, **kwargs):
+    
+    def post(self, request, **kwargs):
         data = request.POST
-        comment = data['comment']
-        email = data['mail']
-        user = User.objects.get(email=email)
+        order_comment = OrderCommentForm(request.POST)
+        comment = ''
+        if order_comment.is_valid():
+            comment = order_comment.cleaned_data.get('comment')
+        user = request.user
         delivery = Delivery.objects.get(title=data['delivery'])
         city = data['city']
         address = data['address']
         pay_method = PayMethod.objects.get(title=data['pay'])
 
         products = CartItems.objects.filter(session_id=request.session.session_key).select_related('product')
+        
         order_goods = {}
         for product in products:
             if product.shop not in order_goods.keys():
@@ -89,10 +116,10 @@ class OrderView(LoginRequiredMixin, View):
             order_goods[product.shop][product.product_id] = product.quantity
         Order.objects.create(user=user, order_goods=order_goods, delivery=delivery, city=city,
                              address=address, pay_method=pay_method, order_comment=comment, payment_status='')
-
+        
         if pay_method.id == 1:
-            return render(request, template_name='order/payment.html', )
-        return render(request, template_name='order/payment_someone.html')
+            return render(request, template_name='order/payment.html', context = {'title': _('Megano-order')})
+        return render(request, template_name='order/payment_someone.html', context = {'title': _('Megano-order')})
 
 
 class OrderPayment(View):
@@ -110,12 +137,19 @@ class OrderPayment(View):
         payment_amount = order.get_total_cost()
         if order.get_total_cost_with_discount():
             payment_amount = order.get_total_cost_with_discount()
-        if order.delivery.id == 1 and (payment_amount < 2000 or q_shops > 1):
-            payment_amount += 200
+        data_custom = DefaultSettings.objects.all()
+        if data_custom:
+            delivery_express_coast = data_custom[0].delivery_express_coast
+            min_order = data_custom[0].min_order
+            delivery_min = data_custom[0].delivery_min
+        else:
+            delivery_express_coast, min_order, delivery_min = 0, 0, 0
+        if order.delivery.id == 1 and (payment_amount < min_order or q_shops > 1):
+            payment_amount += delivery_min
         elif order.delivery.id == 2:
-            payment_amount += 500
+            payment_amount += delivery_express_coast
         handle_payment.delay(order.id, card_num, payment_amount)
-        return render(request, template_name='order/progressPayment.html')
+        return render(request, template_name='order/progressPayment.html', context = {'title': _('Megano-order')})
 
     @transaction.atomic
     def get(self, request):
@@ -125,7 +159,7 @@ class OrderPayment(View):
         expression_wrapper = ExpressionWrapper(
             F('price') * (1 - F('product__discount__discount_value') * Decimal('1.0') / 100),
             output_field=FloatField())
-        cart = CartItems.objects.filter(session_id=request.session.session_key). \
+        cart = CartItems.objects.filter(user=user.id). \
             select_related('product__discount'). \
             annotate(price_discount=expression_wrapper,
                      total_sum=Sum(F('price') * F('quantity')),
@@ -141,31 +175,34 @@ class OrderPayment(View):
                 else:
                     logger.error(f'Заказ не оформлен. Недостаточное количество товара {product.product}')
                     # order.payment_status = f'Недостаточное количество товара {product.product}'
-                    pay_status = PayStatus.objects.get(title='недостаточное кол-во товаров')
-                    order.payment_status = pay_status.title
+                    pay_status = PayStatus.objects.get(id=6)
+                    order.payment_status = pay_status.get_title_display()
                     order.save()
                     return render(request, template_name='order/order_detail.html',
                                   context={'user': user,
                                            'profile': profile,
                                            'cart': cart,
-                                           'order': order
+                                           'order': order,
+                                           'title': _('Megano-order')
                                            })
             logger.info(f'Оформление заказа {order.id} пользователем {user.id}')
             cart.delete()
             return render(request, template_name='order/order_detail.html',
                           context={'user': user,
                                    'profile': profile,
-                                   'order': order
+                                   'order': order,
+                                   'title': _('Megano-order')
                                    })
         elif order.payment_status:
             logger.error('Ошибка оплаты')
             return render(request, template_name='order/order_detail.html', context={'user': user,
                                                                                      'profile': profile,
                                                                                      'cart': cart,
-                                                                                     'order': order
+                                                                                     'order': order,
+                                                                                     'title': _('Megano-order')
                                                                                      })
         else:
-            return render(request, template_name='order/progressPayment.html')
+            return render(request, template_name='order/progressPayment.html', context = {'title': _('Megano-order')})
 
 
 class OrderRepeat(View):
@@ -174,5 +211,5 @@ class OrderRepeat(View):
     def get(request):
         order = Order.objects.filter(user=request.user).last()
         if order.pay_method_id == 1:
-            return render(request, template_name='order/payment.html', )
-        return render(request, template_name='order/payment_someone.html')
+            return render(request, template_name='order/payment.html', context = {'title': _('Megano-order')})
+        return render(request, template_name='order/payment_someone.html', context = {'title': _('Megano-order')})

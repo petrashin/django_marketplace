@@ -3,7 +3,9 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
 from django.views import View
 from django.views.generic.edit import FormMixin
 from django.views.generic import DetailView
@@ -15,17 +17,15 @@ from app_goods.forms import ReviewForm
 from cart.forms import CartAddProductForm
 from app_users.models import Profile
 
-from app_shops.views import AddToCartFormMixin
 
-
-class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
+class ProductDetailView(FormMixin, DetailView):
     """ Представление для получения детальной информации о продукте
     и добавления его в корзину"""
     model = Product
     context_object_name = 'product'
     template_name = 'app_goods/product.html'
     form_class = CartAddProductForm
-    extra_context = {'title': _('Product'), 'review_form': ReviewForm, 'reviews': Reviews.objects.all}
+    extra_context = {'review_form': ReviewForm, 'reviews': Reviews.objects.all}
 
     def get_object(self, *args, **kwargs):
         view_object = super(ProductDetailView, self).get_object()
@@ -44,10 +44,11 @@ class ProductDetailView(FormMixin, AddToCartFormMixin, DetailView):
                 ViewsHistory.objects.create(profile=profile, product=product)
 
         # добавляем в контекст магазины, которые продают этот товар и активируем кнопку добавления в корзину
-        shops = ShopProduct.objects.filter(product=self.object.id).select_related('shop', 'product')
+        shop_product = ShopProduct()
+        shops = shop_product.get_shops_for_product(product=self.object)
         context['shops'] = shops
-        self.add_to_cart_form(shops)
-
+        context['title'] = self.object.name
+        context['specs'] = self.object.technical_specs
         return context
 
 
@@ -59,11 +60,10 @@ class AddReview(View):
         product = Product.objects.get(slug=slug)
         if form.is_valid():
             form = form.save(commit=False)
-            user = User.objects.get(id=request.user.id)
+            user = request.user
             form.user = user
             form.email = user.email
             form.product = product
-
             form.save()
 
         return redirect(product.get_absolute_url())
@@ -174,21 +174,25 @@ def add_to_comparison(request, pk):
     Функция для добавления товара в меню сравнения
     При добавлении пятого товара в сравнение удаляет первый добавленный товар
     """
-    profile = Profile.objects.get(user=request.user)
-    if not ComparedProducts.objects.filter(profile=profile, product_id=pk).exists():
-        if ComparedProducts.objects.filter(profile=profile).count() > 3:
-            ComparedProducts.objects.filter(profile=profile).order_by('added_at').first().delete()
-        ComparedProducts.objects.create(profile=profile, product_id=pk)
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        profile = Profile.objects.get(user=request.user)
+        if not ComparedProducts.objects.filter(profile=profile, product_id=pk).exists():
+            if ComparedProducts.objects.filter(profile=profile).count() > 3:
+                ComparedProducts.objects.filter(profile=profile).order_by('added_at').first().delete()
+            ComparedProducts.objects.create(profile=profile, product_id=pk)
 
-    return redirect('compare')
+        return redirect('compare')
 
 
 class SaleView(View):
     def get(self, request):
-        sale_products = Product.objects.filter(discount__isnull=False, discount__active=True)
+        sale_products = Product.objects.filter(discount__isnull=False, discount__active=True,
+                                               ).exclude(discount__end_date__lt=timezone.now())
         paginator = Paginator(sale_products, 8)
         page_number = request.GET.get('page')
         if page_number is None:
             page_number = 1
         products = paginator.get_page(page_number)
-        return render(request, 'app_goods/sale.html', context={'products': products})
+        return render(request, 'app_goods/sale.html', context={'products': products, 'title': _("Sales")})

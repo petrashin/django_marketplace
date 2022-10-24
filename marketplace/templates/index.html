@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+{% load cache %}
 {% block content %}
 <div class="Header-slider">
       <div class="Slider Slider_main">
@@ -89,8 +90,9 @@
             </header>
 
 {#          Lim Product #}
-              {% if lim_products %}
-              {% with lim_product=lim_products|random %}
+              {% if lim_product %}
+{#              {% with lim_product=lim_products|random %}#}
+              {% cache 86400 lim_product %}
                 <div class="Card">
                 <a class="Card-picture" href="{% url 'product_detail' lim_product.slug %}">
                 {% if lim_product.product_images.main_image %}
@@ -143,12 +145,11 @@
                 </div>
               </div>
             </div>
-              {% endwith %}
+              {% endcache %}
+{#              {% endwith %}#}
               {% else %}
                   {% include 'empty_category.html' %}
               {% endif %}
-
-
           </div>
         </div>
 
@@ -186,14 +187,25 @@
                   {% endfor %}
                   <div class="Card-hover">
                     <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                      <form action="{% url 'cart_shop_add' item.slug %}" method="post">
-                          {% csrf_token %}
-                          {{ item.add_to_cart_form }}
-                          <button type="submit" class="Card-btn buy">
-                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
-                          </button>
-                      </form>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
+                      <a class="Card-btn" href="{% url 'cart_random_shop_add' item.slug %}">
+                          <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+
+<!--{#                      <form action="{% url 'cart_shop_add' item.slug %}" method="post">#}-->
+<!--{#                          {% csrf_token %}#}-->
+<!--{#                          {{ item.add_to_cart_form }}#}-->
+<!--{#                          <button type="submit" class="Card-btn buy">#}-->
+<!--{#                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>#}-->
+<!--{#                          </button>#}-->
+<!--{#                      </form>#}-->
+
+                    <div style="margin-left: 10px;">
+                        <form action="{% url 'add_to_comparison' item.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="Card-btn">
+                                <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/>
+                            </button>
+                        </form>
+                    </div>
                   </div>
 
                 </div>
@@ -255,14 +267,16 @@
                         {% endfor %}
                         <div class="Card-hover">
                             <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                            <form action="{% url 'cart_shop_add' item.slug %}" method="post">
-                            {% csrf_token %}
-                            {{ item.add_to_cart_form }}
-                            <button type="submit" class="Card-btn buy">
-                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
-                            </button>
+                            <a class="Card-btn" href="{% url 'cart_random_shop_add' item.slug %}">
+                                <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+                            <div style="margin-left: 10px;">
+                            <form action="{% url 'add_to_comparison' item.id %}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" class="Card-btn">
+                                <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/>
+                              </button>
                             </form>
-                            <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -349,8 +363,10 @@
 {#          Limited Products#}
             <div class="Slider-box Cards">
                 {% if lim_products %}
+                    {% cache 86400 lim_products %}
                 {% if lim_products|length > 1 %}
                     {% for product in lim_products %}
+
                     <div class="Slider-item">
                         <div class="Slider-content">
                             <div class="Card">
@@ -374,15 +390,17 @@
                         {% endfor %}
                        <div class="Card-hover">
                            <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                        <form action="{% url 'cart_shop_add' product.slug %}" method="post">
-                          {% csrf_token %}
-                          {{ product.add_to_cart_form }}
-                          <button type="submit" class="Card-btn buy">
-                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
-                          </button>
-                        </form>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
-                  </div>
+                           <a class="Card-btn" href="{% url 'cart_random_shop_add' product.slug %}">
+                            <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+                           <div style="margin-left: 10px;">
+                            <form action="{% url 'add_to_comparison' product.id %}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" class="Card-btn">
+                                <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/>
+                              </button>
+                            </form>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     {% if product.discount.discount_value > 0 %}
@@ -418,15 +436,17 @@
                         {% endfor %}
                        <div class="Card-hover">
                            <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/bookmark.svg' %}" alt="bookmark.svg"/></a>
-                        <form action="{% url 'cart_shop_add' lim_products.slug %}" method="post">
-                          {% csrf_token %}
-                          {{ lim_products.add_to_cart_form }}
-                          <button type="submit" class="Card-btn buy">
-                              <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/>
-                          </button>
-                        </form>
-                    <a class="Card-btn" href="#"><img src="{% static 'assets/img/icons/card/change.svg' %}" alt="change.svg"/></a>
-                  </div>
+                           <a class="Card-btn" href="{% url 'cart_random_shop_add' lim_products.slug %}">
+                            <img src="{% static 'assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+                           <div style="margin-left: 10px;">
+                            <form action="{% url 'add_to_comparison' product.id %}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" class="Card-btn">
+                                <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/>
+                              </button>
+                            </form>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     {% if lim_products.discount.discount_value > 0 %}
@@ -438,6 +458,7 @@
                 </div>
               </div>
             {% endif %}
+                    {% endcache %}
                 {% else %}
                     {% include 'empty_category.html' %}
             {% endif %}

@@ -32,6 +32,7 @@ class Discount(models.Model):
 
     discount_type = models.ForeignKey(DiscountType, on_delete=models.DO_NOTHING, verbose_name=_('discount_type'))
     discount_name = models.CharField(max_length=50,
+                                     blank=True,
                                      verbose_name=_('discount_name'),
                                      help_text='название скидки')
     discount_value = models.PositiveSmallIntegerField(null=True,
@@ -71,7 +72,7 @@ class Category(models.Model):
                                         related_name="sub", verbose_name=_('parent category'))
     category_icon = models.FileField(upload_to="icons/categories/", verbose_name=_('category icon'),
                                      default=os.path.abspath(
-                                         f'{settings.BASE_DIR}/media/icons/categories/test_category_icon.jpg'))
+                                         f'/icons/categories/test_category_icon.jpg'))
     category_image = models.ImageField(upload_to='cat_image/',
                                        blank=True,
                                        null=True,

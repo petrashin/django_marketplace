@@ -1,5 +1,4 @@
-import math
-import random
+import math, random
 
 from django.core.paginator import Paginator
 from django.db.models import Count, F, Avg, Case, When, DecimalField, Max, Min, Q
@@ -9,7 +8,6 @@ from django.views.generic import TemplateView, DetailView, ListView
 from app_goods.models import ProductTag
 from app_shops.filters import ProductFilter
 from app_shops.models import ShopProduct, Shop, Product
-from cart.forms import CartAddProductShopForm
 
 SORT_OPTIONS = {
     'price': Avg('shop_products__price') * Case(
@@ -31,40 +29,7 @@ DEFAULT_OPTION = F('id')
 DEFAULT_DIRECTION = ''
 
 
-class AddToCartFormMixin:
-    """ Миксин для активации кнопки добавления товара в корзину на карточках товаров """
-
-    def get_form_params(self, object):
-        if not hasattr(object, 'shop'):
-            shop = None
-        else:
-            shop = object.shop.slug
-        if not hasattr(object, 'product'):
-            product_id = object.id
-        else:
-            product_id = object.product.id
-        return [shop, product_id]
-
-    def add_to_cart_form(self, products):
-        if products:
-            if len(products) > 1:
-                for product in products:
-                    shop = self.get_form_params(product)[0]
-                    product_id = self.get_form_params(product)[1]
-                    product.add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                               'shop': shop,
-                                                                               'product': product_id
-                                                                               })
-            else:
-                shop = self.get_form_params(products[0])[0]
-                product_id = self.get_form_params(products[0])[1]
-                products[0].add_to_cart_form = CartAddProductShopForm(initial={'quantity': 1,
-                                                                               'shop': shop,
-                                                                               'product': product_id
-                                                                               })
-
-
-class CatalogueView(AddToCartFormMixin, ListView):
+class CatalogueView(ListView):
     template_name = 'catalog.html'
 
     def get_queryset(self):
@@ -99,56 +64,50 @@ class CatalogueView(AddToCartFormMixin, ListView):
             context['selected_min_price'] = min_price
             context['selected_max_price'] = max_price
 
-        context['max_price'] = math.ceil(self.get_queryset().annotate(
-            avg_price=SORT_OPTIONS['price']).aggregate(Max('avg_price'))['avg_price__max'])
-        context['min_price'] = math.trunc(self.get_queryset().annotate(
-            avg_price=SORT_OPTIONS['price']).aggregate(Min('avg_price'))['avg_price__min'])
-
-        self.add_to_cart_form(products)
+        if self.get_queryset():
+            context['max_price'] = math.ceil(self.get_queryset().annotate(
+                avg_price=SORT_OPTIONS['price']).aggregate(Max('avg_price'))['avg_price__max'])
+            context['min_price'] = math.trunc(self.get_queryset().annotate(
+                avg_price=SORT_OPTIONS['price']).aggregate(Min('avg_price'))['avg_price__min'])
 
         return context
 
 
-class BaseTemplateView(AddToCartFormMixin, TemplateView):
-    """ Вьюха для демонстрации базового шаблона """
+class BaseTemplateView(TemplateView):
+    """ Главная страница магазина """
     template_name = 'index.html'
     extra_context = {'title': _("Megano")}
 
     def get_context_data(self, **kwargs):
         context = super(BaseTemplateView, self).get_context_data()
-        products = Product.objects.filter(published=True)
+        products = Product.objects.filter(published=True). \
+            prefetch_related('category', 'product_images')
         popular_products = products.order_by('-sales_count')[:8]
         limited_products = products.filter(limited_edition=True)
         hot_offers = products.filter(discount__discount_value__gt=0)[:9]
-        self.add_to_cart_form(popular_products)
-        self.add_to_cart_form(limited_products)
-        self.add_to_cart_form(hot_offers)
         if limited_products:
             if len(limited_products) > 1:
-                context['lim_products'] = limited_products[:16]
+                lim_product = random.choice(limited_products)
+                context['lim_product'] = lim_product
+                context['lim_products'] = limited_products.exclude(id=lim_product.id)[:16]
             else:
-                context['lim_products'] = limited_products[0]
+                context['lim_product'] = limited_products[0]
 
         context['popular_products'] = popular_products
         context['hot_offers'] = hot_offers
         return context
 
 
-class ShopListView(AddToCartFormMixin, ListView):
+class ShopListView(ListView):
     context_object_name = 'products'
     template_name = 'app_shops/shop_list.html'
     queryset = ShopProduct.objects.select_related('shop', 'product'). \
         filter(product__published=True). \
         prefetch_related('product__category', 'product__product_images').order_by('shop__name')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        products = self.object_list
-        self.add_to_cart_form(products)
-        return context
+    extra_context = {'title': _("Shops")}
 
 
-class ShopDetailView(AddToCartFormMixin, DetailView):
+class ShopDetailView(DetailView):
     """ Детальная страница магазина """
     model = Shop
     context_object_name = 'shop'
@@ -157,10 +116,11 @@ class ShopDetailView(AddToCartFormMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # товары магазина
-        products = ShopProduct.objects.filter(shop__slug=self.object.slug, product__published=True). \
-                                       select_related('product'). \
-                                       prefetch_related('product__category', 'product__product_images'). \
-                                       order_by('-product__sales_count')[:10]
+        products = ShopProduct.objects. \
+                       filter(shop__slug=self.object.slug, product__published=True). \
+                       select_related('product'). \
+                       prefetch_related('product__category', 'product__product_images'). \
+                       order_by('-product__sales_count')[:10]
         context['products'] = products
-        self.add_to_cart_form(products)
+        context['title'] = self.object.name
         return context

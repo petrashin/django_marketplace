@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
+
 {% block content %}
   <div class="Middle Middle_top">
     <div class="Middle-top">
       <div class="wrap">
         <div class="Middle-header">
-          <h1 class="Middle-title">Оформление заказа
+          <h1 class="Middle-title">{% trans 'Checkout' %}{{ data_custom.delivery_express_coast }}
           </h1>
           <ul class="breadcrumbs Middle-breadcrumbs">
-            <li class="breadcrumbs-item"><a href="index.html">home</a>
+            <li class="breadcrumbs-item"><a href="../index.html">{% trans 'home' %}</a>
             </li>
-            <li class="breadcrumbs-item breadcrumbs-item_current"><span>Оформление заказа</span>
+            <li class="breadcrumbs-item breadcrumbs-item_current"><span>{% trans 'Checkout' %}</span>
             </li>
           </ul>
         </div>
@@ -21,28 +23,28 @@
         <div class="Section-column">
           <div class="Section-columnSection">
             <header class="Section-header">
-              <strong class="Section-title">Прогресс заполнения
+              <strong class="Section-title">{% trans 'Fill progress' %}
               </strong>
             </header>
             <div class="Section-columnContent">
               <ul class="menu menu_vt Order-navigate">
                 {% if request.path|slice:"-1:" != '2' %}
-                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
+                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step1">{% trans 'Step 1: User Options' %}</a>
                   </li>
                 {% else %}
-                  <li class="menu-item"><a class="menu-link" href="#step1">Шаг 1. Параметры пользователя</a>
+                  <li class="menu-item"><a class="menu-link" href="#step1">{% trans 'Step 1: User Options' %}</a>
                   </li>
                 {%endif %}
                 {% if request.path|slice:"-1:" != '2' %}
-                  <li class="menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                  <li class="menu-item"><a class="menu-link" href="#step2">{% trans 'Step 2: Shipping Method' %}</a>
                   </li>
                 {% else %}
-                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step2">Шаг 2. Способ доставки</a>
+                  <li class="menu-item_ACTIVE menu-item"><a class="menu-link" href="#step2">{% trans 'Step 2 Shipping Method' %}</a>
                   </li>
                 {% endif %}
-                <li class="menu-item"><a class="menu-link" href="#step3">Шаг 3. Способ оплаты</a>
+                <li class="menu-item"><a class="menu-link" href="#step3">{% trans 'Step 3: Payment Method' %}</a>
                 </li>
-                <li class="menu-item"><a class="menu-link" href="#step4">Шаг 4. Подтверждение заказа</a>
+                <li class="menu-item"><a class="menu-link" href="#step4">{% trans 'Step 4: Order confirmation' %}</a>
                 </li>
               </ul>
             </div>
@@ -57,41 +59,29 @@
             <div class="Order-block" id="step1">
             {% endif %}
               <header class="Section-header Section-header_sm">
-                <h2 class="Section-title">Шаг 1. Параметры пользователя
+                <h2 class="Section-title">{% trans 'Step 1: User Options' %}
                 </h2>
               </header>
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
-                    <label class="form-label" for="name">ФИО
+                    <label class="form-label" for="name">{% trans 'Fullname' %}
                     </label>
-                    <input class="form-input" id="name" name="name" type="text" value="{{ profile.fullname }}" data-validate="require"/>
+                    <div class="form-input" style="min-height: 55px;">{{ profile.fullname }}</div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="phone">Телефон
+                    <label class="form-label" for="phone">{% trans 'Phone number' %}
                     </label>
-                    <input class="form-input" id="phone" name="phone" type="text" value="{{ profile.phone_number }}" data-validate="require"/>
+                    <div class="form-input" style="min-height: 55px;">{{ profile.phone_number }}</div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label" for="mail">E-mail
+                    <label class="form-label" for="mail">{% trans 'E-mail' %}
                     </label>
-                    <input class="form-input" id="mail" name="mail" type="text" value="{{ user.email }}" data-validate="require"/>
-                  </div>
-                </div>
-                <div class="row-block">
-                  <div class="form-group">
-                    <label class="form-label" for="password">Пароль
-                    </label>
-                    <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="passwordReply">Подтверждение пароля
-                    </label>
-                    <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
+                    <div class="form-input" style="min-height: 55px;">{{ user.email }}</div>
                   </div>
                 </div>
               </div>
-              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">Дальше</a>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step2">{% trans 'Next' %}</a>
               </div>
             </div>
             {% if request.path|slice:"-1:" != '2' %}
@@ -100,57 +90,57 @@
             <div class="Order-block Order-block_OPEN" id="step2">
             {% endif %}
               <header class="Section-header Section-header_sm">
-                <h2 class="Section-title">Шаг 2. Способ доставки
+                <h2 class="Section-title">{% trans 'Step 2: Delivery type' %}
                 </h2>
               </header>
               <div class="form-group">
                 <div>
                   <label class="toggle">
-                    <input id="delivery_ordinary" type="radio" name="delivery" value="1" checked="checked"/><span class="toggle-box"></span><span class="toggle-text">Обычная доставка</span>
+                    <input id="delivery_ordinary" type="radio" name="delivery" value="1" checked="checked"/><span class="toggle-box"></span><span id="regular_delivery" class="toggle-text">{% trans 'Regular delivery' %}</span>
                   </label>
                 </div>
                 <div>
                   <label class="toggle">
-                    <input id="delivery_express" type="radio" name="delivery" value="2"/><span class="toggle-box"></span><span class="toggle-text">Экспресс доставка</span>
+                    <input id="delivery_express" type="radio" name="delivery" value="2"/><span class="toggle-box"></span><span id="express_delivery" class="toggle-text">{% trans 'Express delivery' %}</span>
                   </label>
                 </div>
               </div>
               <div class="form-group">
-                <label class="form-label" for="city">Город
+                <label class="form-label" for="city">{% trans 'City' %}
                 </label>
                 <input class="form-input" id="city" name="city" type="text" onkeyup="CopyCity()" data-validate="require">
               </div>
               <div class="form-group">
-                <label class="form-label" for="address">Адрес
+                <label class="form-label" for="address">{% trans 'Adress' %}
                 </label>
                 <textarea class="form-textarea" name="address" id="address" onkeyup="CopyAddress()" data-validate="require"></textarea>
               </div>
-              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3">Дальше</a>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step3">{% trans 'Next' %}</a>
               </div>
             </div>
             <div class="Order-block" id="step3">
               <header class="Section-header Section-header_sm">
-                <h2 class="Section-title">Шаг 3. Способ оплаты
+                <h2 class="Section-title">{% trans 'Step 3: Payment Method' %}
                 </h2>
               </header>
               <div class="form-group">
                 <div>
                   <label class="toggle">
-                    <input id="pay_online" type="radio" name="pay" value="1" checked="checked"/><span class="toggle-box"></span><span class="toggle-text">Онлайн картой</span>
+                    <input id="pay_online" type="radio" name="pay" value="1" checked="checked"/><span class="toggle-box"></span><span id="pay_online_card" class="toggle-text">{% trans 'Online card' %}</span>
                   </label>
                 </div>
                 <div>
                   <label class="toggle">
-                    <input id="pay_someone" type="radio" name="pay" value="2"/><span class="toggle-box"></span><span class="toggle-text">Онлайн со случайного чужого счета</span>
+                    <input id="pay_someone" type="radio" name="pay" value="2"/><span class="toggle-box"></span><span id="pay_online_card_someone" class="toggle-text">{% trans "Online from a random someone else's account" %}</span>
                   </label>
                 </div>
               </div>
-              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4">Дальше</a>
+              <div class="Order-footer"><a class="btn btn_success Order-next" href="#step4">{% trans 'Next' %}</a>
               </div>
             </div>
             <div class="Order-block" id="step4">
               <header class="Section-header Section-header_sm">
-                <h2 class="Section-title">Шаг 4. Подтверждение заказа
+                <h2 class="Section-title">{% trans 'Step 4: Order confirmation' %}
                 </h2>
               </header>
               <!--+div.Order.-confirmation-->
@@ -159,19 +149,19 @@
                   <div class="row">
                     <div class="row-block">
                       <div class="Order-info">
-                        <div class="Order-infoType">ФИО:
+                        <div class="Order-infoType">{% trans 'Fullname' %}
                         </div>
                         <div class="Order-infoContent">{{ profile.fullname }}
                         </div>
                       </div>
                       <div class="Order-info">
-                        <div class="Order-infoType">Телефон:
+                        <div class="Order-infoType">{% trans 'Phone number' %}
                         </div>
                         <div class="Order-infoContent">{{ profile.phone_number }}
                         </div>
                       </div>
                       <div class="Order-info">
-                        <div class="Order-infoType">E-mail:
+                        <div class="Order-infoType">{% trans 'E-mail' %}
                         </div>
                         <div class="Order-infoContent">{{ user.email }}
                         </div>
@@ -179,29 +169,40 @@
                     </div>
                     <div class="row-block">
                       <div class="Order-info Order-info_delivery">
-                        <div class="Order-infoType">Тип доставки:
+                        <div class="Order-infoType">{% trans 'Delivery type' %}
                         </div>
-                        <div id="delivery_info" class="Order-infoContent">Обычная доставка
+                        <div id="delivery_info" class="Order-infoContent">{% trans 'Regular delivery' %}
                         </div>
                       </div>
                       <div class="Order-info">
-                        <div class="Order-infoType">Город:
+                        <div class="Order-infoType">{% trans 'City' %}
                         </div>
                         <div id="city_info" class="Order-infoContent">
                         </div>
                       </div>
                       <div class="Order-info">
-                        <div class="Order-infoType">Адрес:
+                        <div class="Order-infoType">{% trans 'Adress' %}
                         </div>
                         <div id="address_info" class="Order-infoContent">
                         </div>
                       </div>
                       <div class="Order-info Order-info_pay">
-                        <div class="Order-infoType">Оплата:
+                        <div class="Order-infoType">{% trans 'Payment' %}
                         </div>
-                        <div id="pay_info" class="Order-infoContent">Онлайн картой
+                        <div id="pay_info" class="Order-infoContent">{% trans 'Online card' %}
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="Cart-block">
+                  <h2 class="Section-title">{% trans 'Comment to the order' %}
+                  </h2>
+                  <div class="form-group">
+                    <div>
+                      <label class="form-label">
+                        <input class="form-input" name="comment">
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -232,12 +233,12 @@
                     </div>
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_seller">
-                        <div>Продавец:
+                        <div>{% trans 'Shop' %}
                         </div>
                         <div>{{ product.shop }}
                         </div>
                       </div>
-                      <div class="Cart-block Cart-block_amount">{{ product.quantity }}шт.
+                      <div class="Cart-block Cart-block_amount">{{ product.quantity }} {% trans 'pieces' %}
                       </div>
                     </div>
                   </div>
@@ -245,10 +246,12 @@
                   <div class="Cart-product">
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_pict">
-                        <br>
+                        <div class="Cart-pict"></div>
                       </div>
                       <div class="Cart-block Cart-block_info">
-                        Доставка
+                        <div class="Cart-title" style="text-align: left">
+                          {% trans 'Delivery' %}
+                        </div>
                       </div>
                       <div class="Cart-block Cart-block_price">
                           <div id="delivery_coast" class="Cart-price">
@@ -258,12 +261,13 @@
                     <div class="Cart-block Cart-block_row">
                       <div class="Cart-block Cart-block_seller">
                       </div>
+                      <div class="Cart-block Cart-block_amount">
+                      </div>
                     </div>
                   </div>
-
                   <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
-                      <strong class="Cart-title">Итого:</strong>
+                      <strong class="Cart-title">{% trans 'Total' %}</strong>
                       {% if total_sum|floatformat:2 != total_sum_with_discount|floatformat:2 %}
                       <span id="total_sum_with_discount" class="Cart-price">{{ total_cost_with_discount|floatformat:2 }}</span>
                       <span class="Cart-price_old">{{ total_cost|floatformat:2 }}</span>
@@ -272,18 +276,7 @@
                       {% endif %}
                     </div>
                     <div class="Cart-block">
-                      <h2 class="Section-title">Комментарий к заказу
-                      </h2>
-                      <div class="form-group">
-                        <div>
-                          <label class="form-label">
-                            <input class="form-input" name="comment">
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="Cart-block">
-                      <button class="btn btn_primary btn_lg" type="submit">Оплатить
+                      <button class="btn btn_primary btn_lg" type="submit">{% trans 'Pay' %}
                       </button>
                     </div>
                   </div>
@@ -298,47 +291,53 @@
 {% endblock %}
 {% block order_scripts %}
   <script>
-    const delivery_ordinary = document.getElementById("delivery_ordinary");
-    const delivery_express = document.getElementById("delivery_express");
-    const total_sum = parseFloat({{ total_sum }})
-    const q_shops = {{ q_shops }}
-
-    DeliveryCoast(total_sum, q_shops);
-    function DeliveryCoast(total_sum, q_shops) {
-        let delivery_coast;
-        if (total_sum < 2000 || q_shops > 1) {
-            document.getElementById("delivery_coast").innerHTML = "200,00$"
-            delivery_coast = 200.00
-            TotalSum(delivery_coast)
-            return 200.00
-        } else {
-            document.getElementById("delivery_coast").innerHTML = "0,00$"
-            delivery_coast = 0.00
-            TotalSum(delivery_coast)
-            return 0.00
+    delivery_ordinary = document.getElementById("delivery_ordinary");
+    delivery_express = document.getElementById("delivery_express");
+    total_sum = parseFloat({{ total_sum }});
+    q_shops = {{ q_shops }};
+    min_order = parseFloat({{ data_custom.min_order }});
+    delivery_min = parseFloat({{ data_custom.delivery_min }});
+    delivery_express_coast = parseFloat({{ data_custom.delivery_express_coast }});
+    if (!delivery_express_coast || !min_order || !delivery_express_coast){
+        min_order = 0;
+        delivery_min = 0;
+        delivery_express_coast = 0;
+    }
+    let delivery_coast;
+    DeliveryCoast(total_sum, min_order, delivery_min, q_shops);
+    function DeliveryCoast(total_sum, min_order, delivery_min, q_shops) {
+        if (total_sum < min_order || q_shops > 1) {
+            delivery_coast = delivery_min;
+            TotalSum(delivery_coast);
+            return delivery_coast;
+        }
+        else {
+            delivery_coast = 0;
+            TotalSum(delivery_coast);
+            return 0;
         }
     }
     delivery_ordinary.addEventListener('click', function () {
-      document.getElementById("delivery_info").innerHTML = "Обычная доставка"
-      let delivery_coast = DeliveryCoast()
-      TotalSum(delivery_coast)
+      document.getElementById("delivery_info").innerHTML = document.getElementById("regular_delivery").innerHTML;
+      delivery_coast = DeliveryCoast();
+      TotalSum(delivery_coast);
     });
     delivery_express.addEventListener('click', function () {
-      document.getElementById("delivery_info").innerHTML = "Экспресс доставка"
-      document.getElementById("delivery_coast").innerHTML = "500,00$"
-      const delivery_coast = 500.00;
-      TotalSum(delivery_coast)
+      document.getElementById("delivery_info").innerHTML = document.getElementById("express_delivery").innerHTML;
+      TotalSum(delivery_express_coast);
     });
 
     function TotalSum(delivery_coast) {
-        let total_sum = parseFloat({{ total_sum }});
-        const total_sum_with_discount = parseFloat({{ total_sum_with_discount }});
+        document.getElementById("delivery_coast").innerHTML = String(delivery_coast).replace('.', ',') + "$";
+        total_sum = parseFloat({{ total_sum }});
+        total_sum_with_discount = parseFloat({{ total_sum_with_discount }});
         if (total_sum_with_discount !== total_sum) {
             total_sum = total_sum_with_discount + delivery_coast;
-            document.getElementById("total_sum_with_discount").innerHTML = String(total_sum).replace('.', ',') + "$"
-        } else {
+            document.getElementById("total_sum_with_discount").innerHTML = String(total_sum).replace('.', ',') + "$";
+        }
+        else {
             total_sum = total_sum + delivery_coast;
-            document.getElementById("total_sum").innerHTML = String(total_sum).replace('.', ',') + "$"
+            document.getElementById("total_sum").innerHTML = String(total_sum).replace('.', ',') + "$";
         }
     }
 
@@ -346,13 +345,13 @@
     const input_pay_someone = document.getElementById("pay_someone");
 
     input_pay_online.addEventListener('click', function () {
-      document.getElementById("pay_info").innerHTML = "Онлайн картой"
+      document.getElementById("pay_info").innerHTML = document.getElementById("pay_online_card").innerHTML
     });
     input_pay_someone.addEventListener('click', function () {
-      document.getElementById("pay_info").innerHTML = "Онлайн со случайного чужого счета"
+      document.getElementById("pay_info").innerHTML = document.getElementById("pay_online_card_someone").innerHTML
     });
 
-    function CopyCity() {document.getElementById("city_info").innerHTML = document.getElementById("city").value;}
-    function CopyAddress() {document.getElementById("address_info").innerHTML = document.getElementById("address").value;}
+    function CopyCity() {document.getElementById("city_info").innerHTML = document.getElementById("city").value}
+    function CopyAddress() {document.getElementById("address_info").innerHTML = document.getElementById("address").value}
   </script>
 {% endblock %}

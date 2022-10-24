@@ -70,9 +70,13 @@
                                     </div>
                                     {% endif %}
                                 </div>
-                                <div class="ProductCard-compare"><a class="btn btn_default" href="#"><img
-                                        class="btn-icon" src="{% static 'assets/img/icons/card/change.svg' %}"
-                                        alt="change.svg"/></a>
+                                <div class="ProductCard-compare">
+                                    <form action="{% url 'add_to_comparison' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="Card-btn">
+                                          <img src="/static/assets/img/icons/card/change.svg" alt="change.svg"/>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -151,12 +155,14 @@
                                         <th>{% trans 'Notation' %}
                                         </th>
                                     </tr>
+                                    {% for spec, value in specs.items %}
                                     <tr>
-                                        <td>ываыв
-                                        </td>
-                                        <td>llslssl
-                                        </td>
+                                            <td>{{spec}}
+                                            </td>
+                                            <td>{{value}}
+                                            </td>
                                     </tr>
+                                    {% endfor %}
                                 </table>
                             </div>
                         </div>
@@ -178,12 +184,11 @@
                                         </strong>
                                     </div>
                                     <div class="Categories-block Categories-button">
-                                        <form action="{% url 'cart_shop_add' product.slug %}" method="post">
+                                        <form action="{% url 'cart_shop_add' product.slug shop.shop.slug %}" method="post">
                                             {% csrf_token %}
-                                            {{ shop.add_to_cart_form }}
-                                            <button type="submit" class="btn btn_primary" value="Купить">
+                                            <button type="submit" class="btn btn_primary">
                                             <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}"
-                                            alt="cart_white.svg"/><span class="btn-content">{% trans 'Buy' %}</span>
+                                                alt="cart_white.svg"/><span class="btn-content">{% trans 'Buy' %}</span>
                                             </button>
                                         </form>
                                     </div>

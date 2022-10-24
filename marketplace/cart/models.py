@@ -36,7 +36,6 @@ class CartItems(models.Model):
     quantity = models.PositiveSmallIntegerField(default=1,
                                                 verbose_name=_('quantity'))
     added_at = models.DateTimeField(auto_now_add=True, verbose_name=_('added_at'))
-
     published = models.BooleanField(default=True, verbose_name='опубликовать')
 
     def get_session_id(self, request):
@@ -53,7 +52,7 @@ class CartItems(models.Model):
         user_id = user.id
         if user.is_anonymous:
             user_id = 0
-            session_id = session_id
+            # session_id = session_id
         else:
             if CartItems:
                 # получаем корзину неавторизованного пользователя и присваиваем user_id
@@ -157,7 +156,21 @@ class CartItems(models.Model):
         if cart_item:
             cart_item.price = price
             cart_item.shop = shop
-            cart_item.save()
+        cart_items = self.get_cart_items(request)
+        if cart_items:
+            if len(cart_items) > 1:
+                match = False
+                for item in cart_items:
+                    if item.product == cart_item.product and item.shop == cart_item.shop:
+                        match = True
+                        item.quantity += cart_item.quantity
+                        cart_item.delete()
+                        item.save()
+                        break
+                if not match:
+                    cart_item.save()
+            else:
+                cart_item.save()
 
     def get_item_total_price(self):
         return self.price * self.quantity

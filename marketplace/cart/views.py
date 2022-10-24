@@ -7,8 +7,8 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
 from app_goods.models import Product
-from app_shops.models import ShopProduct
-from .forms import CartAddProductForm, CartAddProductShopForm, CartShopsForm, CartUpdateQuantityProductForm
+from app_shops.models import ShopProduct, Shop
+from .forms import CartAddProductForm, CartShopsForm, CartUpdateQuantityProductForm
 from .models import CartItems
 
 
@@ -16,6 +16,7 @@ class CartItemsListView(ListView):
     model = CartItems
     context_object_name = 'cart_items'
     template_name = 'cart.html'
+    extra_context = {'title': _("Cart")}
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -62,6 +63,7 @@ class CartItemsListView(ListView):
 
 
 def _check_cart_discount(discount_cart_product):
+    """ Проверка на наличие скидок по количеству и обычной"""
     if discount_cart_product.quantity >= discount_cart_product.product.discount.discount_amount:
         discount = discount_cart_product.old_price * decimal.Decimal(
             (discount_cart_product.product.discount.discount_value / 100))
@@ -80,6 +82,7 @@ def _check_cart_discount(discount_cart_product):
 
 
 def _check_doublet_discount(cart_products, discount_cart_product):
+    """ Проверка на наличие скидок - при наличии 2-х товаров """
     accept_discount_products = []
     for product in cart_products:
         if discount_cart_product.product.discount == product.product.discount:
@@ -120,23 +123,24 @@ def cart_add(request, slug):
 
 
 @require_POST
-def cart_shop_add(request, slug):
+def cart_shop_add(request, slug1, slug2):
     """ Представление для добавления товара в корзину с выбранным продавцом """
     cart = CartItems()
+    product = get_object_or_404(Product, slug=slug1)
+    cart.add(request=request,
+             product=product,
+             shop=slug2,
+             )
+    messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
+    return redirect('shops')
+
+
+def cart_random_shop_add(request, slug):
+    """ Представление для добавления товара в корзину с случайным продавцом """
+    cart = CartItems()
     product = get_object_or_404(Product, slug=slug)
-    form = CartAddProductShopForm(request.POST)
-    if form.is_valid():
-        cd = form.cleaned_data
-        if cd['shop'] == '':
-            shop = None
-        else:
-            shop = cd['shop']
-        cart.add(request=request,
-                 product=product,
-                 shop=shop,
-                 quantity=cd['quantity']
-                 )
-        messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
+    cart.add(request, product)
+    messages.success(request, f'{product.name}' + _(' successfully added to cart!'))
     return redirect('shops')
 
 
@@ -148,6 +152,7 @@ def cart_remove(request, **kwargs):
     return redirect('cart_detail')
 
 
+@require_POST
 def cart_update_quantity(request, **kwargs):
     """ Представление для обновления количества товара в корзине """
     item_id = kwargs['pk']
@@ -156,6 +161,7 @@ def cart_update_quantity(request, **kwargs):
     return redirect('cart_detail')
 
 
+@require_POST
 def cart_update_price(request, **kwargs):
     """ Представление для обновления магазина и цены товара в корзине """
     item_id = kwargs['pk']

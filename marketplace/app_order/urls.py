@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import OrderView, OrderPayment, OrderRepeat
+
+from .views import OrderPayment, OrderRepeat, OrderView
 
 urlpatterns = [
     path('cart/order/', OrderView.as_view(), name='order'),

@@ -878,7 +878,7 @@
         "views_count": 0,
         "sales_count": 0,
         "published": true,
-        "limited_edition": false,
+        "limited_edition": true,
         "technical_specs": {},
         "category": [
             3,
@@ -904,7 +904,7 @@
         "views_count": 0,
         "sales_count": 0,
         "published": true,
-        "limited_edition": true,
+        "limited_edition": false,
         "technical_specs": {},
         "category": [
             3,
@@ -918,8 +918,8 @@
     "fields": {
         "name": "рубашка2",
         "name_ru": "рубашка2",
-        "name_en": "T-shirt2",
-        "slug": "t-shirt2",
+        "name_en": "shirt2",
+        "slug": "shirt2",
         "description": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
         "description_ru": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
         "description_en": "A shirt is a fabric garment for the upper body (from the neck to the waist). Initially, underwear was worn exclusively by men, but in American English it has become a universal term for a wide range of outerwear and underwear. In British English, a shirt is more specifically a garment with a collar, sleeves with cuffs and a full vertical opening with buttons or snaps (North Americans would call this a \"shirt\", a specific type of shirt with a collar).",
@@ -944,8 +944,8 @@
     "fields": {
         "name": "рубашка3",
         "name_ru": "рубашка3",
-        "name_en": "T-shirt3",
-        "slug": "t-shirt3",
+        "name_en": "shirt3",
+        "slug": "shirt3",
         "description": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
         "description_ru": "Рубашка-это тканевая одежда для верхней части тела (от шеи до талии). Первоначально нижнее белье носили исключительно мужчины, но в американском английском оно стало универсальным термином для широкого спектра верхней одежды и нижнего белья. В британском английском языке рубашка-это более конкретно одежда с воротником, рукавами с манжетами и полным вертикальным отверстием с пуговицами или защелками (североамериканцы назвали бы это \"рубашкой\", специфическим типом рубашки с воротником).",
         "description_en": "A shirt is a fabric garment for the upper body (from the neck to the waist). Initially, underwear was worn exclusively by men, but in American English it has become a universal term for a wide range of outerwear and underwear. In British English, a shirt is more specifically a garment with a collar, sleeves with cuffs and a full vertical opening with buttons or snaps (North Americans would call this a \"shirt\", a specific type of shirt with a collar).",
